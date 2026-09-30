@@ -25,6 +25,9 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - name: Android SDK (lo exige Gradle al configurar el modulo shared)
+        uses: android-actions/setup-android@v3
+
       - name: Seleccionar el Xcode mas reciente
         run: |
           XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
@@ -57,7 +60,8 @@ jobs:
           if ! xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
                -configuration Debug -sdk iphonesimulator -arch arm64 \
                SYMROOT="$PWD/build/ios" CODE_SIGNING_ALLOWED=NO build > "$EVID/xcodebuild.log" 2>&1; then
-            ERR=$(grep -E "error:|e: |FAILURE|What went wrong" -A2 "$EVID/xcodebuild.log" | head -25 | tr '\n' ' ' | cut -c1-3000)
+            ERR=$( (grep -E "(^| )error: |^e: |What went wrong|SDK location|Exception:|> " "$EVID/xcodebuild.log" | grep -v "^note:" | head -30) | tr '\n' ' ' | cut -c1-3500)
+            [ -n "$ERR" ] || ERR=$(grep -v "^ *export " "$EVID/xcodebuild.log" | tail -40 | tr '\n' ' ' | cut -c1-3500)
             echo "::error title=xcodebuild fallo::$ERR"
             exit 1
           fi
