@@ -26,7 +26,21 @@ jobs:
           java-version: '21'
 
       - name: Android SDK (lo exige Gradle al configurar el modulo shared)
-        uses: android-actions/setup-android@v3
+        run: |
+          # Si el runner ya trae SDK se usa; si no, se instala lo minimo (plataforma 36).
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          if [ -z "$SDK" ] || [ ! -d "$SDK/platforms" ]; then
+            SDK="$HOME/android-sdk"
+            mkdir -p "$SDK/cmdline-tools"
+            curl -sSLo /tmp/clt.zip https://dl.google.com/android/repository/commandlinetools-mac-13114758_latest.zip
+            unzip -q /tmp/clt.zip -d "$SDK/cmdline-tools"
+            mv "$SDK/cmdline-tools/cmdline-tools" "$SDK/cmdline-tools/latest"
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" --licenses > /dev/null || true
+            "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" "platforms;android-36" "build-tools;36.0.0" > /dev/null
+          fi
+          echo "sdk.dir=$SDK" > local.properties
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "::notice title=Android SDK::$SDK ($(ls "$SDK/platforms" | tr '\n' ' '))"
 
       - name: Seleccionar el Xcode mas reciente
         run: |
