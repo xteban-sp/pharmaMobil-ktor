@@ -51,18 +51,33 @@ jobs:
 
       - name: Compilar la app iOS para el simulador
         run: |
-          xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
-            -configuration Debug -sdk iphonesimulator -arch arm64 \
-            SYMROOT="$PWD/build/ios" CODE_SIGNING_ALLOWED=NO build | tail -30
-          find build/ios -maxdepth 3 -name "*.app"
+          set -o pipefail
+          # Log completo al artifact; si falla, los errores salen como anotacion
+          # (las anotaciones se ven sin iniciar sesion en GitHub).
+          if ! xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
+               -configuration Debug -sdk iphonesimulator -arch arm64 \
+               SYMROOT="$PWD/build/ios" CODE_SIGNING_ALLOWED=NO build > "$EVID/xcodebuild.log" 2>&1; then
+            ERR=$(grep -E "error:|e: |FAILURE|What went wrong" -A2 "$EVID/xcodebuild.log" | head -25 | tr '\n' ' ' | cut -c1-3000)
+            echo "::error title=xcodebuild fallo::$ERR"
+            exit 1
+          fi
+          APP=$(find build/ios -maxdepth 3 -name "*.app" | head -1)
+          test -n "$APP" || { echo "::error title=Sin .app::xcodebuild no genero la app"; exit 1; }
+          echo "APP=$PWD/$APP" >> "$GITHUB_ENV"
+          # El bundle id real sale del Info.plist compilado (evita adivinarlo)
+          BID=$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$APP/Info.plist")
+          echo "BUNDLE_ID=$BID" >> "$GITHUB_ENV"
+          echo "::notice title=App compilada::$APP ($BID)"
 
       - name: Correr en el simulador y capturar la lista
         run: |
+          # Cualquier comando que falle deja una anotacion con la linea y el codigo de salida
+          trap 'echo "::error title=Fallo en simulador::linea $LINENO: \"$BASH_COMMAND\" (codigo $?)"' ERR
           UDID=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; rts=sorted([k for k in d if '.iOS-' in k and d[k]], key=lambda k:[int(x) for x in k.split('iOS-')[1].split('-')]); print([x['udid'] for x in d[rts[-1]] if x['name'].startswith('iPhone')][0])")
           echo "UDID=$UDID" >> "$GITHUB_ENV"
+          echo "::notice title=Simulador::$(xcrun simctl list devices | grep "$UDID")"
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
-          APP=$(find build/ios -maxdepth 3 -name "*.app" | head -1)
           xcrun simctl install "$UDID" "$APP"
           # --console-pty: guarda el stdout de la app (lineas KtorHttp => ...)
           nohup xcrun simctl launch --console-pty "$UDID" "$BUNDLE_ID" -pantalla productos > "$EVID/ios-ktor.log" 2>&1 &
@@ -70,8 +85,10 @@ jobs:
           xcrun simctl io "$UDID" screenshot "$EVID/01-ios-lista-productos.png"
           grep "KtorHttp" "$EVID/ios-ktor.log" > "$EVID/ios-ktor-filtrado.log" || true
           cat "$EVID/ios-ktor-filtrado.log"
+          echo "::notice title=Log Ktor iOS::$(head -c 1500 "$EVID/ios-ktor-filtrado.log" | tr '\n' ' ')"
 
       - name: Apagar el backend y capturar el error controlado
+        if: always() && env.UDID != ''
         run: |
           pkill -f spring-boot || true
           pkill -f PharmaBackendApplication || true
