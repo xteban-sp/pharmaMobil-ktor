@@ -9,7 +9,7 @@ import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
-import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioEnMemoria
+import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositoryImpl
 import pe.edu.upeu.pharmamobil.domain.repository.ClienteRepository
 import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarClientesUseCase
@@ -56,7 +56,8 @@ class AppModuleTest {
 
         val koin = grafoCompleto()
 
-        assertIs<ProductoRepositorioEnMemoria>(koin.get<ProductoRepository>())
+        // Sesion 7: el inventario ya viene del backend via Ktor.
+        assertIs<ProductoRepositoryImpl>(koin.get<ProductoRepository>())
         assertIs<ClienteRepositorioEnMemoria>(koin.get<ClienteRepository>())
     }
 

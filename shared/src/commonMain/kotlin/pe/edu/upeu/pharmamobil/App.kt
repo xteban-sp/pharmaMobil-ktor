@@ -81,11 +81,16 @@ private val ScreenSaver = Saver<Screen, Int>(
     }
 )
 
+/**
+ * @param pantallaInicial pantalla con la que abre la app. Por defecto Inicio;
+ * iOS la puede cambiar con el argumento de arranque `-pantalla productos`
+ * (lo usa el workflow de GitHub Actions para capturar evidencias en el simulador).
+ */
 @Composable
-fun App() = KoinContext {
+fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
 
     var pantallaActual by rememberSaveable(stateSaver = ScreenSaver) {
-        mutableStateOf<Screen>(Screen.Inicio)
+        mutableStateOf<Screen>(pantallaInicial)
     }
 
     var darkTheme by rememberSaveable {

@@ -1,0 +1,89 @@
+# Evidencias de iOS sin Mac propio: GitHub Actions presta un runner macOS con Xcode.
+# 1) Levanta PharmaSoft (perfil h2, sin Oracle) en localhost:8080
+# 2) Compila la app iOS y la corre en el simulador abriendo directo en Productos
+# 3) Captura: lista de productos, log de Ktor (GET + 200) y el error sin backend
+# Resultado: artifact "evidencias-ios" (zip) en la pestaña Actions del repositorio.
+name: Evidencias iOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ feature/ktor-client ]
+
+jobs:
+  ios-simulador:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      BUNDLE_ID: pe.edu.upeu.pharmamobil.PharmaMobil
+      EVID: ${{ github.workspace }}/evidencias
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Seleccionar el Xcode mas reciente
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+          mkdir -p "$EVID"
+
+      - name: Levantar PharmaSoft (perfil h2)
+        run: |
+          git clone --depth 1 https://github.com/dreyna/pharmaSoft.git backend
+          cp .github/ci/pharmasoft-h2/* backend/src/main/resources/
+          cd backend
+          # Agrega el driver H2 al pom (igual que la rama feature/perfil-h2)
+          perl -0pi -e 's#(<artifactId>ojdbc11</artifactId>\s*<scope>runtime</scope>\s*</dependency>)#$1\n\t\t<dependency>\n\t\t\t<groupId>com.h2database</groupId>\n\t\t\t<artifactId>h2</artifactId>\n\t\t\t<scope>runtime</scope>\n\t\t</dependency>#' pom.xml
+          grep -q "com.h2database" pom.xml
+          chmod +x mvnw
+          nohup ./mvnw -q -DskipTests spring-boot:run -Dspring-boot.run.profiles=h2 > "$EVID/backend.log" 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:8080/api/health && break
+            sleep 5
+          done
+          echo
+          curl -sf "http://localhost:8080/api/v1/productos?pagina=0&tamanio=20" | tee "$EVID/productos.json"
+
+      - name: Compilar la app iOS para el simulador
+        run: |
+          xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
+            -configuration Debug -sdk iphonesimulator -arch arm64 \
+            SYMROOT="$PWD/build/ios" CODE_SIGNING_ALLOWED=NO build | tail -30
+          find build/ios -maxdepth 3 -name "*.app"
+
+      - name: Correr en el simulador y capturar la lista
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; rts=sorted([k for k in d if '.iOS-' in k and d[k]], key=lambda k:[int(x) for x in k.split('iOS-')[1].split('-')]); print([x['udid'] for x in d[rts[-1]] if x['name'].startswith('iPhone')][0])")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          APP=$(find build/ios -maxdepth 3 -name "*.app" | head -1)
+          xcrun simctl install "$UDID" "$APP"
+          # --console-pty: guarda el stdout de la app (lineas KtorHttp => ...)
+          nohup xcrun simctl launch --console-pty "$UDID" "$BUNDLE_ID" -pantalla productos > "$EVID/ios-ktor.log" 2>&1 &
+          sleep 40
+          xcrun simctl io "$UDID" screenshot "$EVID/01-ios-lista-productos.png"
+          grep "KtorHttp" "$EVID/ios-ktor.log" > "$EVID/ios-ktor-filtrado.log" || true
+          cat "$EVID/ios-ktor-filtrado.log"
+
+      - name: Apagar el backend y capturar el error controlado
+        run: |
+          pkill -f spring-boot || true
+          pkill -f PharmaBackendApplication || true
+          sleep 5
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+          nohup xcrun simctl launch --console-pty "$UDID" "$BUNDLE_ID" -pantalla productos > "$EVID/ios-ktor-error.log" 2>&1 &
+          sleep 30
+          xcrun simctl io "$UDID" screenshot "$EVID/02-ios-error-sin-backend.png"
+          cat "$EVID/ios-ktor-error.log" | grep "KtorHttp" || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencias-ios
+          path: evidencias/
