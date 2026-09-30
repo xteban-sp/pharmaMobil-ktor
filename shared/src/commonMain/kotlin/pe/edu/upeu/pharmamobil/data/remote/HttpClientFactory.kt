@@ -39,7 +39,10 @@ fun crearHttpClient(engine: HttpClientEngine, config: ConfiguracionApi): HttpCli
             level = LogLevel.HEADERS
             // Prefijo fijo para filtrar en Logcat / consola de Xcode: "KtorHttp"
             logger = object : Logger {
-                override fun log(message: String) = println("KtorHttp => $message")
+                // Ktor manda bloques de varias lineas: se antepone el prefijo a CADA linea
+                // para que el filtro de Logcat las muestre todas.
+                override fun log(message: String) =
+                    message.lineSequence().forEach { linea -> println("KtorHttp => $linea") }
             }
             // Pensando en JWT (Producto U2): el token nunca se imprime.
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
