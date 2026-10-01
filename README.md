@@ -31,7 +31,7 @@ Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
 ---
 
-## Sesión 7 · Cliente Ktor y consumo GET (rama `feature/ktor-client`)
+## Conectividad REST (Sesión 7 · rama `feature/ktor-client`)
 
 El inventario de Productos ya no viene del repositorio en memoria: se obtiene del backend **PharmaSoft** con Ktor Client.
 
@@ -86,6 +86,15 @@ El backend responde con un envoltorio paginado (`PaginaResponseDTO`). Los produc
 5. JSON con campos nuevos: se ignoran.
 
 Se ejecutan con `./gradlew :shared:testAndroidHostTest`.
+
+En el emulador, cada escenario se provoca cambiando `escenario` en `PlatformModule.android.kt`:
+
+| Escenario | Valor | Lo que ve el usuario |
+|---|---|---|
+| Recurso inexistente | `RECURSO_INEXISTENTE` | "El recurso solicitado no existe (404)." |
+| Tiempo agotado | `TIEMPO_AGOTADO` | "El servidor tardo demasiado en responder." |
+| Campo desconocido | `JSON_ESTRICTO` | "La respuesta del servidor no tiene el formato esperado." |
+| Sin conexión | modo avión | "No se pudo conectar con el servidor..." |
 
 ### Evidencias
 

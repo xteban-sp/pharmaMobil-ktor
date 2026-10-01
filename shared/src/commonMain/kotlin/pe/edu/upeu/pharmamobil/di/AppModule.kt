@@ -6,6 +6,7 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
+import pe.edu.upeu.pharmamobil.data.remote.ConfiguracionApi
 import pe.edu.upeu.pharmamobil.data.remote.ProductoApi
 import pe.edu.upeu.pharmamobil.data.remote.crearHttpClient
 import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositoryImpl
@@ -22,7 +23,7 @@ import pe.edu.upeu.pharmamobil.presentation.producto.ProductoViewModel
 val dataModule = module {
     // Sesion 7: un solo HttpClient; motor y URL base los aporta platformModule.
     single { crearHttpClient(engine = get(), config = get()) }
-    single { ProductoApi(get()) }
+    single { ProductoApi(get(), get<ConfiguracionApi>().escenario) }
     // El repositorio conectado reemplaza a ProductoRepositorioEnMemoria.
     single<ProductoRepository> { ProductoRepositoryImpl(get()) }
     single<ClienteRepository> { ClienteRepositorioEnMemoria() }

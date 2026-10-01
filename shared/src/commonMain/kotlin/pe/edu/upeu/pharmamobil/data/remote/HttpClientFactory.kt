@@ -28,7 +28,8 @@ fun crearHttpClient(engine: HttpClientEngine, config: ConfiguracionApi): HttpCli
 
         install(ContentNegotiation) {
             json(Json {
-                ignoreUnknownKeys = true   // PharmaSoft manda fechas, categoria, etc. que no usamos
+                // PharmaSoft manda fechas, categoria, etc. que no usamos (escenario 5 lo desactiva)
+                ignoreUnknownKeys = config.escenario != EscenarioPrueba.JSON_ESTRICTO
                 isLenient = true
                 encodeDefaults = true
             })
@@ -49,7 +50,8 @@ fun crearHttpClient(engine: HttpClientEngine, config: ConfiguracionApi): HttpCli
         }
 
         install(HttpTimeout) {
-            requestTimeoutMillis = config.requestTimeoutMs
+            requestTimeoutMillis =
+                if (config.escenario == EscenarioPrueba.TIEMPO_AGOTADO) 1 else config.requestTimeoutMs
             connectTimeoutMillis = config.connectTimeoutMs
         }
 

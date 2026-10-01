@@ -5,6 +5,7 @@ import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ServerResponseException
+import io.ktor.serialization.ContentConvertException
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 
@@ -30,6 +31,7 @@ fun Throwable.mensajeLegible(): String = when (this) {
     is HttpRequestTimeoutException, is ConnectTimeoutException, is SocketTimeoutException ->
         "El servidor tardo demasiado en responder."
     is IOException -> "No se pudo conectar con el servidor. Revisa tu conexion o que PharmaSoft este encendido."
-    is SerializationException -> "La respuesta del servidor no tiene el formato esperado."
+    // Ktor envuelve el SerializationException en un JsonConvertException (ContentConvertException)
+    is SerializationException, is ContentConvertException -> "La respuesta del servidor no tiene el formato esperado."
     else -> message ?: "Ocurrio un error inesperado."
 }
