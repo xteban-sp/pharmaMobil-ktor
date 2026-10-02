@@ -9,10 +9,13 @@ import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
-import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositoryImpl
+import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
 import pe.edu.upeu.pharmamobil.domain.repository.ClienteRepository
 import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
+import pe.edu.upeu.pharmamobil.domain.usecase.ActualizarProductoUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarClientesUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
@@ -56,8 +59,8 @@ class AppModuleTest {
 
         val koin = grafoCompleto()
 
-        // Sesion 7: el inventario ya viene del backend via Ktor.
-        assertIs<ProductoRepositoryImpl>(koin.get<ProductoRepository>())
+        // Sesion 8: el inventario se lee y se escribe en el backend via Ktor.
+        assertIs<ProductoRepositorioRest>(koin.get<ProductoRepository>())
         assertIs<ClienteRepositorioEnMemoria>(koin.get<ClienteRepository>())
     }
 
@@ -77,12 +80,15 @@ class AppModuleTest {
     }
 
     @Test
-    fun resuelveLosCuatroCasosDeUsoConSusRepositorios() {
+    fun resuelveLosCasosDeUsoConSusRepositorios() {
 
         val koin = grafoCompleto()
 
         koin.get<RegistrarProductoUseCase>()
         koin.get<ListarProductosUseCase>()
+        koin.get<ObtenerProductoUseCase>()
+        koin.get<ActualizarProductoUseCase>()
+        koin.get<EliminarProductoUseCase>()
         koin.get<RegistrarClienteUseCase>()
         koin.get<ListarClientesUseCase>()
     }

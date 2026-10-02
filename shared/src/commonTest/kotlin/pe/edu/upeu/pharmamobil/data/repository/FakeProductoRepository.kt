@@ -1,5 +1,7 @@
 package pe.edu.upeu.pharmamobil.data.repository
 
+import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
+import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.model.Producto
 import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
 
@@ -14,6 +16,9 @@ class FakeProductoRepository(
 
     var fallaAlRegistrar: Throwable? = null
     var fallaAlListar: Throwable? = null
+    var fallaAlObtener: Throwable? = null
+    var fallaAlActualizar: Throwable? = null
+    var fallaAlEliminar: Throwable? = null
 
     private var siguienteId = 1L
 
@@ -31,5 +36,30 @@ class FakeProductoRepository(
         fallaAlListar?.let { throw it }
 
         return productos.toList()
+    }
+
+    override suspend fun obtener(id: Long): Producto {
+
+        fallaAlObtener?.let { throw it }
+
+        return productos.firstOrNull { it.id == id }
+            ?: throw ErrorApiException(ErrorApi.NoEncontrado)
+    }
+
+    override suspend fun actualizar(producto: Producto): Producto {
+
+        fallaAlActualizar?.let { throw it }
+
+        val indice = productos.indexOfFirst { it.id == producto.id }
+        if (indice < 0) throw ErrorApiException(ErrorApi.NoEncontrado)
+        productos[indice] = producto
+        return producto
+    }
+
+    override suspend fun eliminar(id: Long) {
+
+        fallaAlEliminar?.let { throw it }
+
+        if (!productos.removeAll { it.id == id }) throw ErrorApiException(ErrorApi.NoEncontrado)
     }
 }

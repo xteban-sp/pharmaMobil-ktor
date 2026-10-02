@@ -5,28 +5,42 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.TextContent
 import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.IOException
-import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositoryImpl
+import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
+import pe.edu.upeu.pharmamobil.domain.model.Producto
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 /**
- * Bitacora de pruebas de conexion (actividad autonoma, sesion 7) sin depender
- * de que PharmaSoft este encendido: MockEngine reemplaza al motor real.
+ * El repositorio REST probado sin depender de que PharmaSoft este encendido:
+ * MockEngine reemplaza al motor real y responde con los cuerpos del backend.
  */
-class ProductoRepositoryImplTest {
+class ProductoRepositorioRestTest {
 
     private val jsonHeaders = headersOf(HttpHeaders.ContentType, "application/json")
     private val config = ConfiguracionApi(urlBase = "http://10.0.2.2:8080/api/v1/")
+    private val CATEGORIA = 1L
+
+    private fun repositorioCon(engine: MockEngine) =
+        ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, config)), CATEGORIA)
 
     private fun casoDeUsoCon(engine: MockEngine) =
-        ListarProductosUseCase(ProductoRepositoryImpl(ProductoApi(crearHttpClient(engine, config))))
+        ListarProductosUseCase(repositorioCon(engine))
+
+    private val productoJson = """
+        {"id":11,"nombre":"Omeprazol 20mg","precio":4.5,"stock":40,"estado":true,
+         "categoriaId":2,"categoriaNombre":"Antibioticos",
+         "fechaCreacion":"2026-10-01T22:44:56.2","fechaModificacion":null}
+    """.trimIndent()
 
     // Forma real de PaginaResponseDTO<ProductoResponseDTO> de PharmaSoft.
     private val paginaValida = """
@@ -110,7 +124,7 @@ class ProductoRepositoryImplTest {
     fun caso5b_sinIgnoreUnknownKeys_seTraduceARespuestaInesperada() = runTest {
         val estricto = config.copy(escenario = EscenarioPrueba.JSON_ESTRICTO)
         val engine = MockEngine { respond(paginaValida, HttpStatusCode.OK, jsonHeaders) }
-        val casoDeUso = ListarProductosUseCase(ProductoRepositoryImpl(ProductoApi(crearHttpClient(engine, estricto))))
+        val casoDeUso = ListarProductosUseCase(ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, estricto)), CATEGORIA))
 
         val fallo = casoDeUso().exceptionOrNull()
 
@@ -129,5 +143,92 @@ class ProductoRepositoryImplTest {
         val productos = casoDeUsoCon(engine)().getOrThrow()
 
         assertEquals(listOf("Valido"), productos.map { it.nombre })
+    }
+
+    // ---------- Sesion 8: los otros cuatro verbos ----------
+
+    @Test
+    fun obtener_pideElRecursoPorIdYConservaLaCategoria() = runTest {
+        var metodo = ""; var url = ""
+        val engine = MockEngine { request ->
+            metodo = request.method.value; url = request.url.toString()
+            respond(productoJson, HttpStatusCode.OK, jsonHeaders)
+        }
+
+        val producto = repositorioCon(engine).obtener(11)
+
+        assertEquals("GET", metodo)
+        assertEquals("http://10.0.2.2:8080/api/v1/productos/11", url)
+        assertEquals(2L, producto.categoriaId)
+    }
+
+    @Test
+    fun registrar_enviaPostConLosCincoCamposQueExigeElBackend() = runTest {
+        var metodo = ""; var cuerpo = ""
+        val engine = MockEngine { request ->
+            metodo = request.method.value
+            cuerpo = (request.body as TextContent).text
+            respond(productoJson, HttpStatusCode.Created, jsonHeaders)
+        }
+
+        val creado = repositorioCon(engine).registrar(
+            Producto(id = 0, nombre = "Omeprazol 20mg", precio = 4.5, stock = 40)
+        )
+
+        assertEquals("POST", metodo)
+        assertEquals(
+            """{"nombre":"Omeprazol 20mg","precio":4.5,"stock":40,"estado":true,"categoriaId":1}""",
+            cuerpo
+        )
+        assertEquals(11L, creado.id)
+    }
+
+    @Test
+    fun actualizar_enviaPutAlIdYNoPisaLaCategoriaDelProducto() = runTest {
+        var metodo = ""; var url = ""; var cuerpo = ""
+        val engine = MockEngine { request ->
+            metodo = request.method.value; url = request.url.toString()
+            cuerpo = (request.body as TextContent).text
+            respond(productoJson, HttpStatusCode.OK, jsonHeaders)
+        }
+
+        repositorioCon(engine).actualizar(
+            Producto(id = 11, nombre = "Omeprazol 20mg", precio = 5.0, stock = 35, categoriaId = 2)
+        )
+
+        assertEquals("PUT", metodo)
+        assertEquals("http://10.0.2.2:8080/api/v1/productos/11", url)
+        assertTrue(cuerpo.contains(""""categoriaId":2"""), cuerpo)
+    }
+
+    @Test
+    fun eliminar_aceptaEl204SinCuerpo() = runTest {
+        var metodo = ""; var url = ""
+        val engine = MockEngine { request ->
+            metodo = request.method.value; url = request.url.toString()
+            respond("", HttpStatusCode.NoContent)
+        }
+
+        repositorioCon(engine).eliminar(11)
+
+        assertEquals("DELETE", metodo)
+        assertEquals("http://10.0.2.2:8080/api/v1/productos/11", url)
+    }
+
+    @Test
+    fun registrar_conNombreDuplicado_lanzaConflictoConElMensajeDelServidor() = runTest {
+        val engine = MockEngine {
+            respond(
+                """{"status":409,"error":"Conflict","message":"Ya existe un producto con el nombre Omeprazol 20mg",
+                    "path":"/api/v1/productos","validationErrors":null}""",
+                HttpStatusCode.Conflict, jsonHeaders
+            )
+        }
+
+        val fallo = assertFailsWith<ErrorApiException> {
+            repositorioCon(engine).registrar(Producto(id = 0, nombre = "Omeprazol 20mg", precio = 4.5, stock = 40))
+        }
+
+        assertEquals(ErrorApi.Conflicto("Ya existe un producto con el nombre Omeprazol 20mg"), fallo.error)
     }
 }
