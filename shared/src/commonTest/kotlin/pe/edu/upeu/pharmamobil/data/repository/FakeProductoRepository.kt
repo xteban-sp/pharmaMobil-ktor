@@ -27,6 +27,9 @@ class FakeProductoRepository(
      */
     var compuerta: CompletableDeferred<Unit>? = null
 
+    /** Igual que [compuerta], pero para listar: permite observar la fase Cargando. */
+    var compuertaAlListar: CompletableDeferred<Unit>? = null
+
     private var siguienteId = 1L
 
     override suspend fun registrar(producto: Producto): Producto {
@@ -41,6 +44,7 @@ class FakeProductoRepository(
 
     override suspend fun listar(): List<Producto> {
 
+        compuertaAlListar?.await()
         fallaAlListar?.let { throw it }
 
         return productos.toList()

@@ -1,6 +1,8 @@
 package pe.edu.upeu.pharmamobil.presentation.producto
 
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -377,5 +379,120 @@ class ProductoViewModelTest {
             ),
             viewModel.uiState.value.operacion
         )
+    }
+
+    // ---------- Actividad autonoma S8: transiciones pedidas en la ficha ----------
+
+    @Test
+    fun laCargaPasaDeCargandoAConProductosConLaListaEsperada() = runTest {
+
+        val repositorio = repositorioConDos()
+        val compuerta = CompletableDeferred<Unit>().also { repositorio.compuertaAlListar = it }
+
+        val viewModel = nuevoViewModel(repositorio)
+
+        // Mientras el servidor no responde, la pantalla esta en Cargando.
+        assertEquals(ProductoUiState.Fase.Cargando, viewModel.uiState.value.fase)
+
+        compuerta.complete(Unit)
+
+        assertEquals(listOf("Paracetamol", "Ibuprofeno"), viewModel.nombresEnPantalla())
+    }
+
+    @Test
+    fun elErrorDeValidacionNoCambiaLaFaseAError() = runTest {
+
+        val repositorio = repositorioConDos().apply {
+            fallaAlRegistrar = ErrorApiException(
+                ErrorApi.Validacion(
+                    mapOf(
+                        "nombre" to "El nombre debe tener entre 3 y 150 caracteres",
+                        "precio" to "El precio debe ser mayor que cero",
+                        "stock" to "El stock no puede ser negativo"
+                    )
+                )
+            )
+        }
+        val viewModel = nuevoViewModel(repositorio)
+
+        viewModel.onNombreChange("Ab")
+        viewModel.onPrecioChange("0.001")
+        viewModel.onStockChange("10")
+        viewModel.guardar()
+
+        val estado = viewModel.uiState.value
+        assertEquals("El nombre debe tener entre 3 y 150 caracteres", estado.formulario.nombreError)
+        assertEquals("El precio debe ser mayor que cero", estado.formulario.precioError)
+        assertEquals("El stock no puede ser negativo", estado.formulario.stockError)
+        assertIs<ProductoUiState.Fase.ConProductos>(estado.fase)
+        assertEquals(Operacion.Inactiva, estado.operacion)
+    }
+
+    @Test
+    fun el409AlEliminarRefrescaLaListaYMuestraElMensajeDelServidor() = runTest {
+
+        val repositorio = repositorioConDos()
+        val viewModel = nuevoViewModel(repositorio)
+
+        // Otro cliente da de baja el producto 1 mientras la app aun lo muestra como activo...
+        repositorio.actualizar(repositorio.obtener(1L).copy(activo = false))
+        // ...y el servidor rechaza la segunda eliminacion con 409.
+        repositorio.fallaAlEliminar = ErrorApiException(
+            ErrorApi.Conflicto("El producto Paracetamol ya se encuentra inactivo")
+        )
+
+        viewModel.eliminar(1L)
+
+        val estado = viewModel.uiState.value
+        assertEquals(Operacion.Fallida("El producto Paracetamol ya se encuentra inactivo"), estado.operacion)
+        // La lista se refresco: el producto paso a "De baja".
+        assertEquals(listOf("Ibuprofeno"), viewModel.nombresEnPantalla())
+        assertEquals(listOf("Paracetamol"), estado.dadosDeBaja.map { it.nombre })
+    }
+
+    @Test
+    fun el409AlEliminarNoSeConfundeConUnNombreDuplicadoDelFormulario() = runTest {
+
+        val repositorio = repositorioConDos()
+        val viewModel = nuevoViewModel(repositorio)
+
+        // El usuario tiene abierto en el formulario el mismo producto que va a eliminar.
+        viewModel.editar(1L)
+        repositorio.actualizar(repositorio.obtener(1L).copy(activo = false))
+        repositorio.fallaAlEliminar = ErrorApiException(
+            ErrorApi.Conflicto("El producto Paracetamol ya se encuentra inactivo")
+        )
+
+        viewModel.eliminar(1L)
+
+        // Aunque el nombre del formulario coincide con una baja, el aviso es el del servidor.
+        assertEquals(
+            Operacion.Fallida("El producto Paracetamol ya se encuentra inactivo"),
+            viewModel.uiState.value.operacion
+        )
+    }
+
+    @Test
+    fun siElViewModelSeCancelaDuranteUnaOperacionNoSeMuestraNingunError() = runTest {
+
+        val repositorio = repositorioConDos()
+        val viewModel = nuevoViewModel(repositorio)
+        repositorio.compuerta = CompletableDeferred()
+
+        viewModel.eliminar(1L)
+        assertEquals(
+            Operacion.EnCurso(Operacion.Tipo.Eliminar, productoId = 1L),
+            viewModel.uiState.value.operacion
+        )
+
+        // La Activity se destruye: viewModelScope se cancela con la operacion a medias.
+        viewModel.viewModelScope.cancel()
+
+        // La CancellationException se relanza: no se convierte en Operacion.Fallida
+        // ni se intenta actualizar el estado despues de la cancelacion.
+        val estado = viewModel.uiState.value
+        assertEquals(Operacion.EnCurso(Operacion.Tipo.Eliminar, productoId = 1L), estado.operacion)
+        assertNull(estado.mensajeExito)
+        assertEquals(listOf("Paracetamol", "Ibuprofeno"), viewModel.nombresEnPantalla())
     }
 }
