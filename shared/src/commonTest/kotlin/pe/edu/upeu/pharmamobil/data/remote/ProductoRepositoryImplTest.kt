@@ -118,25 +118,11 @@ class ProductoRepositoryImplTest {
     }
 
     @Test
-    fun caso2b_escenarioRecursoInexistente_pideUnIdQueNoExiste() = runTest {
-        var urlPedida = ""
-        val engine = MockEngine { request ->
-            urlPedida = request.url.toString()
-            respond("""{"status":404}""", HttpStatusCode.NotFound, jsonHeaders)
-        }
-        val api = ProductoApi(crearHttpClient(engine, config), EscenarioPrueba.RECURSO_INEXISTENTE)
-
-        val fallo = ListarProductosUseCase(ProductoRepositoryImpl(api))().exceptionOrNull()
-
-        assertTrue(urlPedida.contains("/productos/999999"), urlPedida)
-        assertTrue(fallo!!.message!!.contains("404"))
-    }
-
-    @Test
     fun registroQueRompeReglasDelDominio_seDescartaSinTumbarLaLista() = runTest {
         val json = """{"contenido":[
             {"id":1,"nombre":"Muestra gratis","precio":0,"stock":5,"estado":true},
-            {"id":2,"nombre":"Valido","precio":5,"stock":5,"estado":true}]}"""
+            {"id":2,"nombre":"Valido","precio":5,"stock":5,"estado":true}],
+            "pagina":0,"tamanio":20,"totalElementos":2,"totalPaginas":1,"ultima":true}"""
         val engine = MockEngine { respond(json, HttpStatusCode.OK, jsonHeaders) }
 
         val productos = casoDeUsoCon(engine)().getOrThrow()

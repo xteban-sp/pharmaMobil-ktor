@@ -19,7 +19,7 @@ class ProductoRepositoryImpl(
 ) : ProductoRepository {
 
     override suspend fun listar(): List<Producto> = traducirErrores {
-        api.obtenerProductos().contenido
+        api.listar().contenido
             // estado=false es un producto dado de baja (borrado logico en PharmaSoft).
             .filter { it.estado }
             // Un registro que rompe las reglas del dominio (p. ej. precio 0)

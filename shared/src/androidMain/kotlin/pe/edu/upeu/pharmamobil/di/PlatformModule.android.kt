@@ -15,7 +15,7 @@ actual val platformModule: Module = module {
     single {
         ConfiguracionApi(
             urlBase = "http://10.0.2.2:8080/api/v1/",
-            // Bitacora S7: cambiar a RECURSO_INEXISTENTE, TIEMPO_AGOTADO o JSON_ESTRICTO
+            // Bitacoras S7/S8: cambiar a TIEMPO_AGOTADO o JSON_ESTRICTO
             // para provocar cada escenario. Dejar en NINGUNO para el uso normal.
             escenario = EscenarioPrueba.NINGUNO
         )

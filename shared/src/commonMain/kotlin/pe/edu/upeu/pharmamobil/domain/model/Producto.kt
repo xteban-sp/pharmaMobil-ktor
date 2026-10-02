@@ -4,7 +4,10 @@ data class Producto(
     val id:Long,
     val nombre:String,
     val precio:Double,
-    val stock: Int
+    val stock: Int,
+    // Sesion 8: categoria que le asigna el backend. Se conserva al editar;
+    // null en un producto nuevo (el repositorio usa la categoria por defecto).
+    val categoriaId: Long? = null
 ) {
 
 
