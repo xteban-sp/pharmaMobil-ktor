@@ -74,6 +74,7 @@ jobs:
           if ! xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
                -configuration Debug -sdk iphonesimulator -arch arm64 \
                SYMROOT="$PWD/build/ios" CODE_SIGNING_ALLOWED=NO build > "$EVID/xcodebuild.log" 2>&1; then
+            set +e +o pipefail   # que un grep sin resultados no corte el reporte
             ERR=$( (grep -E "(^| )error: |^e: |What went wrong|SDK location|Exception:|> " "$EVID/xcodebuild.log" | grep -v "^note:" | head -30) | tr '\n' ' ' | cut -c1-3500)
             [ -n "$ERR" ] || ERR=$(grep -v "^ *export " "$EVID/xcodebuild.log" | tail -40 | tr '\n' ' ' | cut -c1-3500)
             echo "::error title=xcodebuild fallo::$ERR"
