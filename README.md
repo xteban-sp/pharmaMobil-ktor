@@ -91,11 +91,74 @@ En el emulador, cada escenario se provoca cambiando `escenario` en `PlatformModu
 
 | Escenario | Valor | Lo que ve el usuario |
 |---|---|---|
-| Recurso inexistente | `RECURSO_INEXISTENTE` | "El recurso solicitado no existe (404)." |
-| Tiempo agotado | `TIEMPO_AGOTADO` | "El servidor tardo demasiado en responder." |
+| Tiempo agotado | `TIEMPO_AGOTADO` | "El servidor tardó demasiado en responder." |
 | Campo desconocido | `JSON_ESTRICTO` | "La respuesta del servidor no tiene el formato esperado." |
-| Sin conexión | modo avión | "No se pudo conectar con el servidor..." |
+| Sin conexión | modo avión | "No se pudo conectar con el servidor. Revisa tu conexión." |
 
 ### Evidencias
 
 En Logcat, filtra por `KtorHttp` para ver `REQUEST: http://10.0.2.2:8080/api/v1/productos...` y `RESPONSE: 200`.
+
+---
+
+## CRUD REST completo (Sesión 8 · rama `feature/crud-productos-istana`)
+
+La pantalla de Productos ya hace las cuatro operaciones contra PharmaSoft: listar, registrar, editar y eliminar.
+
+### Endpoints consumidos
+
+| Operación en la app | Método y ruta | Éxito | Errores que se manejan |
+|---|---|---|---|
+| Cargar inventario | `GET /api/v1/productos?pagina=0&tamanio=20` | 200 (página) | sin conexión, timeout, 5xx |
+| Abrir un producto para editar | `GET /api/v1/productos/{id}` | 200 | 404 |
+| Registrar | `POST /api/v1/productos` | 201 | 400, 409 |
+| Guardar cambios | `PUT /api/v1/productos/{id}` | 200 | 400, 404, 409 |
+| Eliminar | `DELETE /api/v1/productos/{id}` | 204 sin cuerpo | 404 |
+
+El `DELETE` de PharmaSoft es una baja lógica (`estado = false`): el producto deja de listarse, pero su nombre sigue ocupado y registrar otro igual devuelve 409.
+
+### Capas
+
+- `data/remote/dto`: `ProductoRequestDto`, `ProductoResponseDto`, `PaginaResponseDto<T>` y `ErrorResponseDto`.
+- `data/remote/ProductoApi.kt`: `listar`, `obtener`, `crear`, `actualizar` y `eliminar` (este último no llama a `body()`).
+- `data/remote/EjecutarLlamada.kt`: **único punto** donde las excepciones de Ktor se traducen a `ErrorApi`.
+- `domain/error/ErrorApi.kt`: `Validacion`, `NoEncontrado`, `Conflicto`, `NoAutorizado`, `Servidor`, `SinConexion`, `TiempoAgotado` y `RespuestaInesperada`.
+- `data/repository/ProductoRepositorioRest.kt`: implementa las cinco operaciones de `ProductoRepository`. El repositorio en memoria se conserva para pruebas.
+- `domain/usecase`: `Listar`, `Obtener`, `Registrar`, `Actualizar` y `EliminarProductoUseCase`; todos devuelven `Result`.
+- `presentation`: ninguna clase importa `io.ktor`. `mensajeDe(ErrorApi)` convierte el error en el texto que ve el usuario.
+
+### Estados de la interfaz
+
+`ProductoUiState` separa dos cosas:
+
+- `fase` (`Cargando`, `SinProductos`, `ConProductos`, `Error`): el estado de la pantalla completa.
+- `operacion` (`Inactiva`, `EnCurso(tipo, productoId)`, `Fallida(mensaje)`): el estado de la acción del usuario.
+
+Al guardar o eliminar, la lista sigue visible: solo se deshabilitan los botones y la fila afectada muestra progreso. Tras cada cambio se vuelve a pedir el listado, sin pasar por `Cargando`.
+
+### Errores
+
+| Respuesta | `ErrorApi` | Qué ve el usuario |
+|---|---|---|
+| 400 con `validationErrors` | `Validacion` | El mensaje del servidor debajo del campo (nombre, precio o stock) |
+| 404 | `NoEncontrado` | Aviso "El producto ya no existe en el servidor." y la lista se refresca |
+| 409 | `Conflicto` | El mensaje del servidor (p. ej. nombre duplicado) |
+| 5xx | `Servidor` | "El servidor tuvo un problema. Intenta de nuevo en un momento." |
+| Sin red | `SinConexion` | "No se pudo conectar con el servidor. Revisa tu conexión." |
+| Timeout | `TiempoAgotado` | "El servidor tardó demasiado en responder." |
+| JSON inesperado | `RespuestaInesperada` | "La respuesta del servidor no tiene el formato esperado." |
+
+Para ver el 400 bajo el campo: registrar un producto con un nombre de dos caracteres.
+
+### Categoría
+
+El backend exige `categoriaId` y el formulario aún no lo pide. Al crear se envía `CATEGORIA_POR_DEFECTO` (id 1, en `di/AppModule.kt`); al editar se conserva la categoría que ya tenía el producto.
+
+### Pruebas
+
+`./gradlew :shared:testAndroidHostTest`
+
+- `EjecutarLlamadaTest`: traducción de 400, 401/403, 404, 409, 500 y cancelación.
+- `ProductoRepositorioRestTest`: los cinco verbos con `MockEngine` (método, URL, cuerpo enviado y 204 sin cuerpo).
+- `CrudProductoUseCasesTest`: obtener, actualizar y eliminar.
+- `ProductoViewModelTest`: transiciones de `operacion` (en curso, fallida, validación bajo el campo, 404 con refresco).
