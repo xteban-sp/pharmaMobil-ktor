@@ -3,6 +3,7 @@ package pe.edu.upeu.pharmamobil.data.remote
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -10,9 +11,13 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
+
+private const val RETARDO_RESPUESTA_LENTA_MS = 8_000L
 
 /**
  * Unico punto donde se configura el cliente HTTP. Es comun a Android e iOS:
@@ -53,6 +58,16 @@ fun crearHttpClient(engine: HttpClientEngine, config: ConfiguracionApi): HttpCli
             requestTimeoutMillis =
                 if (config.escenario == EscenarioPrueba.TIEMPO_AGOTADO) 1 else config.requestTimeoutMs
             connectTimeoutMillis = config.connectTimeoutMs
+        }
+
+        // Bitacora S8, escenario de cancelacion: retrasa las operaciones de escritura
+        // para poder salir de la pantalla mientras estan en curso.
+        if (config.escenario == EscenarioPrueba.RESPUESTA_LENTA) {
+            install(createClientPlugin("RespuestaLenta") {
+                onRequest { request, _ ->
+                    if (request.method != HttpMethod.Get) delay(RETARDO_RESPUESTA_LENTA_MS)
+                }
+            })
         }
 
         defaultRequest {

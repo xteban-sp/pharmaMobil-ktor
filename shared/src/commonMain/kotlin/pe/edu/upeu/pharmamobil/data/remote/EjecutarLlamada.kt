@@ -23,7 +23,10 @@ suspend fun <T> ejecutarLlamada(bloque: suspend () -> T): Result<T> =
     try {
         Result.success(bloque())
     } catch (cancelacion: CancellationException) {
-        throw cancelacion                                   // nunca se atrapa: evita corrutinas zombis
+        // Nunca se convierte en Result.failure: se deja constancia en el log y se
+        // relanza, para que la corrutina termine y no actualice un estado que ya no existe.
+        println("KtorHttp => llamada cancelada: se relanza CancellationException")
+        throw cancelacion
     } catch (e: ClientRequestException) {                   // 4xx
         Result.failure(ErrorApiException(traducirCliente(e)))
     } catch (e: ServerResponseException) {                  // 5xx

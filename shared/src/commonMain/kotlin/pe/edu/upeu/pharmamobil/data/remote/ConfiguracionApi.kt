@@ -24,5 +24,7 @@ enum class EscenarioPrueba {
     /** requestTimeoutMillis = 1 ms: HttpRequestTimeoutException. */
     TIEMPO_AGOTADO,
     /** ignoreUnknownKeys = false: los campos extra de PharmaSoft provocan SerializationException. */
-    JSON_ESTRICTO
+    JSON_ESTRICTO,
+    /** Crear, actualizar y eliminar tardan 8 s: da tiempo a salir de la pantalla (escenario de cancelacion). */
+    RESPUESTA_LENTA
 }
