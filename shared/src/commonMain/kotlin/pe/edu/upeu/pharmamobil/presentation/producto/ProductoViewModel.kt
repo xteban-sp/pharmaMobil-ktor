@@ -276,6 +276,10 @@ class ProductoViewModel(
 
         val error = (fallo as? ErrorApiException)?.error
 
+        // Solo crear y actualizar envian el nombre del formulario al servidor.
+        val tipo = (_uiState.value.operacion as? Operacion.EnCurso)?.tipo
+        val enviaElFormulario = tipo == Tipo.Crear || tipo == Tipo.Actualizar
+
         when {
             // 400 del servidor: las claves de validationErrors son los campos del formulario.
             error is ErrorApi.Validacion && error.porCampo.keys.any { it in CAMPOS_DEL_FORMULARIO } ->
@@ -302,15 +306,24 @@ class ProductoViewModel(
                 }
             }
 
-            // 409 al guardar con el nombre de un producto dado de baja: en vez del
-            // mensaje generico del servidor, se indica la salida (reactivarlo).
-            error is ErrorApi.Conflicto && nombreCoincideConUnaBaja() -> _uiState.update {
-                it.copy(
-                    operacion = Operacion.Fallida(
-                        "Ya existe un producto dado de baja con ese nombre. " +
-                            "Reactívalo desde \"De baja\"."
+            // 409: una regla de negocio impide la operacion. Suele indicar que la lista
+            // quedo desactualizada (p. ej. eliminar un producto que otro usuario ya dio
+            // de baja), asi que se refresca antes de avisar.
+            error is ErrorApi.Conflicto -> {
+                refrescarInventario()
+                _uiState.update {
+                    it.copy(
+                        operacion = Operacion.Fallida(
+                            // Si el nombre pertenece a un producto dado de baja, se indica la salida.
+                            if (enviaElFormulario && nombreCoincideConUnaBaja()) {
+                                "Ya existe un producto dado de baja con ese nombre. " +
+                                    "Reactívalo desde \"De baja\"."
+                            } else {
+                                mensajeDe(fallo)
+                            }
+                        )
                     )
-                )
+                }
             }
 
             else -> _uiState.update {
