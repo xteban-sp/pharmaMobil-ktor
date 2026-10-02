@@ -11,7 +11,7 @@ import pe.edu.upeu.pharmamobil.domain.model.Producto
  */
 interface ProductoRepository {
 
-    /** Entrega el inventario vigente (sin los productos dados de baja). */
+    /** Entrega todos los productos, incluidos los dados de baja (activo = false). */
     suspend fun listar(): List<Producto>
 
     /** Trae un producto por su id; falla con NoEncontrado si ya no existe. */
@@ -23,6 +23,6 @@ interface ProductoRepository {
     /** Reemplaza los datos del producto con ese id y devuelve la version guardada. */
     suspend fun actualizar(producto: Producto): Producto
 
-    /** Da de baja el producto con ese id. */
+    /** Da de baja el producto con ese id (se reactiva actualizandolo con activo = true). */
     suspend fun eliminar(id: Long)
 }

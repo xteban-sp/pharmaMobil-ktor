@@ -7,12 +7,19 @@ package pe.edu.upeu.pharmamobil.presentation.producto
  *  - [fase]: el estado de la pantalla completa (la consulta del inventario).
  *  - [operacion]: el estado de la accion del usuario (crear, actualizar, eliminar).
  * Asi, al guardar o eliminar, el listado sigue visible y no vuelve a Cargando.
+ *
+ * La fase describe el inventario ACTIVO; los dados de baja van aparte en
+ * [dadosDeBaja] para poder reactivarlos.
  */
 data class ProductoUiState(
     val fase: Fase = Fase.Cargando,
     val formulario: FormularioProducto = FormularioProducto(),
     val operacion: Operacion = Operacion.Inactiva,
-    val mensajeExito: String? = null
+    val mensajeExito: String? = null,
+    /** Productos dados de baja (eliminados): se pueden reactivar. */
+    val dadosDeBaja: List<ProductoUi> = emptyList(),
+    /** true cuando el usuario mira la lista de dados de baja en vez del inventario activo. */
+    val viendoBajas: Boolean = false
 ) {
 
     /** true mientras hay una operacion contra el servidor: los botones se deshabilitan. */
@@ -42,7 +49,7 @@ data class ProductoUiState(
         /** La operacion fallo: se avisa sin perder la lista. */
         data class Fallida(val mensaje: String) : Operacion
 
-        enum class Tipo { Crear, Actualizar, Eliminar }
+        enum class Tipo { Crear, Actualizar, Eliminar, Reactivar }
     }
 }
 

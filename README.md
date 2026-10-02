@@ -115,7 +115,17 @@ La pantalla de Productos ya hace las cuatro operaciones contra PharmaSoft: lista
 | Guardar cambios | `PUT /api/v1/productos/{id}` | 200 | 400, 404, 409 |
 | Eliminar | `DELETE /api/v1/productos/{id}` | 204 sin cuerpo | 404 |
 
-El `DELETE` de PharmaSoft es una baja lógica (`estado = false`): el producto deja de listarse, pero su nombre sigue ocupado y registrar otro igual devuelve 409.
+El `DELETE` de PharmaSoft es una baja lógica (`estado = false`): el producto sale del inventario activo, pero su nombre sigue ocupado y registrar otro igual devuelve 409.
+
+### Productos dados de baja
+
+El listado del backend incluye los productos con `estado = false`. La app los separa del inventario activo:
+
+- El filtro **Activos / De baja** del encabezado alterna entre las dos listas.
+- En "De baja", el botón **Reactivar** trae el producto (`GET /productos/{id}`) y lo actualiza con `estado = true` (`PUT /productos/{id}`). Conserva su nombre, precio, stock y categoría.
+- Si se intenta registrar un producto con el nombre de uno dado de baja, el 409 se muestra como "Ya existe un producto dado de baja con ese nombre. Reactívalo desde "De baja"."
+
+`ReactivarProductoUseCase` reutiliza las operaciones `obtener` y `actualizar` del repositorio: el contrato sigue teniendo cinco operaciones.
 
 ### Capas
 
@@ -124,7 +134,7 @@ El `DELETE` de PharmaSoft es una baja lógica (`estado = false`): el producto de
 - `data/remote/EjecutarLlamada.kt`: **único punto** donde las excepciones de Ktor se traducen a `ErrorApi`.
 - `domain/error/ErrorApi.kt`: `Validacion`, `NoEncontrado`, `Conflicto`, `NoAutorizado`, `Servidor`, `SinConexion`, `TiempoAgotado` y `RespuestaInesperada`.
 - `data/repository/ProductoRepositorioRest.kt`: implementa las cinco operaciones de `ProductoRepository`. El repositorio en memoria se conserva para pruebas.
-- `domain/usecase`: `Listar`, `Obtener`, `Registrar`, `Actualizar` y `EliminarProductoUseCase`; todos devuelven `Result`.
+- `domain/usecase`: `Listar`, `Obtener`, `Registrar`, `Actualizar`, `Eliminar` y `ReactivarProductoUseCase`; todos devuelven `Result`.
 - `presentation`: ninguna clase importa `io.ktor`. `mensajeDe(ErrorApi)` convierte el error en el texto que ve el usuario.
 
 ### Estados de la interfaz

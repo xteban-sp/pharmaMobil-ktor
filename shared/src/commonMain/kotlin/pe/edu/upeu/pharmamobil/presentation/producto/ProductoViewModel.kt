@@ -15,6 +15,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ProductoInvalidoException
+import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import pe.edu.upeu.pharmamobil.presentation.error.mensajeDe
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Fase
@@ -31,7 +32,8 @@ class ProductoViewModel(
     private val obtenerProducto: ObtenerProductoUseCase,
     private val registrarProducto: RegistrarProductoUseCase,
     private val actualizarProducto: ActualizarProductoUseCase,
-    private val eliminarProducto: EliminarProductoUseCase
+    private val eliminarProducto: EliminarProductoUseCase,
+    private val reactivarProducto: ReactivarProductoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductoUiState())
@@ -48,11 +50,12 @@ class ProductoViewModel(
     fun cargarProductos() {
         viewModelScope.launch {
             _uiState.update { it.copy(fase = Fase.Cargando) }
-            val fase = listarProductos().fold(
-                onSuccess = ::faseDe,
-                onFailure = { fallo -> Fase.Error(mensajeDe(fallo)) }
+            listarProductos().fold(
+                onSuccess = ::mostrarInventario,
+                onFailure = { fallo ->
+                    _uiState.update { it.copy(fase = Fase.Error(mensajeDe(fallo))) }
+                }
             )
-            _uiState.update { it.copy(fase = fase) }
         }
     }
 
@@ -191,6 +194,39 @@ class ProductoViewModel(
         }
     }
 
+    /** Vuelve a activar un producto dado de baja (PUT con estado = true). */
+    fun reactivar(id: Long) {
+
+        if (_uiState.value.operando) return
+
+        viewModelScope.launch {
+
+            _uiState.update {
+                it.copy(operacion = Operacion.EnCurso(Tipo.Reactivar, id), mensajeExito = null)
+            }
+
+            reactivarProducto(id).fold(
+                onSuccess = { producto ->
+                    refrescarInventario()
+                    _uiState.update {
+                        it.copy(
+                            operacion = Operacion.Inactiva,
+                            mensajeExito = "Producto \"${producto.nombre}\" reactivado",
+                            // Si ya no queda ninguno de baja, se regresa al inventario activo.
+                            viendoBajas = it.viendoBajas && it.dadosDeBaja.isNotEmpty()
+                        )
+                    }
+                },
+                onFailure = { fallo -> manejarFallo(fallo) }
+            )
+        }
+    }
+
+    /** Alterna entre el inventario activo y la lista de dados de baja. */
+    fun verDadosDeBaja(ver: Boolean) {
+        _uiState.update { it.copy(viendoBajas = ver, mensajeExito = null) }
+    }
+
     /** Cierra el aviso de una operacion fallida. */
     fun descartarError() {
         _uiState.update {
@@ -204,14 +240,22 @@ class ProductoViewModel(
      * Si la recarga falla, se conserva la lista que ya estaba.
      */
     private suspend fun refrescarInventario() {
-        listarProductos().onSuccess { productos ->
-            _uiState.update { it.copy(fase = faseDe(productos)) }
-        }
+        listarProductos().onSuccess(::mostrarInventario)
     }
 
-    private fun faseDe(productos: List<Producto>): Fase =
-        if (productos.isEmpty()) Fase.SinProductos
-        else Fase.ConProductos(productos.map { it.aUi() })
+    /** Separa lo que llega del servidor: activos a la fase, dados de baja a su propia lista. */
+    private fun mostrarInventario(productos: List<Producto>) {
+
+        val (activos, bajas) = productos.partition { it.activo }
+
+        _uiState.update {
+            it.copy(
+                fase = if (activos.isEmpty()) Fase.SinProductos
+                       else Fase.ConProductos(activos.map { p -> p.aUi() }),
+                dadosDeBaja = bajas.map { p -> p.aUi() }
+            )
+        }
+    }
 
     private suspend fun manejarFallo(fallo: Throwable) {
 
@@ -258,10 +302,27 @@ class ProductoViewModel(
                 }
             }
 
+            // 409 al guardar con el nombre de un producto dado de baja: en vez del
+            // mensaje generico del servidor, se indica la salida (reactivarlo).
+            error is ErrorApi.Conflicto && nombreCoincideConUnaBaja() -> _uiState.update {
+                it.copy(
+                    operacion = Operacion.Fallida(
+                        "Ya existe un producto dado de baja con ese nombre. " +
+                            "Reactívalo desde \"De baja\"."
+                    )
+                )
+            }
+
             else -> _uiState.update {
                 it.copy(operacion = Operacion.Fallida(mensajeDe(fallo)))
             }
         }
+    }
+
+    private fun nombreCoincideConUnaBaja(): Boolean {
+        val estado = _uiState.value
+        val nombre = estado.formulario.nombre.trim()
+        return nombre.isNotEmpty() && estado.dadosDeBaja.any { it.nombre.equals(nombre, ignoreCase = true) }
     }
 
     private companion object {

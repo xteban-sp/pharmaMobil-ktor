@@ -10,7 +10,8 @@ fun ProductoResponseDto.toDomain(): Producto = Producto(
     nombre = nombre.trim(),
     precio = precio,
     stock = stock,
-    categoriaId = categoriaId
+    categoriaId = categoriaId,
+    activo = estado
 )
 
 /**
@@ -22,6 +23,6 @@ fun Producto.toRequest(categoriaPorDefecto: Long): ProductoRequestDto = Producto
     nombre = nombre,
     precio = precio,
     stock = stock,
-    estado = true,
+    estado = activo,
     categoriaId = categoriaId ?: categoriaPorDefecto
 )

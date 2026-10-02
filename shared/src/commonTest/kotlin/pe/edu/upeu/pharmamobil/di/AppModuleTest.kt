@@ -17,6 +17,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarClientesUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import pe.edu.upeu.pharmamobil.presentation.cliente.ClienteViewModel
@@ -89,6 +90,7 @@ class AppModuleTest {
         koin.get<ObtenerProductoUseCase>()
         koin.get<ActualizarProductoUseCase>()
         koin.get<EliminarProductoUseCase>()
+        koin.get<ReactivarProductoUseCase>()
         koin.get<RegistrarClienteUseCase>()
         koin.get<ListarClientesUseCase>()
     }

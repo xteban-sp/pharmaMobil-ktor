@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.Medication
@@ -20,6 +21,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -94,7 +97,12 @@ fun ProductoScreen(
             MensajeExito(it)
         }
 
-        EncabezadoInventario(uiState.fase)
+        EncabezadoInventario(
+            fase = uiState.fase,
+            cantidadDeBaja = uiState.dadosDeBaja.size,
+            viendoBajas = uiState.viendoBajas,
+            onVerBajas = viewModel::verDadosDeBaja
+        )
 
         Box(
             modifier = Modifier
@@ -113,21 +121,39 @@ fun ProductoScreen(
                     )
 
                 Fase.SinProductos ->
-                    EstadoVacio(
-                        icono = Icons.Default.Inventory2,
-                        titulo = "Todavía no hay productos",
-                        descripcion = "Registra el primero con el formulario de arriba.",
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    if (uiState.viendoBajas) {
+                        ListaDadosDeBaja(
+                            productos = uiState.dadosDeBaja,
+                            operacion = uiState.operacion,
+                            onReactivar = viewModel::reactivar,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    } else {
+                        EstadoVacio(
+                            icono = Icons.Default.Inventory2,
+                            titulo = "Todavía no hay productos",
+                            descripcion = "Registra el primero con el formulario de arriba.",
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
 
                 is Fase.ConProductos ->
-                    ListaProductos(
-                        productos = fase.productos,
-                        operacion = uiState.operacion,
-                        editandoId = uiState.formulario.editandoId,
-                        onEditar = viewModel::editar,
-                        onEliminar = { porEliminar = it }
-                    )
+                    if (uiState.viendoBajas) {
+                        ListaDadosDeBaja(
+                            productos = uiState.dadosDeBaja,
+                            operacion = uiState.operacion,
+                            onReactivar = viewModel::reactivar,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    } else {
+                        ListaProductos(
+                            productos = fase.productos,
+                            operacion = uiState.operacion,
+                            editandoId = uiState.formulario.editandoId,
+                            onEditar = viewModel::editar,
+                            onEliminar = { porEliminar = it }
+                        )
+                    }
 
                 is Fase.Error ->
                     EstadoError(
@@ -266,12 +292,18 @@ private fun FormularioProductoCard(
 
 @Composable
 private fun EncabezadoInventario(
-    fase: Fase
+    fase: Fase,
+    cantidadDeBaja: Int,
+    viendoBajas: Boolean,
+    onVerBajas: (Boolean) -> Unit
 ) {
+
+    val cantidadActivos = (fase as? Fase.ConProductos)?.productos?.size ?: 0
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
         Text(
@@ -280,16 +312,18 @@ private fun EncabezadoInventario(
             modifier = Modifier.weight(1f)
         )
 
-        if (fase is Fase.ConProductos) {
+        // El filtro separa el inventario activo de los productos dados de baja.
+        FilterChip(
+            selected = !viendoBajas,
+            onClick = { onVerBajas(false) },
+            label = { Text("Activos · $cantidadActivos") }
+        )
 
-            val cantidad = fase.productos.size
-
-            Text(
-                text = if (cantidad == 1) "1 producto" else "$cantidad productos",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+        FilterChip(
+            selected = viendoBajas,
+            onClick = { onVerBajas(true) },
+            label = { Text("De baja · $cantidadDeBaja") }
+        )
     }
 }
 
@@ -432,6 +466,105 @@ private fun ProductoItem(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Eliminar ${producto.nombre}"
                         )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun ListaDadosDeBaja(
+    productos: List<ProductoUi>,
+    operacion: Operacion,
+    onReactivar: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    if (productos.isEmpty()) {
+        EstadoVacio(
+            icono = Icons.Default.DeleteOutline,
+            titulo = "No hay productos dados de baja",
+            descripcion = "Los productos que elimines aparecerán aquí y podrás reactivarlos.",
+            modifier = modifier
+        )
+        return
+    }
+
+    val enCurso = operacion as? Operacion.EnCurso
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(
+            items = productos,
+            key = { it.id }
+        ) { producto ->
+
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+
+                Row(
+                    modifier = Modifier.padding(start = 12.dp, top = 6.dp, bottom = 6.dp, end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Default.Medication,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .size(20.dp)
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+
+                        Text(
+                            text = producto.nombre,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        Text(
+                            text = "Dado de baja  ·  ${producto.precio}  ·  ${producto.stock}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    if (enCurso?.productoId == producto.id) {
+
+                        Box(
+                            modifier = Modifier.size(96.dp, 48.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(22.dp),
+                                strokeWidth = 2.dp
+                            )
+                        }
+
+                    } else {
+
+                        FilledTonalButton(
+                            onClick = { onReactivar(producto.id) },
+                            enabled = enCurso == null
+                        ) {
+                            Text("Reactivar")
+                        }
                     }
                 }
             }

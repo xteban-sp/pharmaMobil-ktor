@@ -63,6 +63,18 @@ class CrudProductoUseCasesTest {
     }
 
     @Test
+    fun reactivarVuelveAActivarConservandoSusDatos() = runTest {
+
+        val dadoDeBaja = paracetamol.copy(activo = false)
+        val repositorio = FakeProductoRepository(mutableListOf(dadoDeBaja))
+
+        val reactivado = ReactivarProductoUseCase(repositorio).invoke(1L).getOrThrow()
+
+        assertEquals(paracetamol, reactivado)
+        assertTrue(repositorio.listar().single().activo)
+    }
+
+    @Test
     fun eliminarQuitaElProductoDelInventario() = runTest {
 
         val repositorio = repositorioConUno()

@@ -17,6 +17,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
@@ -64,14 +65,16 @@ class ProductoRepositorioRestTest {
 
         val productos = casoDeUsoCon(engine)().getOrThrow()
 
-        // El inactivo (estado=false) no se muestra.
-        assertEquals(1, productos.size)
+        assertEquals(2, productos.size)
         with(productos.first()) {
             assertEquals(1L, id)
             assertEquals("Paracetamol 500mg", nombre)
             assertEquals(3.50, precio)
             assertEquals(120, stock)
+            assertTrue(activo)
         }
+        // estado=false llega como producto dado de baja: la pantalla lo separa para reactivarlo.
+        assertFalse(productos.last().activo)
         assertEquals("http://10.0.2.2:8080/api/v1/productos?pagina=0&tamanio=20", urlPedida)
     }
 
@@ -199,6 +202,20 @@ class ProductoRepositorioRestTest {
         assertEquals("PUT", metodo)
         assertEquals("http://10.0.2.2:8080/api/v1/productos/11", url)
         assertTrue(cuerpo.contains(""""categoriaId":2"""), cuerpo)
+    }
+
+    @Test
+    fun actualizar_conActivoTrue_enviaEstadoTrueParaReactivar() = runTest {
+        var cuerpo = ""
+        val engine = MockEngine { request ->
+            cuerpo = (request.body as TextContent).text
+            respond(productoJson, HttpStatusCode.OK, jsonHeaders)
+        }
+        val dadoDeBaja = Producto(id = 11, nombre = "Omeprazol 20mg", precio = 4.5, stock = 40, categoriaId = 2, activo = false)
+
+        repositorioCon(engine).actualizar(dadoDeBaja.copy(activo = true))
+
+        assertTrue(cuerpo.contains(""""estado":true"""), cuerpo)
     }
 
     @Test

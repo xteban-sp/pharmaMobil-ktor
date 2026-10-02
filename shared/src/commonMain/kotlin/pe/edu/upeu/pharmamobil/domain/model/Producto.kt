@@ -7,7 +7,10 @@ data class Producto(
     val stock: Int,
     // Sesion 8: categoria que le asigna el backend. Se conserva al editar;
     // null en un producto nuevo (el repositorio usa la categoria por defecto).
-    val categoriaId: Long? = null
+    val categoriaId: Long? = null,
+    // false = dado de baja. PharmaSoft no borra productos: los desactiva para
+    // que sigan en ventas y reportes. Un producto dado de baja se puede reactivar.
+    val activo: Boolean = true
 ) {
 
 

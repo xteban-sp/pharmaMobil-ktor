@@ -22,9 +22,9 @@ class ProductoRepositorioRest(
 ) : ProductoRepository {
 
     override suspend fun listar(): List<Producto> = ejecutarLlamada {
+        // Incluye los dados de baja (activo = false): la pantalla los separa
+        // para poder reactivarlos. El DELETE de PharmaSoft es logico.
         api.listar().contenido
-            // estado=false es un producto dado de baja (el DELETE de PharmaSoft es logico).
-            .filter { it.estado }
             // Un registro que rompe las reglas del dominio (p. ej. precio 0)
             // se descarta en vez de tumbar toda la lista.
             .mapNotNull { dto -> runCatching { dto.toDomain() }.getOrNull() }

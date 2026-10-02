@@ -16,6 +16,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ActualizarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -49,7 +50,8 @@ class ProductoViewModelTest {
         obtenerProducto = ObtenerProductoUseCase(repositorio),
         registrarProducto = RegistrarProductoUseCase(repositorio),
         actualizarProducto = ActualizarProductoUseCase(repositorio),
-        eliminarProducto = EliminarProductoUseCase(repositorio)
+        eliminarProducto = EliminarProductoUseCase(repositorio),
+        reactivarProducto = ReactivarProductoUseCase(repositorio)
     )
 
     private fun repositorioConDos() = FakeProductoRepository(
@@ -317,5 +319,63 @@ class ProductoViewModelTest {
         viewModel.cancelarEdicion()
 
         assertEquals(FormularioProducto(), viewModel.uiState.value.formulario)
+    }
+
+    // ---------- Productos dados de baja ----------
+
+    private fun repositorioConUnaBaja() = FakeProductoRepository(
+        mutableListOf(
+            Producto(id = 1L, nombre = "Paracetamol", precio = 12.5, stock = 50, categoriaId = 2, activo = false),
+            Producto(id = 2L, nombre = "Ibuprofeno", precio = 5.2, stock = 80, categoriaId = 1)
+        )
+    )
+
+    @Test
+    fun elInventarioSeparaLosActivosDeLosDadosDeBaja() = runTest {
+
+        val viewModel = nuevoViewModel(repositorioConUnaBaja())
+
+        assertEquals(listOf("Ibuprofeno"), viewModel.nombresEnPantalla())
+        assertEquals(listOf("Paracetamol"), viewModel.uiState.value.dadosDeBaja.map { it.nombre })
+    }
+
+    @Test
+    fun reactivarDevuelveElProductoAlInventarioActivo() = runTest {
+
+        val viewModel = nuevoViewModel(repositorioConUnaBaja())
+
+        viewModel.verDadosDeBaja(true)
+        viewModel.reactivar(1L)
+
+        val estado = viewModel.uiState.value
+        assertEquals(Operacion.Inactiva, estado.operacion)
+        assertEquals(listOf("Paracetamol", "Ibuprofeno"), viewModel.nombresEnPantalla())
+        assertTrue(estado.dadosDeBaja.isEmpty())
+        assertEquals("Producto \"Paracetamol\" reactivado", estado.mensajeExito)
+        // Sin mas productos de baja, la pantalla regresa al inventario activo.
+        assertEquals(false, estado.viendoBajas)
+    }
+
+    @Test
+    fun el409PorUnNombreDadoDeBajaSugiereReactivarlo() = runTest {
+
+        val repositorio = repositorioConUnaBaja().apply {
+            fallaAlRegistrar = ErrorApiException(
+                ErrorApi.Conflicto("Ya existe un producto con el nombre Paracetamol")
+            )
+        }
+        val viewModel = nuevoViewModel(repositorio)
+
+        viewModel.onNombreChange("paracetamol")
+        viewModel.onPrecioChange("4.50")
+        viewModel.onStockChange("10")
+        viewModel.guardar()
+
+        assertEquals(
+            Operacion.Fallida(
+                "Ya existe un producto dado de baja con ese nombre. Reactívalo desde \"De baja\"."
+            ),
+            viewModel.uiState.value.operacion
+        )
     }
 }
