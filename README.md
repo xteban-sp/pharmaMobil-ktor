@@ -113,7 +113,7 @@ La pantalla de Productos ya hace las cuatro operaciones contra PharmaSoft: lista
 | Abrir un producto para editar | `GET /api/v1/productos/{id}` | 200 | 404 |
 | Registrar | `POST /api/v1/productos` | 201 | 400, 409 |
 | Guardar cambios | `PUT /api/v1/productos/{id}` | 200 | 400, 404, 409 |
-| Eliminar | `DELETE /api/v1/productos/{id}` | 204 sin cuerpo | 404 |
+| Eliminar | `DELETE /api/v1/productos/{id}` | 204 sin cuerpo | 404, 409 |
 
 El `DELETE` de PharmaSoft es una baja lógica (`estado = false`): el producto sale del inventario activo, pero su nombre sigue ocupado y registrar otro igual devuelve 409.
 
@@ -146,19 +146,42 @@ El listado del backend incluye los productos con `estado = false`. La app los se
 
 Al guardar o eliminar, la lista sigue visible: solo se deshabilitan los botones y la fila afectada muestra progreso. Tras cada cambio se vuelve a pedir el listado, sin pasar por `Cargando`.
 
-### Errores
+### Manejo de errores
 
-| Respuesta | `ErrorApi` | Qué ve el usuario |
-|---|---|---|
-| 400 con `validationErrors` | `Validacion` | El mensaje del servidor debajo del campo (nombre, precio o stock) |
-| 404 | `NoEncontrado` | Aviso "El producto ya no existe en el servidor." y la lista se refresca |
-| 409 | `Conflicto` | El mensaje del servidor (p. ej. nombre duplicado) |
-| 5xx | `Servidor` | "El servidor tuvo un problema. Intenta de nuevo en un momento." |
-| Sin red | `SinConexion` | "No se pudo conectar con el servidor. Revisa tu conexión." |
-| Timeout | `TiempoAgotado` | "El servidor tardó demasiado en responder." |
-| JSON inesperado | `RespuestaInesperada` | "La respuesta del servidor no tiene el formato esperado." |
+Las excepciones de Ktor se traducen en un único punto (`ejecutarLlamada`) a un `ErrorApi` del dominio. La presentación no conoce códigos HTTP: recibe el `ErrorApi` y decide dónde mostrarlo.
 
-Para ver el 400 bajo el campo: registrar un producto con un nombre de dos caracteres.
+| Respuesta | `ErrorApi` | Qué ve el usuario | Dónde |
+|---|---|---|---|
+| 400 con `validationErrors` | `Validacion(porCampo)` | El mensaje del servidor | Debajo del campo (nombre, precio o stock) |
+| 404 | `NoEncontrado` | "El producto ya no existe en el servidor." | Aviso sobre la lista, que se refresca |
+| 409 | `Conflicto(mensaje)` | El mensaje del servidor (nombre duplicado, producto ya inactivo) | Aviso sobre la lista, que se refresca |
+| 401 / 403 | `NoAutorizado` | "No tienes permiso para realizar esta operación." | Aviso |
+| 5xx | `Servidor` | "El servidor tuvo un problema. Intenta de nuevo en un momento." | Aviso |
+| Sin red o servidor apagado | `SinConexion` | "No se pudo conectar con el servidor. Revisa tu conexión." | Aviso (o pantalla de error con Reintentar si falla la carga inicial) |
+| Timeout | `TiempoAgotado` | "El servidor tardó demasiado en responder." | Igual que el anterior |
+| JSON inesperado | `RespuestaInesperada` | "La respuesta del servidor no tiene el formato esperado." | Igual que el anterior |
+
+Reglas que sigue la pantalla:
+
+- Un error de una **operación** (crear, actualizar, eliminar, reactivar) va a `operacion = Fallida(mensaje)`: la lista sigue visible. Solo el fallo de la **carga inicial** cambia `fase` a `Error`.
+- La validación local (nombre vacío, precio ≤ 0, stock negativo) se resuelve en el caso de uso y no llega a hacer la petición.
+- En 404 y 409 la lista que tenía la app estaba desactualizada, así que se vuelve a pedir el listado.
+- `CancellationException` nunca se convierte en `ErrorApi`: `ejecutarLlamada` la relanza y no se muestra ningún mensaje.
+
+Comportamientos de PharmaSoft verificados contra el backend (bitácora de la actividad autónoma 08):
+
+- Repetir un `DELETE` sobre el mismo producto no devuelve 404 sino **409** ("El producto X ya se encuentra inactivo"), porque la baja es lógica y el registro sigue existiendo.
+- Un precio `0` o negativo lo detiene la validación local. Para ver el 400 del servidor bajo el campo precio hay que enviar un valor positivo menor que `0.01` (p. ej. `0.001`).
+- El `ViewModel` está ligado a la `Activity`, no a la pantalla: salir de Productos a Inicio **no cancela** una operación en curso; termina y la lista queda actualizada al volver. La cancelación solo ocurre cuando se destruye la `Activity`.
+
+Escenarios que no se pueden provocar desde la interfaz: se activan cambiando una línea (`escenario = EscenarioPrueba.…`) en `shared/src/androidMain/.../di/PlatformModule.android.kt`.
+
+| `EscenarioPrueba` | Efecto |
+|---|---|
+| `NINGUNO` | Uso normal |
+| `TIEMPO_AGOTADO` | Timeout de 1 ms: toda petición termina en `TiempoAgotado` |
+| `JSON_ESTRICTO` | `ignoreUnknownKeys = false`: la respuesta termina en `RespuestaInesperada` |
+| `RESPUESTA_LENTA` | Crear, actualizar y eliminar tardan 8 s: da tiempo a salir de la pantalla |
 
 ### Categoría
 
@@ -171,4 +194,4 @@ El backend exige `categoriaId` y el formulario aún no lo pide. Al crear se env�
 - `EjecutarLlamadaTest`: traducción de 400, 401/403, 404, 409, 500 y cancelación.
 - `ProductoRepositorioRestTest`: los cinco verbos con `MockEngine` (método, URL, cuerpo enviado y 204 sin cuerpo).
 - `CrudProductoUseCasesTest`: obtener, actualizar y eliminar.
-- `ProductoViewModelTest`: transiciones de `operacion` (en curso, fallida, validación bajo el campo, 404 con refresco).
+- `ProductoViewModelTest`: transiciones de `fase` (`Cargando` → `ConProductos` / `SinProductos` / `Error`) y de `operacion` (en curso, fallida, validación bajo el campo sin pasar a `Error`, 404 y 409 con refresco, cancelación sin mensaje).
