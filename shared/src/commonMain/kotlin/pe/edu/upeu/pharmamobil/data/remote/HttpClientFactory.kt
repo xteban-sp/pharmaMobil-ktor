@@ -65,7 +65,13 @@ fun crearHttpClient(engine: HttpClientEngine, config: ConfiguracionApi): HttpCli
         if (config.escenario == EscenarioPrueba.RESPUESTA_LENTA) {
             install(createClientPlugin("RespuestaLenta") {
                 onRequest { request, _ ->
-                    if (request.method != HttpMethod.Get) delay(RETARDO_RESPUESTA_LENTA_MS)
+                    if (request.method != HttpMethod.Get) {
+                        println(
+                            "KtorHttp => RESPUESTA_LENTA: ${request.method.value} retenido " +
+                                "${RETARDO_RESPUESTA_LENTA_MS / 1000} s antes de enviarse"
+                        )
+                        delay(RETARDO_RESPUESTA_LENTA_MS)
+                    }
                 }
             })
         }
