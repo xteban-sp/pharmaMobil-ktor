@@ -7,48 +7,52 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
+import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
+import pe.edu.upeu.pharmamobil.domain.model.Producto
+import pe.edu.upeu.pharmamobil.domain.usecase.ActualizarProductoUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ProductoInvalidoException
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import pe.edu.upeu.pharmamobil.presentation.error.mensajeDe
+import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Fase
+import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Operacion
+import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Operacion.Tipo
 
-
+/**
+ * Cada operacion sigue el mismo patron: marcar en curso, ejecutar el caso de
+ * uso (que devuelve Result y nunca lanza) y resolver con exito o con error.
+ * No importa nada de io.ktor: solo conoce ErrorApi.
+ */
 class ProductoViewModel(
+    private val listarProductos: ListarProductosUseCase,
+    private val obtenerProducto: ObtenerProductoUseCase,
     private val registrarProducto: RegistrarProductoUseCase,
-    private val listarProductos: ListarProductosUseCase
+    private val actualizarProducto: ActualizarProductoUseCase,
+    private val eliminarProducto: EliminarProductoUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductoUiState())
     val uiState: StateFlow<ProductoUiState> = _uiState.asStateFlow()
 
+    /** Version del servidor del producto en edicion: conserva lo que el formulario no muestra. */
+    private var productoEnEdicion: Producto? = null
+
     init {
         cargarProductos()
     }
 
+    /** Carga inicial y boton Reintentar: aqui si se muestra la fase Cargando. */
     fun cargarProductos() {
-
         viewModelScope.launch {
-
-            _uiState.update {
-                it.copy(fase = ProductoUiState.Fase.Cargando)
-            }
-
+            _uiState.update { it.copy(fase = Fase.Cargando) }
             val fase = listarProductos().fold(
-                onSuccess = { productos ->
-                    if (productos.isEmpty()) {
-                        ProductoUiState.Fase.SinProductos
-                    } else {
-                        ProductoUiState.Fase.ConProductos(productos.map { it.aUi() })
-                    }
-                },
-                onFailure = { fallo ->
-                    ProductoUiState.Fase.Error(mensajeDe(fallo))
-                }
+                onSuccess = ::faseDe,
+                onFailure = { fallo -> Fase.Error(mensajeDe(fallo)) }
             )
-
-            _uiState.update {
-                it.copy(fase = fase)
-            }
+            _uiState.update { it.copy(fase = fase) }
         }
     }
 
@@ -79,56 +83,188 @@ class ProductoViewModel(
         }
     }
 
-    fun registrar() {
+    /** Crea un producto nuevo o guarda los cambios del que esta en edicion. */
+    fun guardar() {
 
-        if (_uiState.value.registrando) return
+        if (_uiState.value.operando) return
+
+        val formulario = _uiState.value.formulario
+        val original = productoEnEdicion
+        val tipo = if (original != null) Tipo.Actualizar else Tipo.Crear
 
         viewModelScope.launch {
 
             _uiState.update {
-                it.copy(registrando = true, mensajeExito = null)
+                it.copy(operacion = Operacion.EnCurso(tipo, original?.id), mensajeExito = null)
             }
 
-            val formulario = _uiState.value.formulario
+            val resultado = if (original != null) {
+                actualizarProducto(original, formulario.nombre, formulario.precio, formulario.stock)
+            } else {
+                registrarProducto(formulario.nombre, formulario.precio, formulario.stock)
+            }
 
-            registrarProducto(
-                nombre = formulario.nombre,
-                precio = formulario.precio,
-                stock = formulario.stock
-            ).fold(
+            resultado.fold(
                 onSuccess = { producto ->
+                    productoEnEdicion = null
+                    refrescarInventario()
                     _uiState.update {
                         it.copy(
-                            registrando = false,
+                            operacion = Operacion.Inactiva,
                             formulario = FormularioProducto(),
-                            mensajeExito = "Producto \"${producto.nombre}\" registrado correctamente"
+                            mensajeExito = if (tipo == Tipo.Crear) {
+                                "Producto \"${producto.nombre}\" registrado correctamente"
+                            } else {
+                                "Producto \"${producto.nombre}\" actualizado correctamente"
+                            }
                         )
                     }
-                    cargarProductos()
                 },
-                onFailure = { fallo ->
-                    when (fallo) {
-
-                        is ProductoInvalidoException -> _uiState.update {
-                            it.copy(
-                                registrando = false,
-                                formulario = it.formulario.copy(
-                                    nombreError = fallo.errores.nombre,
-                                    precioError = fallo.errores.precio,
-                                    stockError = fallo.errores.stock
-                                )
-                            )
-                        }
-
-                        else -> _uiState.update {
-                            it.copy(
-                                registrando = false,
-                                fase = ProductoUiState.Fase.Error(mensajeDe(fallo))
-                            )
-                        }
-                    }
-                }
+                onFailure = { fallo -> manejarFallo(fallo) }
             )
         }
+    }
+
+    /** Trae del servidor la version vigente del producto y la carga en el formulario. */
+    fun editar(id: Long) {
+
+        if (_uiState.value.operando) return
+
+        viewModelScope.launch {
+
+            _uiState.update {
+                it.copy(operacion = Operacion.EnCurso(Tipo.Actualizar, id), mensajeExito = null)
+            }
+
+            obtenerProducto(id).fold(
+                onSuccess = { producto ->
+                    productoEnEdicion = producto
+                    _uiState.update {
+                        it.copy(
+                            operacion = Operacion.Inactiva,
+                            formulario = FormularioProducto(
+                                nombre = producto.nombre,
+                                precio = producto.precio.toString(),
+                                stock = producto.stock.toString(),
+                                editandoId = producto.id
+                            )
+                        )
+                    }
+                },
+                onFailure = { fallo -> manejarFallo(fallo) }
+            )
+        }
+    }
+
+    fun cancelarEdicion() {
+        productoEnEdicion = null
+        _uiState.update {
+            it.copy(formulario = FormularioProducto(), operacion = Operacion.Inactiva)
+        }
+    }
+
+    fun eliminar(id: Long) {
+
+        if (_uiState.value.operando) return
+
+        viewModelScope.launch {
+
+            _uiState.update {
+                it.copy(operacion = Operacion.EnCurso(Tipo.Eliminar, id), mensajeExito = null)
+            }
+
+            eliminarProducto(id).fold(
+                onSuccess = {
+                    val estabaEnEdicion = productoEnEdicion?.id == id
+                    if (estabaEnEdicion) productoEnEdicion = null
+                    refrescarInventario()
+                    _uiState.update {
+                        it.copy(
+                            operacion = Operacion.Inactiva,
+                            formulario = if (estabaEnEdicion) FormularioProducto() else it.formulario,
+                            mensajeExito = "Producto eliminado"
+                        )
+                    }
+                },
+                onFailure = { fallo -> manejarFallo(fallo) }
+            )
+        }
+    }
+
+    /** Cierra el aviso de una operacion fallida. */
+    fun descartarError() {
+        _uiState.update {
+            if (it.operacion is Operacion.Fallida) it.copy(operacion = Operacion.Inactiva) else it
+        }
+    }
+
+    /**
+     * Recarga tras una mutacion SIN pasar por Fase.Cargando: lo que se ve en
+     * pantalla siempre es lo que existe en el servidor, y la lista no parpadea.
+     * Si la recarga falla, se conserva la lista que ya estaba.
+     */
+    private suspend fun refrescarInventario() {
+        listarProductos().onSuccess { productos ->
+            _uiState.update { it.copy(fase = faseDe(productos)) }
+        }
+    }
+
+    private fun faseDe(productos: List<Producto>): Fase =
+        if (productos.isEmpty()) Fase.SinProductos
+        else Fase.ConProductos(productos.map { it.aUi() })
+
+    private suspend fun manejarFallo(fallo: Throwable) {
+
+        // Validacion local (antes de ir al servidor).
+        if (fallo is ProductoInvalidoException) {
+            _uiState.update {
+                it.copy(
+                    operacion = Operacion.Inactiva,
+                    formulario = it.formulario.copy(
+                        nombreError = fallo.errores.nombre,
+                        precioError = fallo.errores.precio,
+                        stockError = fallo.errores.stock
+                    )
+                )
+            }
+            return
+        }
+
+        val error = (fallo as? ErrorApiException)?.error
+
+        when {
+            // 400 del servidor: las claves de validationErrors son los campos del formulario.
+            error is ErrorApi.Validacion && error.porCampo.keys.any { it in CAMPOS_DEL_FORMULARIO } ->
+                _uiState.update {
+                    it.copy(
+                        operacion = Operacion.Inactiva,
+                        formulario = it.formulario.copy(
+                            nombreError = error.porCampo["nombre"],
+                            precioError = error.porCampo["precio"],
+                            stockError = error.porCampo["stock"]
+                        )
+                    )
+                }
+
+            // 404: el producto ya no existe. Se refresca la lista y se abandona la edicion.
+            error is ErrorApi.NoEncontrado -> {
+                productoEnEdicion = null
+                refrescarInventario()
+                _uiState.update {
+                    it.copy(
+                        operacion = Operacion.Fallida(mensajeDe(fallo)),
+                        formulario = if (it.formulario.enEdicion) FormularioProducto() else it.formulario
+                    )
+                }
+            }
+
+            else -> _uiState.update {
+                it.copy(operacion = Operacion.Fallida(mensajeDe(fallo)))
+            }
+        }
+    }
+
+    private companion object {
+        val CAMPOS_DEL_FORMULARIO = setOf("nombre", "precio", "stock")
     }
 }

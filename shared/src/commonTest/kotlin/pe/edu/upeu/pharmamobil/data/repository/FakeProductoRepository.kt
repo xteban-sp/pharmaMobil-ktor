@@ -1,5 +1,6 @@
 package pe.edu.upeu.pharmamobil.data.repository
 
+import kotlinx.coroutines.CompletableDeferred
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.model.Producto
@@ -20,10 +21,17 @@ class FakeProductoRepository(
     var fallaAlActualizar: Throwable? = null
     var fallaAlEliminar: Throwable? = null
 
+    /**
+     * Si se asigna, registrar/actualizar/eliminar esperan a que se complete:
+     * permite observar el estado "operacion en curso" antes de que termine.
+     */
+    var compuerta: CompletableDeferred<Unit>? = null
+
     private var siguienteId = 1L
 
     override suspend fun registrar(producto: Producto): Producto {
 
+        compuerta?.await()
         fallaAlRegistrar?.let { throw it }
 
         val guardado = producto.copy(id = siguienteId++)
@@ -48,6 +56,7 @@ class FakeProductoRepository(
 
     override suspend fun actualizar(producto: Producto): Producto {
 
+        compuerta?.await()
         fallaAlActualizar?.let { throw it }
 
         val indice = productos.indexOfFirst { it.id == producto.id }
@@ -58,6 +67,7 @@ class FakeProductoRepository(
 
     override suspend fun eliminar(id: Long) {
 
+        compuerta?.await()
         fallaAlEliminar?.let { throw it }
 
         if (!productos.removeAll { it.id == id }) throw ErrorApiException(ErrorApi.NoEncontrado)
