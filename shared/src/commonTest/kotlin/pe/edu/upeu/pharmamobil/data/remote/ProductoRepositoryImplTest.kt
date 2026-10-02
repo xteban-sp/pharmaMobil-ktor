@@ -9,11 +9,12 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.IOException
 import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositoryImpl
+import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
+import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.test.assertTrue
 
 /**
  * Bitacora de pruebas de conexion (actividad autonoma, sesion 7) sin depender
@@ -61,33 +62,33 @@ class ProductoRepositoryImplTest {
     }
 
     @Test
-    fun caso2_error404_devuelveFailureConMensajeLegible() = runTest {
+    fun caso2_error404_seTraduceANoEncontrado() = runTest {
         val engine = MockEngine { respond("""{"mensaje":"No encontrado"}""", HttpStatusCode.NotFound, jsonHeaders) }
 
         val fallo = casoDeUsoCon(engine)().exceptionOrNull()
 
-        assertIs<ErrorDeRed>(fallo)
-        assertTrue(fallo.message!!.contains("404"))
+        assertIs<ErrorApiException>(fallo)
+        assertEquals(ErrorApi.NoEncontrado, fallo.error)
     }
 
     @Test
-    fun caso3_sinConexion_devuelveFailureSinCaerse() = runTest {
+    fun caso3_sinConexion_seTraduceASinConexion() = runTest {
         val engine = MockEngine { throw IOException("Failed to connect to /10.0.2.2:8080") }
 
         val fallo = casoDeUsoCon(engine)().exceptionOrNull()
 
-        assertIs<ErrorDeRed>(fallo)
-        assertTrue(fallo.message!!.startsWith("No se pudo conectar"))
+        assertIs<ErrorApiException>(fallo)
+        assertEquals(ErrorApi.SinConexion, fallo.error)
     }
 
     @Test
-    fun caso4_timeout_devuelveFailureConMensajeDeTiempo() = runTest {
+    fun caso4_timeout_seTraduceATiempoAgotado() = runTest {
         val engine = MockEngine { throw HttpRequestTimeoutException("productos", 15_000) }
 
         val fallo = casoDeUsoCon(engine)().exceptionOrNull()
 
-        assertIs<ErrorDeRed>(fallo)
-        assertTrue(fallo.message!!.contains("tardo demasiado"))
+        assertIs<ErrorApiException>(fallo)
+        assertEquals(ErrorApi.TiempoAgotado, fallo.error)
     }
 
     @Test
@@ -106,15 +107,15 @@ class ProductoRepositoryImplTest {
     }
 
     @Test
-    fun caso5b_sinIgnoreUnknownKeys_elCampoNuevoProvocaErrorDeFormato() = runTest {
+    fun caso5b_sinIgnoreUnknownKeys_seTraduceARespuestaInesperada() = runTest {
         val estricto = config.copy(escenario = EscenarioPrueba.JSON_ESTRICTO)
         val engine = MockEngine { respond(paginaValida, HttpStatusCode.OK, jsonHeaders) }
         val casoDeUso = ListarProductosUseCase(ProductoRepositoryImpl(ProductoApi(crearHttpClient(engine, estricto))))
 
         val fallo = casoDeUso().exceptionOrNull()
 
-        assertIs<ErrorDeRed>(fallo)
-        assertEquals("La respuesta del servidor no tiene el formato esperado.", fallo.message)
+        assertIs<ErrorApiException>(fallo)
+        assertEquals(ErrorApi.RespuestaInesperada, fallo.error)
     }
 
     @Test

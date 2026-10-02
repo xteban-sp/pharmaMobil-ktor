@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ProductoInvalidoException
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
+import pe.edu.upeu.pharmamobil.presentation.error.mensajeDe
 
 
 class ProductoViewModel(
@@ -41,9 +42,7 @@ class ProductoViewModel(
                     }
                 },
                 onFailure = { fallo ->
-                    ProductoUiState.Fase.Error(
-                        fallo.message ?: "No se pudo cargar el inventario"
-                    )
+                    ProductoUiState.Fase.Error(mensajeDe(fallo))
                 }
             )
 
@@ -124,9 +123,7 @@ class ProductoViewModel(
                         else -> _uiState.update {
                             it.copy(
                                 registrando = false,
-                                fase = ProductoUiState.Fase.Error(
-                                    fallo.message ?: "No se pudo registrar el producto"
-                                )
+                                fase = ProductoUiState.Fase.Error(mensajeDe(fallo))
                             )
                         }
                     }
