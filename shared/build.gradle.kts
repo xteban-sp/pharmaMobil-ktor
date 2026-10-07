@@ -44,6 +44,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
+            // Sesion 9: BackHandler para el actual de AlPulsarAtras.
+            implementation(libs.androidx.activity.compose)
             // api: MainApplication (androidApp) usa androidContext() al arrancar Koin.
             api(libs.koin.android)
             // Sesion 7: motor de red de Android

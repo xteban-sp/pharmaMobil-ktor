@@ -1,5 +1,12 @@
 package pe.edu.upeu.pharmamobil
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalPharmacy
@@ -36,28 +44,36 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 
+import pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacion
 import pe.edu.upeu.pharmamobil.navigation.Screen
+import pe.edu.upeu.pharmamobil.platform.AlPulsarAtras
 import pe.edu.upeu.pharmamobil.presentation.cliente.ClienteScreen
 import pe.edu.upeu.pharmamobil.presentation.components.EstadoVacio
+import pe.edu.upeu.pharmamobil.presentation.detalle.DetalleProductoScreen
 import pe.edu.upeu.pharmamobil.presentation.inicio.InicioScreen
+import pe.edu.upeu.pharmamobil.presentation.producto.FormularioProductoScreen
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoScreen
+import pe.edu.upeu.pharmamobil.presentation.producto.ProductoViewModel
 import pe.edu.upeu.pharmamobil.theme.PharmaMobilTheme
 
-/** Una sola fuente para el menu lateral y el titulo de la barra superior. */
+/** Modulos del menu lateral. */
 private data class Destino(
     val screen: Screen,
     val titulo: String,
@@ -71,15 +87,7 @@ private val DESTINOS = listOf(
     Destino(Screen.Pedidos, "Pedidos", Icons.Default.ShoppingCart)
 )
 
-
-private val ScreenSaver = Saver<Screen, Int>(
-    save = { pantalla ->
-        DESTINOS.indexOfFirst { it.screen == pantalla }
-    },
-    restore = { indice ->
-        DESTINOS[indice].screen
-    }
-)
+private const val DURACION_TRANSICION_MS = 220
 
 /**
  * @param pantallaInicial pantalla con la que abre la app. Por defecto Inicio;
@@ -89,8 +97,9 @@ private val ScreenSaver = Saver<Screen, Int>(
 @Composable
 fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
 
-    var pantallaActual by rememberSaveable(stateSaver = ScreenSaver) {
-        mutableStateOf<Screen>(pantallaInicial)
+    // Pila de pantallas: la flecha de la barra y el boton Atras quitan la de arriba.
+    val pila = rememberSaveable(saver = PilaDeNavegacion.Saver) {
+        PilaDeNavegacion.desde(pantallaInicial)
     }
 
     var darkTheme by rememberSaveable {
@@ -103,6 +112,33 @@ fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
 
     val scope = rememberCoroutineScope()
 
+    // El ViewModel de productos se pide solo dentro de su modulo: asi la
+    // portada no dispara la carga del inventario.
+    val productoViewModel: ProductoViewModel? =
+        if (pila.actual.esDelModuloProductos()) koinViewModel() else null
+
+    fun volver() {
+        val saliendoDe = pila.actual
+        if (pila.volver() && saliendoDe is Screen.FormularioProducto) {
+            // Se sale sin guardar: el formulario y sus avisos no deben quedar para despues.
+            productoViewModel?.cancelarEdicion()
+        }
+    }
+
+    // Boton Atras del sistema: cierra el menu o vuelve a la pantalla anterior.
+    AlPulsarAtras(habilitado = drawerState.isOpen || pila.puedeVolver) {
+        if (drawerState.isOpen) {
+            scope.launch { drawerState.close() }
+        } else {
+            volver()
+        }
+    }
+
+    // Avanzar desliza hacia la izquierda; volver, hacia la derecha.
+    var profundidadAnterior by remember { mutableIntStateOf(pila.profundidad) }
+    val avanza = pila.profundidad >= profundidadAnterior
+    SideEffect { profundidadAnterior = pila.profundidad }
+
     PharmaMobilTheme(
         darkTheme = darkTheme
     ) {
@@ -110,6 +146,9 @@ fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
         ModalNavigationDrawer(
 
             drawerState = drawerState,
+
+            // Dentro de un modulo el borde izquierdo queda para el gesto de volver.
+            gesturesEnabled = drawerState.isOpen || !pila.puedeVolver,
 
             drawerContent = {
 
@@ -129,10 +168,10 @@ fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
                             label = {
                                 Text(destino.titulo)
                             },
-                            selected = pantallaActual == destino.screen,
+                            selected = pila.moduloActual() == destino.screen,
                             onClick = {
 
-                                pantallaActual = destino.screen
+                                pila.irAModulo(destino.screen)
 
                                 scope.launch {
                                     drawerState.close()
@@ -172,26 +211,36 @@ fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
 
                         title = {
                             Text(
-                                text = tituloDe(pantallaActual)
+                                text = tituloDe(pila.actual),
+                                fontWeight = FontWeight.SemiBold
                             )
                         },
 
                         navigationIcon = {
 
-                            IconButton(
-                                onClick = {
+                            if (pila.puedeVolver) {
 
-                                    scope.launch {
-
-                                        drawerState.open()
-                                    }
+                                IconButton(onClick = ::volver) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Volver"
+                                    )
                                 }
-                            ) {
 
-                                Icon(
-                                    imageVector = Icons.Default.Menu,
-                                    contentDescription = "Abrir menú"
-                                )
+                            } else {
+
+                                IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Menu,
+                                        contentDescription = "Abrir menú"
+                                    )
+                                }
                             }
                         },
 
@@ -205,43 +254,102 @@ fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
 
             ) { paddingValues ->
 
-                Box(
+                AnimatedContent(
+                    targetState = pila.actual,
+                    transitionSpec = {
+                        val sentido = if (avanza) 1 else -1
+                        (slideInHorizontally(tween(DURACION_TRANSICION_MS)) { sentido * it / 5 } +
+                            fadeIn(tween(DURACION_TRANSICION_MS))) togetherWith
+                            (slideOutHorizontally(tween(DURACION_TRANSICION_MS)) { -sentido * it / 5 } +
+                                fadeOut(tween(DURACION_TRANSICION_MS / 2)))
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
-                ) {
+                ) { pantalla ->
 
-                    when (pantallaActual) {
+                    Box(modifier = Modifier.fillMaxSize()) {
 
-                        Screen.Inicio ->
-                            InicioScreen(
-                                onNavegar = { destino ->
-                                    pantallaActual = destino
-                                }
-                            )
+                        when (pantalla) {
 
-                        Screen.Productos ->
-                            ProductoScreen(
-                                viewModel = koinViewModel()
-                            )
+                            Screen.Inicio ->
+                                InicioScreen(
+                                    onNavegar = { destino ->
+                                        pila.ir(destino)
+                                    }
+                                )
 
-                        Screen.Clientes ->
-                            ClienteScreen(
-                                viewModel = koinViewModel()
-                            )
+                            Screen.Productos -> {
+                                val viewModel: ProductoViewModel = koinViewModel()
+                                ProductoScreen(
+                                    viewModel = viewModel,
+                                    onNuevo = {
+                                        viewModel.prepararNuevo()
+                                        pila.ir(Screen.FormularioProducto())
+                                    },
+                                    onVerDetalle = { id ->
+                                        pila.ir(Screen.DetalleProducto(id))
+                                    }
+                                )
+                            }
 
-                        Screen.Pedidos ->
-                            EstadoVacio(
-                                icono = Icons.Default.ShoppingCart,
-                                titulo = "Pedidos en construcción",
-                                descripcion = "Este módulo llega en una próxima sesión del curso.",
-                                modifier = Modifier.align(Alignment.Center)
-                            )
+                            is Screen.DetalleProducto -> {
+                                val viewModel: ProductoViewModel = koinViewModel()
+                                DetalleProductoScreen(
+                                    productoId = pantalla.productoId,
+                                    onEditar = {
+                                        viewModel.editar(pantalla.productoId)
+                                        pila.ir(Screen.FormularioProducto(pantalla.productoId))
+                                    },
+                                    onEliminar = {
+                                        // El inventario muestra el progreso y el resultado.
+                                        pila.volverA(Screen.Productos)
+                                        viewModel.eliminar(pantalla.productoId)
+                                    }
+                                )
+                            }
+
+                            is Screen.FormularioProducto ->
+                                FormularioProductoScreen(
+                                    viewModel = koinViewModel(),
+                                    productoId = pantalla.productoId,
+                                    activa = pantalla == pila.actual,
+                                    onGuardado = {
+                                        // Tras guardar se regresa al inventario, ya actualizado.
+                                        pila.volverA(Screen.Productos)
+                                    },
+                                    onCerrar = ::volver
+                                )
+
+                            Screen.Clientes ->
+                                ClienteScreen(
+                                    viewModel = koinViewModel()
+                                )
+
+                            Screen.Pedidos ->
+                                EstadoVacio(
+                                    icono = Icons.Default.ShoppingCart,
+                                    titulo = "Pedidos en construcción",
+                                    descripcion = "Este módulo llega en una próxima sesión del curso.",
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                        }
                     }
                 }
             }
         }
     }
+}
+
+
+/** Las tres pantallas que comparten ProductoViewModel. */
+private fun Screen.esDelModuloProductos(): Boolean =
+    this is Screen.Productos || this is Screen.DetalleProducto || this is Screen.FormularioProducto
+
+/** Modulo al que pertenece la pantalla visible: es el que se marca en el menu lateral. */
+private fun PilaDeNavegacion.moduloActual(): Screen = when (val pantalla = actual) {
+    is Screen.DetalleProducto, is Screen.FormularioProducto -> Screen.Productos
+    else -> pantalla
 }
 
 
@@ -326,7 +434,12 @@ private fun ModoOscuro(
 
 private fun tituloDe(
     screen: Screen
-): String {
-
-    return DESTINOS.first { it.screen == screen }.titulo
+): String = when (screen) {
+    Screen.Inicio -> "PharmaMobil"
+    Screen.Productos -> "Productos"
+    Screen.Clientes -> "Clientes"
+    Screen.Pedidos -> "Pedidos"
+    is Screen.DetalleProducto -> "Detalle del producto"
+    is Screen.FormularioProducto ->
+        if (screen.productoId == null) "Nuevo producto" else "Editar producto"
 }

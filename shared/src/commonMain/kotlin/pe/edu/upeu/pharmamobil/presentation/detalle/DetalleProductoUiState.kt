@@ -20,6 +20,7 @@ data class DetalleProductoUi(
     val precio: String,
     val stock: String,
     val estado: String,
+    val activo: Boolean,
     val requiereReposicion: Boolean
 )
 
@@ -29,5 +30,6 @@ fun Producto.aDetalleUi(): DetalleProductoUi = DetalleProductoUi(
     precio = formatearSoles(precio),
     stock = "$stock unidades",
     estado = if (activo) "Activo" else "Dado de baja",
+    activo = activo,
     requiereReposicion = requiereReposicion
 )

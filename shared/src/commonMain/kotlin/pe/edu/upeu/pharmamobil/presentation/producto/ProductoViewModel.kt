@@ -86,6 +86,22 @@ class ProductoViewModel(
         }
     }
 
+    /**
+     * Deja el formulario en blanco para registrar un producto. Se invoca al
+     * abrir la pantalla del formulario, no desde ella: asi una rotacion no
+     * borra lo que el usuario ya escribio.
+     */
+    fun prepararNuevo() {
+        productoEnEdicion = null
+        _uiState.update {
+            it.copy(
+                formulario = FormularioProducto(),
+                operacion = Operacion.Inactiva,
+                mensajeExito = null
+            )
+        }
+    }
+
     /** Crea un producto nuevo o guarda los cambios del que esta en edicion. */
     fun guardar() {
 
