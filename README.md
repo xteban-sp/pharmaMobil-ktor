@@ -200,18 +200,20 @@ El backend exige `categoriaId` y el formulario aún no lo pide. Al crear se env�
 
 ## Capacidades nativas (Sesión 9 · rama `feature/expect-actual-istana`)
 
-Dos capacidades que dependen del sistema operativo, resueltas con los dos mecanismos que ofrece Kotlin Multiplatform. La interfaz Compose y el dominio siguen en `commonMain`.
+Capacidades que dependen del sistema operativo, resueltas con los dos mecanismos que ofrece Kotlin Multiplatform. La interfaz Compose y el dominio siguen en `commonMain`.
 
 | Capacidad | Mecanismo | Código común | Android | iOS |
 |---|---|---|---|---|
 | Formato de moneda | `expect` / `actual` | `platform/Formato.kt` | `platform/Formato.android.kt` (`java.text.NumberFormat`, es-PE) | `platform/Formato.ios.kt` (`NSNumberFormatter`, es_PE) |
 | Compartir | Interfaz + inyección | `domain/platform/Compartidor.kt` | `platform/CompartidorAndroid.kt` (`Intent.ACTION_SEND`) | `platform/CompartidorIos.kt` (`UIActivityViewController`) |
+| Botón Atrás del sistema | `expect` / `actual` | `platform/BotonAtras.kt` | `platform/BotonAtras.android.kt` (`BackHandler`) | `platform/BotonAtras.ios.kt` (sin implementación: iOS no tiene ese botón) |
 
 Las rutas son relativas a `shared/src/<sourceSet>/kotlin/pe/edu/upeu/pharmamobil/`.
 
 ### Por qué un mecanismo distinto para cada una
 
 - **`formatearSoles` es un `expect`**: es una función pura, sin estado ni dependencias. El compilador exige el `actual` en cada plataforma; si falta uno, el proyecto no compila.
+- **`AlPulsarAtras` también es un `expect`**: es un composable sin dependencias, y sirve de ejemplo de un `actual` vacío a propósito. El botón Atrás solo existe en Android; en iOS se vuelve con la flecha de la barra superior.
 - **`Compartidor` es una interfaz**: necesita algo que `commonMain` no conoce (un `Context` en Android, un controlador de vista en iOS). Recibir dependencias por constructor y sustituirla en una prueba es sencillo con una interfaz y complicado con un `expect`.
 - Las dos implementaciones de `Compartidor` se registran dentro del `expect val platformModule`, así que el compilador sigue exigiendo que cada plataforma aporte la suya.
 
@@ -219,8 +221,23 @@ Las rutas son relativas a `shared/src/<sourceSet>/kotlin/pe/edu/upeu/pharmamobil
 
 - `presentation/producto/ProductoUi.kt`: `Producto.aUi()` llama a `formatearSoles`. El dominio conserva el precio como número y el composable solo pinta el texto.
 - `domain/usecase/TextoParaCompartir.kt`: `Producto.comoTextoParaCompartir()` arma el texto en código común (`Naproxeno 550mg — S/ 7.80 · Stock: 6`).
-- `presentation/detalle/`: al tocar una fila del inventario se abre el detalle del producto (`GET /productos/{id}`) con el botón **Compartir**. `DetalleProductoViewModel` recibe el `Compartidor` por constructor.
+- `presentation/detalle/`: al tocar una fila del inventario se abre la pantalla de detalle del producto (`GET /productos/{id}`) con el botón **Compartir**. `DetalleProductoViewModel` recibe el `Compartidor` por constructor.
 - Ninguna clase de `presentation` ni de `domain` importa `android.*`, `java.*` ni `platform.UIKit`.
+
+### Navegación y pantallas
+
+La app usa una pila de pantallas propia (`navigation/PilaDeNavegacion.kt`), sin librería de navegación. La barra superior muestra el menú en Inicio y la flecha de volver en el resto; el botón Atrás de Android hace lo mismo que la flecha.
+
+| Pantalla | Se llega desde | Qué ofrece |
+|---|---|---|
+| Inicio | Arranque | Acceso a los módulos |
+| Productos | Inicio o menú lateral | Inventario, filtro Activos / De baja y botón **Nuevo producto** |
+| Detalle del producto | Tocar una fila | Datos del producto, **Compartir**, **Editar** y **Eliminar** |
+| Nuevo / Editar producto | Botón Nuevo producto o Editar | Formulario; al guardar regresa al inventario ya actualizado |
+
+- Las tres pantallas de productos comparten `ProductoViewModel`, así que el estado de la operación (`operacion`) y sus avisos se ven igual desde cualquiera.
+- La pila se guarda con `rememberSaveable`: sobrevive a la rotación de la pantalla.
+- `presentation/components/Tarjeta.kt` reúne la tarjeta, el icono en recuadro y la etiqueta que usan todas las pantallas.
 
 ### Registro en Koin
 
@@ -265,4 +282,5 @@ git checkout feature/expect-actual-istana
 - `FormatoTest`: símbolo, dos decimales, redondeo y cifras del monto formateado.
 - `TextoParaCompartirTest`: el texto incluye nombre, precio formateado y stock.
 - `DetalleProductoViewModelTest`: carga del detalle, errores y que `compartir()` entrega al `Compartidor` el texto armado en común. Usa `CompartidorFalso`.
+- `PilaDeNavegacionTest`: avanzar, volver, regresar al inventario tras guardar, cambio de módulo desde el menú y guardado de la pila como texto.
 - `AppModuleTest`: Koin resuelve `DetalleProductoViewModel`; el `Compartidor` y el motor HTTP se sustituyen por dobles, de modo que la prueba ya no sale a la red.
