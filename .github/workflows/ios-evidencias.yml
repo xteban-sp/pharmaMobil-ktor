@@ -15,6 +15,11 @@ on:
 permissions:
   contents: write
 
+# Un push nuevo cancela la ejecucion anterior: solo publica evidencias la ultima.
+concurrency:
+  group: evidencias-ios
+  cancel-in-progress: true
+
 jobs:
   ios-simulador:
     runs-on: macos-latest
