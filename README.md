@@ -195,3 +195,74 @@ El backend exige `categoriaId` y el formulario aún no lo pide. Al crear se env�
 - `ProductoRepositorioRestTest`: los cinco verbos con `MockEngine` (método, URL, cuerpo enviado y 204 sin cuerpo).
 - `CrudProductoUseCasesTest`: obtener, actualizar y eliminar.
 - `ProductoViewModelTest`: transiciones de `fase` (`Cargando` → `ConProductos` / `SinProductos` / `Error`) y de `operacion` (en curso, fallida, validación bajo el campo sin pasar a `Error`, 404 y 409 con refresco, cancelación sin mensaje).
+
+---
+
+## Capacidades nativas (Sesión 9 · rama `feature/expect-actual-istana`)
+
+Dos capacidades que dependen del sistema operativo, resueltas con los dos mecanismos que ofrece Kotlin Multiplatform. La interfaz Compose y el dominio siguen en `commonMain`.
+
+| Capacidad | Mecanismo | Código común | Android | iOS |
+|---|---|---|---|---|
+| Formato de moneda | `expect` / `actual` | `platform/Formato.kt` | `platform/Formato.android.kt` (`java.text.NumberFormat`, es-PE) | `platform/Formato.ios.kt` (`NSNumberFormatter`, es_PE) |
+| Compartir | Interfaz + inyección | `domain/platform/Compartidor.kt` | `platform/CompartidorAndroid.kt` (`Intent.ACTION_SEND`) | `platform/CompartidorIos.kt` (`UIActivityViewController`) |
+
+Las rutas son relativas a `shared/src/<sourceSet>/kotlin/pe/edu/upeu/pharmamobil/`.
+
+### Por qué un mecanismo distinto para cada una
+
+- **`formatearSoles` es un `expect`**: es una función pura, sin estado ni dependencias. El compilador exige el `actual` en cada plataforma; si falta uno, el proyecto no compila.
+- **`Compartidor` es una interfaz**: necesita algo que `commonMain` no conoce (un `Context` en Android, un controlador de vista en iOS). Recibir dependencias por constructor y sustituirla en una prueba es sencillo con una interfaz y complicado con un `expect`.
+- Las dos implementaciones de `Compartidor` se registran dentro del `expect val platformModule`, así que el compilador sigue exigiendo que cada plataforma aporte la suya.
+
+### Dónde se usa
+
+- `presentation/producto/ProductoUi.kt`: `Producto.aUi()` llama a `formatearSoles`. El dominio conserva el precio como número y el composable solo pinta el texto.
+- `domain/usecase/TextoParaCompartir.kt`: `Producto.comoTextoParaCompartir()` arma el texto en código común (`Naproxeno 550mg — S/ 7.80 · Stock: 6`).
+- `presentation/detalle/`: al tocar una fila del inventario se abre el detalle del producto (`GET /productos/{id}`) con el botón **Compartir**. `DetalleProductoViewModel` recibe el `Compartidor` por constructor.
+- Ninguna clase de `presentation` ni de `domain` importa `android.*`, `java.*` ni `platform.UIKit`.
+
+### Registro en Koin
+
+```kotlin
+// androidMain/di/PlatformModule.android.kt
+single<Compartidor> { CompartidorAndroid(androidContext()) }
+
+// iosMain/di/PlatformModule.ios.kt
+single<Compartidor> { CompartidorIos() }
+```
+
+En Android el `Context` es el de la aplicación (lo entrega `MainApplication` con `androidContext(...)`), por eso el selector se abre con `FLAG_ACTIVITY_NEW_TASK`.
+
+### Qué cambia entre plataformas
+
+El mismo `Double` no se ve igual: el símbolo, el espacio que lo separa del monto y los separadores los decide cada sistema. Por eso las pruebas de `FormatoTest` no comparan con un texto fijo: verifican el símbolo, los dos decimales y las cifras.
+
+### Interoperabilidad Kotlin-Swift
+
+| En Swift (`iosApp/iosApp/`) | Por qué se llama así |
+|---|---|
+| `import Shared` | El módulo `shared` se compila como framework con `baseName = "Shared"` |
+| `KoinIosKt.doInitKoinIos()` | Las funciones de nivel superior de `KoinIos.kt` quedan en la clase `KoinIosKt`; Swift reserva los nombres que empiezan con `init`, así que Kotlin antepone `do` |
+| `MainViewControllerKt.MainViewController()` | Mismo criterio: función de nivel superior de `MainViewController.kt` |
+
+### Punto de control 1: el error que exige los `actual`
+
+El primer commit de la rama declara solo el `expect`. En ese estado el proyecto no compila:
+
+```
+git log --oneline --grep="declara el expect"      # ubica el commit
+git checkout <hash>
+.\gradlew :shared:compileAndroidMain
+# e: .../platform/Formato.kt:11:1 Expected formatearSoles has no actual declaration in module <commonMain> for JVM
+git checkout feature/expect-actual-istana
+```
+
+### Pruebas
+
+`./gradlew :shared:testAndroidHostTest`
+
+- `FormatoTest`: símbolo, dos decimales, redondeo y cifras del monto formateado.
+- `TextoParaCompartirTest`: el texto incluye nombre, precio formateado y stock.
+- `DetalleProductoViewModelTest`: carga del detalle, errores y que `compartir()` entrega al `Compartidor` el texto armado en común. Usa `CompartidorFalso`.
+- `AppModuleTest`: Koin resuelve `DetalleProductoViewModel`; el `Compartidor` y el motor HTTP se sustituyen por dobles, de modo que la prueba ya no sale a la red.
