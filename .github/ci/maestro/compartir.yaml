@@ -9,9 +9,9 @@ appId: ${APP_ID}
 # Si el argumento de arranque no llego, la app abre en Inicio: se entra a mano.
 - runFlow:
     when:
-      visible: ".*Registrar productos.*"
+      visible: ".*Inventario, precios y stock.*"
     commands:
-      - tapOn: ".*Registrar productos.*"
+      - tapOn: ".*Inventario, precios y stock.*"
 - extendedWaitUntil:
     visible: ".*Paracetamol 500mg.*"
     timeout: 60000
