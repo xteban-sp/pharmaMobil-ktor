@@ -316,6 +316,37 @@ class ProductoViewModelTest {
     }
 
     @Test
+    fun prepararNuevoDejaElFormularioEnBlancoYSinAvisos() = runTest {
+
+        val viewModel = nuevoViewModel(repositorioConDos())
+
+        // Queda un producto en edicion y un aviso de exito de una operacion anterior...
+        viewModel.eliminar(2L)
+        viewModel.editar(1L)
+        assertEquals(1L, viewModel.uiState.value.formulario.editandoId)
+
+        // ...y el usuario abre el formulario para registrar otro.
+        viewModel.prepararNuevo()
+
+        val estado = viewModel.uiState.value
+        assertEquals(FormularioProducto(), estado.formulario)
+        assertEquals(Operacion.Inactiva, estado.operacion)
+        assertNull(estado.mensajeExito)
+
+        // Lo que se guarde ahora es un alta, no una actualizacion del producto 1.
+        viewModel.onNombreChange("Aspirina 100mg")
+        viewModel.onPrecioChange("1.5")
+        viewModel.onStockChange("40")
+        viewModel.guardar()
+
+        assertEquals(
+            "Producto \"Aspirina 100mg\" registrado correctamente",
+            viewModel.uiState.value.mensajeExito
+        )
+        assertTrue("Paracetamol" in viewModel.nombresEnPantalla())
+    }
+
+    @Test
     fun cancelarLaEdicionLimpiaElFormulario() = runTest {
 
         val viewModel = nuevoViewModel(repositorioConDos())
