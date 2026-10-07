@@ -1,22 +1,27 @@
 # Evidencias de iOS sin Mac propio: GitHub Actions presta un runner macOS con Xcode.
 # 1) Levanta PharmaSoft (perfil h2, sin Oracle) en localhost:8080
-# 2) Compila la app iOS y la corre en el simulador abriendo directo en Productos
-# 3) Captura: lista de productos, log de Ktor (GET + 200) y el error sin backend
-# Resultado: artifact "evidencias-ios" (zip) en la pestaña Actions del repositorio.
+# 2) Compila el framework Kotlin y la app iOS, y la corre en el simulador
+# 3) Captura el listado (precio formateado), el detalle y la hoja de compartir
+# Resultado: rama "ci-evidencias-ios" del repositorio (capturas y registros) y
+# artifact "evidencias-ios" en la pestaña Actions.
 name: Evidencias iOS
 
 on:
   workflow_dispatch:
   push:
-    branches: [ feature/ktor-client ]
+    branches: [ feature/expect-actual-istana ]
+
+# Para publicar las capturas en la rama de evidencias.
+permissions:
+  contents: write
 
 jobs:
   ios-simulador:
     runs-on: macos-latest
     timeout-minutes: 60
     env:
-      BUNDLE_ID: pe.edu.upeu.pharmamobil.PharmaMobil
       EVID: ${{ github.workspace }}/evidencias
+      RAMA_EVIDENCIAS: ci-evidencias-ios
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +29,21 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+
+      - name: Preparar el entorno
+        run: |
+          mkdir -p "$EVID"
+          # gradlew esta en el repositorio sin permiso de ejecucion (se subio desde
+          # Windows): en macOS el paso de Xcode que lo invoca falla sin esto.
+          chmod +x gradlew
+          {
+            echo "== sistema"; sw_vers
+            echo "== xcode"; xcodebuild -version; ls -d /Applications/Xcode*.app
+            echo "== sdk simulador"; xcrun --sdk iphonesimulator --show-sdk-version
+            echo "== java"; java -version
+            echo "== commit"; git log -1 --format='%H %s'
+          } > "$EVID/entorno.txt" 2>&1 || true
+          cat "$EVID/entorno.txt"
 
       - name: Android SDK (lo exige Gradle al configurar el modulo shared)
         run: |
@@ -40,14 +60,6 @@ jobs:
           fi
           echo "sdk.dir=$SDK" > local.properties
           echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
-          echo "::notice title=Android SDK::$SDK ($(ls "$SDK/platforms" | tr '\n' ' '))"
-
-      - name: Seleccionar el Xcode mas reciente
-        run: |
-          XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
-          sudo xcode-select -s "$XCODE"
-          xcodebuild -version
-          mkdir -p "$EVID"
 
       - name: Levantar PharmaSoft (perfil h2)
         run: |
@@ -66,16 +78,24 @@ jobs:
           echo
           curl -sf "http://localhost:8080/api/v1/productos?pagina=0&tamanio=20" | tee "$EVID/productos.json"
 
+      - name: Compilar el framework Kotlin (iosSimulatorArm64)
+        run: |
+          # Se compila aparte de Xcode para que un error de Kotlin se vea solo.
+          if ! ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64 --stacktrace > "$EVID/gradle-framework.log" 2>&1; then
+            ERR=$( (grep -E "^e: |What went wrong|^> |error:|Exception" "$EVID/gradle-framework.log" | head -25) | tr '\n' ' ' | cut -c1-3500)
+            [ -n "$ERR" ] || ERR=$(tail -40 "$EVID/gradle-framework.log" | tr '\n' ' ' | cut -c1-3500)
+            echo "::error title=Gradle (framework iOS) fallo::$ERR"
+            exit 1
+          fi
+          echo "::notice title=Framework Kotlin::$(grep -E "BUILD SUCCESSFUL" "$EVID/gradle-framework.log" | tail -1)"
+
       - name: Compilar la app iOS para el simulador
         run: |
-          set -o pipefail
-          # Log completo al artifact; si falla, los errores salen como anotacion
-          # (las anotaciones se ven sin iniciar sesion en GitHub).
+          xcodebuild -project iosApp/iosApp.xcodeproj -list > "$EVID/xcodebuild-list.txt" 2>&1 || true
           if ! xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
                -configuration Debug -sdk iphonesimulator -arch arm64 \
                SYMROOT="$PWD/build/ios" CODE_SIGNING_ALLOWED=NO build > "$EVID/xcodebuild.log" 2>&1; then
-            set +e +o pipefail   # que un grep sin resultados no corte el reporte
-            ERR=$( (grep -E "(^| )error: |^e: |What went wrong|SDK location|Exception:|> " "$EVID/xcodebuild.log" | grep -v "^note:" | head -30) | tr '\n' ' ' | cut -c1-3500)
+            ERR=$( (grep -E "(^| )error: |^e: |What went wrong|Permission denied|Exception:|^> " "$EVID/xcodebuild.log" | grep -v "^note:" | head -30) | tr '\n' ' ' | cut -c1-3500)
             [ -n "$ERR" ] || ERR=$(grep -v "^ *export " "$EVID/xcodebuild.log" | tail -40 | tr '\n' ' ' | cut -c1-3500)
             echo "::error title=xcodebuild fallo::$ERR"
             exit 1
@@ -88,35 +108,75 @@ jobs:
           echo "BUNDLE_ID=$BID" >> "$GITHUB_ENV"
           echo "::notice title=App compilada::$APP ($BID)"
 
-      - name: Correr en el simulador y capturar la lista
+      - name: Correr en el simulador y capturar el listado
         run: |
           # Cualquier comando que falle deja una anotacion con la linea y el codigo de salida
           trap 'echo "::error title=Fallo en simulador::linea $LINENO: \"$BASH_COMMAND\" (codigo $?)"' ERR
           UDID=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; rts=sorted([k for k in d if '.iOS-' in k and d[k]], key=lambda k:[int(x) for x in k.split('iOS-')[1].split('-')]); print([x['udid'] for x in d[rts[-1]] if x['name'].startswith('iPhone')][0])")
           echo "UDID=$UDID" >> "$GITHUB_ENV"
-          echo "::notice title=Simulador::$(xcrun simctl list devices | grep "$UDID")"
+          xcrun simctl list devices | grep "$UDID" | tee "$EVID/simulador.txt"
+          echo "::notice title=Simulador::$(cat "$EVID/simulador.txt")"
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "$APP"
           # --console-pty: guarda el stdout de la app (lineas KtorHttp => ...)
           nohup xcrun simctl launch --console-pty "$UDID" "$BUNDLE_ID" -pantalla productos > "$EVID/ios-ktor.log" 2>&1 &
-          sleep 40
-          xcrun simctl io "$UDID" screenshot "$EVID/01-ios-lista-productos.png"
+          sleep 45
+          xcrun simctl io "$UDID" screenshot "$EVID/01-ios-listado-precio.png"
           grep "KtorHttp" "$EVID/ios-ktor.log" > "$EVID/ios-ktor-filtrado.log" || true
-          cat "$EVID/ios-ktor-filtrado.log"
-          echo "::notice title=Log Ktor iOS::$(head -c 1500 "$EVID/ios-ktor-filtrado.log" | tr '\n' ' ')"
+          echo "::notice title=Log Ktor iOS::$(head -c 1200 "$EVID/ios-ktor-filtrado.log" | tr '\n' ' ')"
 
-      - name: Apagar el backend y capturar el error controlado
-        if: always() && env.UDID != ''
+      - name: Detalle y hoja de compartir (Maestro)
+        if: env.UDID != ''
+        continue-on-error: true
         run: |
-          pkill -f spring-boot || true
-          pkill -f PharmaBackendApplication || true
-          sleep 5
-          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
-          nohup xcrun simctl launch --console-pty "$UDID" "$BUNDLE_ID" -pantalla productos > "$EVID/ios-ktor-error.log" 2>&1 &
-          sleep 30
-          xcrun simctl io "$UDID" screenshot "$EVID/02-ios-error-sin-backend.png"
-          cat "$EVID/ios-ktor-error.log" | grep "KtorHttp" || true
+          curl -fsSL "https://get.maestro.mobile.dev" | bash > "$EVID/maestro-instalacion.log" 2>&1
+          export PATH="$PATH:$HOME/.maestro/bin"
+          export MAESTRO_CLI_NO_ANALYTICS=1
+          maestro --version | tee -a "$EVID/maestro-instalacion.log"
+          FLUJOS="$GITHUB_WORKSPACE/.github/ci/maestro"
+          cd "$EVID"
+          if maestro --device "$UDID" test -e APP_ID="$BUNDLE_ID" "$FLUJOS/compartir.yaml" > maestro-texto.log 2>&1; then
+            echo "::notice title=Maestro::flujo por texto completado"
+          else
+            echo "::warning title=Maestro::el flujo por texto fallo: $(tail -5 maestro-texto.log | tr '\n' ' ' | cut -c1-800)"
+            xcrun simctl io "$UDID" screenshot maestro-fallo-texto.png || true
+            maestro --device "$UDID" hierarchy > maestro-jerarquia.json 2>&1 || true
+            if maestro --device "$UDID" test -e APP_ID="$BUNDLE_ID" "$FLUJOS/compartir-puntos.yaml" > maestro-puntos.log 2>&1; then
+              echo "::notice title=Maestro::flujo por posicion completado"
+            else
+              echo "::warning title=Maestro::el flujo por posicion fallo: $(tail -5 maestro-puntos.log | tr '\n' ' ' | cut -c1-800)"
+            fi
+          fi
+          xcrun simctl io "$UDID" screenshot 09-ios-estado-final.png || true
+
+      - name: Publicar las evidencias en la rama ci-evidencias-ios
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Capturas de depuracion que Maestro guarda fuera de la carpeta de trabajo.
+          mkdir -p "$EVID/maestro-debug"
+          find "$HOME/.maestro/tests" -type f \( -name "*.png" -o -name "*.log" -o -name "*.json" \) -exec cp {} "$EVID/maestro-debug/" \; 2>/dev/null || true
+          cd "$EVID"
+          {
+            echo "# Evidencias iOS"
+            echo
+            echo "- Ejecucion: $GITHUB_RUN_NUMBER (id $GITHUB_RUN_ID)"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Rama: $GITHUB_REF_NAME"
+            echo "- Fecha (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+            echo
+            echo "## Archivos"
+            ls -1 | sed 's/^/- /'
+          } > README.md
+          git init -q
+          git checkout -q -b "$RAMA_EVIDENCIAS"
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "Evidencias iOS de la ejecucion $GITHUB_RUN_NUMBER ($GITHUB_SHA)"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$RAMA_EVIDENCIAS"
+          echo "::notice title=Evidencias publicadas::https://github.com/${GITHUB_REPOSITORY}/tree/${RAMA_EVIDENCIAS}"
 
       - uses: actions/upload-artifact@v4
         if: always()

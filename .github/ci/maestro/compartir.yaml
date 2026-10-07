@@ -1,0 +1,29 @@
+# Flujo de Maestro para la evidencia de iOS (Sesion 9): abre Productos, entra al
+# detalle del primer producto y toca Compartir. Busca los elementos por su texto.
+appId: ${APP_ID}
+---
+- launchApp:
+    stopApp: true
+    arguments:
+      pantalla: productos
+# Si el argumento de arranque no llego, la app abre en Inicio: se entra a mano.
+- runFlow:
+    when:
+      visible: ".*Registrar productos.*"
+    commands:
+      - tapOn: ".*Registrar productos.*"
+- extendedWaitUntil:
+    visible: ".*Paracetamol 500mg.*"
+    timeout: 60000
+- takeScreenshot: m01-ios-listado-precio
+- tapOn:
+    text: ".*Paracetamol 500mg.*"
+    index: 0
+- extendedWaitUntil:
+    visible: "Compartir"
+    timeout: 30000
+- takeScreenshot: m02-ios-detalle
+- tapOn: "Compartir"
+- waitForAnimationToEnd:
+    timeout: 8000
+- takeScreenshot: m03-ios-hoja-compartir
