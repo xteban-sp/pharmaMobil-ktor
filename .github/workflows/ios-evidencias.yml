@@ -191,3 +191,108 @@ jobs:
         with:
           name: evidencias-ios
           path: evidencias/
+
+  # Instalador para un iPhone fisico. Sale sin firma: se firma e instala desde
+  # Windows con Sideloadly y un Apple ID. Solo corre si
+  # iosApp/Configuration/servidor-dispositivo.txt tiene la IP de la PC.
+  ios-dispositivo:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      SALIDA: ${{ github.workspace }}/instalador
+      RAMA_INSTALADOR: ci-ios-instalador
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Leer la IP de la PC
+        id: servidor
+        run: |
+          IP=$(tr -d ' \r\n' < iosApp/Configuration/servidor-dispositivo.txt 2>/dev/null || true)
+          if echo "$IP" | grep -Eq '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
+            echo "ip=$IP" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Servidor para el iPhone::http://$IP:8080/api/v1/"
+          else
+            echo "::notice title=Instalador omitido::servidor-dispositivo.txt no tiene una IP"
+          fi
+
+      - uses: actions/setup-java@v4
+        if: steps.servidor.outputs.ip != ''
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Android SDK (lo exige Gradle al configurar el modulo shared)
+        if: steps.servidor.outputs.ip != ''
+        run: |
+          chmod +x gradlew
+          mkdir -p "$SALIDA"
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          if [ -z "$SDK" ] || [ ! -d "$SDK/platforms" ]; then
+            SDK="$HOME/android-sdk"
+            mkdir -p "$SDK/cmdline-tools"
+            curl -sSLo /tmp/clt.zip https://dl.google.com/android/repository/commandlinetools-mac-13114758_latest.zip
+            unzip -q /tmp/clt.zip -d "$SDK/cmdline-tools"
+            mv "$SDK/cmdline-tools/cmdline-tools" "$SDK/cmdline-tools/latest"
+            yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" --licenses > /dev/null || true
+            "$SDK/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK" "platforms;android-36" "build-tools;36.0.0" > /dev/null
+          fi
+          echo "sdk.dir=$SDK" > local.properties
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+
+      - name: Compilar la app para iPhone (arm64, sin firma)
+        if: steps.servidor.outputs.ip != ''
+        env:
+          IP: ${{ steps.servidor.outputs.ip }}
+        run: |
+          if ! xcodebuild -project iosApp/iosApp.xcodeproj -target iosApp \
+               -configuration Debug -sdk iphoneos -arch arm64 \
+               SYMROOT="$PWD/build/ios-dispositivo" \
+               CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+               PHARMASOFT_URL="http://$IP:8080/api/v1/" build > "$SALIDA/xcodebuild-dispositivo.log" 2>&1; then
+            ERR=$( (grep -E "(^| )error: |^e: |What went wrong|Permission denied|Exception:|^> " "$SALIDA/xcodebuild-dispositivo.log" | grep -v "^note:" | head -30) | tr '\n' ' ' | cut -c1-3500)
+            [ -n "$ERR" ] || ERR=$(grep -v "^ *export " "$SALIDA/xcodebuild-dispositivo.log" | tail -40 | tr '\n' ' ' | cut -c1-3500)
+            echo "::error title=xcodebuild (iPhone) fallo::$ERR"
+            exit 1
+          fi
+          APP=$(find build/ios-dispositivo -maxdepth 3 -name "*.app" | head -1)
+          test -n "$APP" || { echo "::error title=Sin .app::xcodebuild no genero la app"; exit 1; }
+          /usr/libexec/PlistBuddy -c 'Print PharmaSoftUrl' "$APP/Info.plist"
+          # Un .ipa es un zip con la app dentro de una carpeta Payload.
+          mkdir -p ipa/Payload
+          cp -R "$APP" ipa/Payload/
+          (cd ipa && zip -qry "$SALIDA/PharmaMobil.ipa" Payload)
+          ls -lh "$SALIDA/PharmaMobil.ipa"
+          echo "::notice title=Instalador::$(du -h "$SALIDA/PharmaMobil.ipa" | cut -f1) para http://$IP:8080"
+
+      - name: Publicar el instalador en la rama ci-ios-instalador
+        if: always() && steps.servidor.outputs.ip != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IP: ${{ steps.servidor.outputs.ip }}
+        run: |
+          cd "$SALIDA"
+          # GitHub rechaza archivos de mas de 100 MB en una rama.
+          find . -type f -size +95M -delete
+          {
+            echo "# Instalador de PharmaMobil para iPhone"
+            echo
+            echo "- Servidor configurado: http://$IP:8080/api/v1/"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Fecha (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+            echo
+            echo "PharmaMobil.ipa no esta firmado: se instala con Sideloadly y un Apple ID."
+          } > README.md
+          git init -q
+          git checkout -q -b "$RAMA_INSTALADOR"
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "Instalador iOS de la ejecucion $GITHUB_RUN_NUMBER ($GITHUB_SHA)"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$RAMA_INSTALADOR"
+          echo "::notice title=Instalador publicado::https://github.com/${GITHUB_REPOSITORY}/tree/${RAMA_INSTALADOR}"
+
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.servidor.outputs.ip != ''
+        with:
+          name: instalador-ios
+          path: instalador/
+

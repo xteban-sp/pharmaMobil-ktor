@@ -263,6 +263,17 @@ El mismo `Double` no se ve igual: el símbolo, el espacio que lo separa del mont
 | `KoinIosKt.doInitKoinIos()` | Las funciones de nivel superior de `KoinIos.kt` quedan en la clase `KoinIosKt`; Swift reserva los nombres que empiezan con `init`, así que Kotlin antepone `do` |
 | `MainViewControllerKt.MainViewController()` | Mismo criterio: función de nivel superior de `MainViewController.kt` |
 
+### iOS sin Mac: simulador e iPhone físico
+
+El workflow `.github/workflows/ios-evidencias.yml` corre en un runner macOS de GitHub Actions con cada push de la rama.
+
+- **Simulador** (job `ios-simulador`): levanta PharmaSoft con el perfil h2, compila la app, la abre en un simulador de iPhone y recorre listado, detalle y Compartir con Maestro. Las capturas y los registros quedan en la rama `ci-evidencias-ios`.
+- **iPhone físico** (job `ios-dispositivo`): genera `PharmaMobil.ipa` sin firma en la rama `ci-ios-instalador`. Se instala desde Windows con Sideloadly y un Apple ID. Solo corre si `iosApp/Configuration/servidor-dispositivo.txt` contiene la IP de la PC en la red local.
+
+En el simulador la app usa `http://localhost:8080/api/v1/`. En un iPhone físico `localhost` es el propio teléfono, así que la URL se escribe al compilar en la clave `PharmaSoftUrl` del `Info.plist` y `PlatformModule.ios.kt` la lee. El teléfono y la PC deben estar en la misma red, y el firewall de Windows debe permitir el puerto 8080.
+
+`gradlew` está en el repositorio con permiso de ejecución (`git update-index --chmod=+x gradlew`): sin él, el paso de Xcode que lo invoca falla en macOS.
+
 ### Punto de control 1: el error que exige los `actual`
 
 El primer commit de la rama declara solo el `expect`. En ese estado el proyecto no compila:
