@@ -12,18 +12,43 @@ appId: ${APP_ID}
       visible: ".*Inventario, precios y stock.*"
     commands:
       - tapOn: ".*Inventario, precios y stock.*"
+# El runner de CI va cargado y el backend puede tardar: si la carga falla, se reintenta.
+- extendedWaitUntil:
+    visible: ".*Paracetamol 500mg.*|Reintentar"
+    timeout: 90000
+- runFlow:
+    when:
+      visible: "Reintentar"
+    commands:
+      - tapOn: "Reintentar"
 - extendedWaitUntil:
     visible: ".*Paracetamol 500mg.*"
-    timeout: 60000
+    timeout: 90000
 - takeScreenshot: m01-ios-listado-precio
 - tapOn:
     text: ".*Paracetamol 500mg.*"
     index: 0
 - extendedWaitUntil:
+    visible: "Compartir|Reintentar"
+    timeout: 60000
+- runFlow:
+    when:
+      visible: "Reintentar"
+    commands:
+      - tapOn: "Reintentar"
+      - extendedWaitUntil:
+          visible: "Compartir|Reintentar"
+          timeout: 60000
+- runFlow:
+    when:
+      visible: "Reintentar"
+    commands:
+      - tapOn: "Reintentar"
+- extendedWaitUntil:
     visible: "Compartir"
-    timeout: 30000
+    timeout: 60000
 - takeScreenshot: m02-ios-detalle
 - tapOn: "Compartir"
 - waitForAnimationToEnd:
-    timeout: 8000
+    timeout: 10000
 - takeScreenshot: m03-ios-hoja-compartir

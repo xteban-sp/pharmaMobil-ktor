@@ -126,7 +126,8 @@ jobs:
           xcrun simctl install "$UDID" "$APP"
           # --console-pty: guarda el stdout de la app (lineas KtorHttp => ...)
           nohup xcrun simctl launch --console-pty "$UDID" "$BUNDLE_ID" -pantalla productos > "$EVID/ios-ktor.log" 2>&1 &
-          sleep 45
+          # El primer arranque del simulador es lento: se espera a que cargue el inventario.
+          sleep 75
           xcrun simctl io "$UDID" screenshot "$EVID/01-ios-listado-precio.png"
           grep "KtorHttp" "$EVID/ios-ktor.log" > "$EVID/ios-ktor-filtrado.log" || true
           echo "::notice title=Log Ktor iOS::$(head -c 1200 "$EVID/ios-ktor-filtrado.log" | tr '\n' ' ')"
@@ -163,6 +164,8 @@ jobs:
           # Capturas de depuracion que Maestro guarda fuera de la carpeta de trabajo.
           mkdir -p "$EVID/maestro-debug"
           find "$HOME/.maestro/tests" -type f \( -name "*.png" -o -name "*.log" -o -name "*.json" \) -exec cp {} "$EVID/maestro-debug/" \; 2>/dev/null || true
+          # El registro completo del simulador pesa decenas de MB: no se publica.
+          find "$EVID" -type f -size +3M -delete
           cd "$EVID"
           {
             echo "# Evidencias iOS"
