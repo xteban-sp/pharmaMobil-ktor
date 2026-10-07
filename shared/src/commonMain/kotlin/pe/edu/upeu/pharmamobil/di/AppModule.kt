@@ -20,6 +20,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import pe.edu.upeu.pharmamobil.presentation.cliente.ClienteViewModel
+import pe.edu.upeu.pharmamobil.presentation.detalle.DetalleProductoViewModel
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoViewModel
 
 
@@ -52,6 +53,8 @@ val domainModule = module {
 val presentationModule = module {
     viewModel { ProductoViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { ClienteViewModel(get(), get()) }
+    // Sesion 9: el Compartidor lo aporta el platformModule de cada plataforma.
+    viewModel { DetalleProductoViewModel(get(), get()) }
 }
 
 

@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +48,7 @@ import pe.edu.upeu.pharmamobil.presentation.components.IndicadorCarga
 import pe.edu.upeu.pharmamobil.presentation.components.MensajeError
 import pe.edu.upeu.pharmamobil.presentation.components.MensajeExito
 import pe.edu.upeu.pharmamobil.presentation.components.ValidatedTextField
+import pe.edu.upeu.pharmamobil.presentation.detalle.DetalleProductoScreen
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Fase
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Operacion
 
@@ -61,108 +63,123 @@ fun ProductoScreen(
     // Producto pendiente de confirmar su eliminacion (estado solo de la interfaz).
     var porEliminar by remember { mutableStateOf<ProductoUi?>(null) }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+    // Sesion 9: id del producto cuyo detalle esta abierto (null = cerrado).
+    var enDetalle by rememberSaveable { mutableStateOf<Long?>(null) }
 
-        FormularioProductoCard(
-            formulario = uiState.formulario,
-            operacion = uiState.operacion,
-            onNombreChange = viewModel::onNombreChange,
-            onPrecioChange = viewModel::onPrecioChange,
-            onStockChange = viewModel::onStockChange,
-            onGuardar = viewModel::guardar,
-            onCancelarEdicion = viewModel::cancelarEdicion
-        )
+    Box(modifier = modifier.fillMaxSize()) {
 
-        // La operacion en curso se anuncia sin tapar el listado.
-        when (val operacion = uiState.operacion) {
-
-            Operacion.Inactiva -> Unit
-
-            is Operacion.EnCurso ->
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-
-            is Operacion.Fallida ->
-                MensajeError(
-                    texto = operacion.mensaje,
-                    onCerrar = viewModel::descartarError
-                )
-        }
-
-        uiState.mensajeExito?.let {
-            MensajeExito(it)
-        }
-
-        EncabezadoInventario(
-            fase = uiState.fase,
-            cantidadDeBaja = uiState.dadosDeBaja.size,
-            viendoBajas = uiState.viendoBajas,
-            onVerBajas = viewModel::verDadosDeBaja
-        )
-
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            // when exhaustivo sobre la sealed interface: si se agrega una fase
-            // y no se trata aqui, el proyecto no compila.
-            when (val fase = uiState.fase) {
+            FormularioProductoCard(
+                formulario = uiState.formulario,
+                operacion = uiState.operacion,
+                onNombreChange = viewModel::onNombreChange,
+                onPrecioChange = viewModel::onPrecioChange,
+                onStockChange = viewModel::onStockChange,
+                onGuardar = viewModel::guardar,
+                onCancelarEdicion = viewModel::cancelarEdicion
+            )
 
-                Fase.Cargando ->
-                    IndicadorCarga(
-                        texto = "Cargando inventario…",
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+            // La operacion en curso se anuncia sin tapar el listado.
+            when (val operacion = uiState.operacion) {
 
-                Fase.SinProductos ->
-                    if (uiState.viendoBajas) {
-                        ListaDadosDeBaja(
-                            productos = uiState.dadosDeBaja,
-                            operacion = uiState.operacion,
-                            onReactivar = viewModel::reactivar,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    } else {
-                        EstadoVacio(
-                            icono = Icons.Default.Inventory2,
-                            titulo = "Todavía no hay productos",
-                            descripcion = "Registra el primero con el formulario de arriba.",
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                Operacion.Inactiva -> Unit
 
-                is Fase.ConProductos ->
-                    if (uiState.viendoBajas) {
-                        ListaDadosDeBaja(
-                            productos = uiState.dadosDeBaja,
-                            operacion = uiState.operacion,
-                            onReactivar = viewModel::reactivar,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    } else {
-                        ListaProductos(
-                            productos = fase.productos,
-                            operacion = uiState.operacion,
-                            editandoId = uiState.formulario.editandoId,
-                            onEditar = viewModel::editar,
-                            onEliminar = { porEliminar = it }
-                        )
-                    }
+                is Operacion.EnCurso ->
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
 
-                is Fase.Error ->
-                    EstadoError(
-                        titulo = "No pudimos cargar el inventario",
-                        mensaje = fase.mensaje,
-                        onReintentar = viewModel::cargarProductos,
-                        modifier = Modifier.align(Alignment.Center)
+                is Operacion.Fallida ->
+                    MensajeError(
+                        texto = operacion.mensaje,
+                        onCerrar = viewModel::descartarError
                     )
             }
+
+            uiState.mensajeExito?.let {
+                MensajeExito(it)
+            }
+
+            EncabezadoInventario(
+                fase = uiState.fase,
+                cantidadDeBaja = uiState.dadosDeBaja.size,
+                viendoBajas = uiState.viendoBajas,
+                onVerBajas = viewModel::verDadosDeBaja
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+
+                // when exhaustivo sobre la sealed interface: si se agrega una fase
+                // y no se trata aqui, el proyecto no compila.
+                when (val fase = uiState.fase) {
+
+                    Fase.Cargando ->
+                        IndicadorCarga(
+                            texto = "Cargando inventario…",
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+
+                    Fase.SinProductos ->
+                        if (uiState.viendoBajas) {
+                            ListaDadosDeBaja(
+                                productos = uiState.dadosDeBaja,
+                                operacion = uiState.operacion,
+                                onReactivar = viewModel::reactivar,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        } else {
+                            EstadoVacio(
+                                icono = Icons.Default.Inventory2,
+                                titulo = "Todavía no hay productos",
+                                descripcion = "Registra el primero con el formulario de arriba.",
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+
+                    is Fase.ConProductos ->
+                        if (uiState.viendoBajas) {
+                            ListaDadosDeBaja(
+                                productos = uiState.dadosDeBaja,
+                                operacion = uiState.operacion,
+                                onReactivar = viewModel::reactivar,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        } else {
+                            ListaProductos(
+                                productos = fase.productos,
+                                operacion = uiState.operacion,
+                                editandoId = uiState.formulario.editandoId,
+                                onVerDetalle = { enDetalle = it },
+                                onEditar = viewModel::editar,
+                                onEliminar = { porEliminar = it }
+                            )
+                        }
+
+                    is Fase.Error ->
+                        EstadoError(
+                            titulo = "No pudimos cargar el inventario",
+                            mensaje = fase.mensaje,
+                            onReintentar = viewModel::cargarProductos,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                }
+            }
+        }
+
+        // El detalle se dibuja encima del inventario, dentro de la misma pantalla.
+        enDetalle?.let { id ->
+            DetalleProductoScreen(
+                productoId = id,
+                onCerrar = { enDetalle = null }
+            )
         }
     }
 
@@ -333,6 +350,7 @@ private fun ListaProductos(
     productos: List<ProductoUi>,
     operacion: Operacion,
     editandoId: Long?,
+    onVerDetalle: (Long) -> Unit,
     onEditar: (Long) -> Unit,
     onEliminar: (ProductoUi) -> Unit
 ) {
@@ -352,6 +370,7 @@ private fun ListaProductos(
                 enProceso = enCurso?.productoId == producto.id,
                 seleccionado = editandoId == producto.id,
                 accionesHabilitadas = enCurso == null,
+                onVerDetalle = { onVerDetalle(producto.id) },
                 onEditar = { onEditar(producto.id) },
                 onEliminar = { onEliminar(producto) }
             )
@@ -366,11 +385,14 @@ private fun ProductoItem(
     enProceso: Boolean,
     seleccionado: Boolean,
     accionesHabilitadas: Boolean,
+    onVerDetalle: () -> Unit,
     onEditar: () -> Unit,
     onEliminar: () -> Unit
 ) {
 
+    // Tocar la fila abre el detalle; el lapiz y el tachito conservan su accion.
     Card(
+        onClick = onVerDetalle,
         modifier = Modifier.fillMaxWidth()
     ) {
 
