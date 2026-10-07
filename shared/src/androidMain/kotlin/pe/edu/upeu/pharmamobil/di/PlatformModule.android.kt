@@ -2,10 +2,13 @@ package pe.edu.upeu.pharmamobil.di
 
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import pe.edu.upeu.pharmamobil.data.remote.ConfiguracionApi
 import pe.edu.upeu.pharmamobil.data.remote.EscenarioPrueba
+import pe.edu.upeu.pharmamobil.domain.platform.Compartidor
+import pe.edu.upeu.pharmamobil.platform.CompartidorAndroid
 
 actual val platformModule: Module = module {
     // Motor OkHttp (requiere el permiso INTERNET en el AndroidManifest).
@@ -20,4 +23,7 @@ actual val platformModule: Module = module {
             escenario = EscenarioPrueba.NINGUNO
         )
     }
+    // Sesion 9: capacidad nativa de compartir. androidContext() es el Context de
+    // la aplicacion que MainApplication le entrega a Koin al arrancar.
+    single<Compartidor> { CompartidorAndroid(androidContext()) }
 }
