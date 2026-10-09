@@ -1,0 +1,21 @@
+Running on test
+ > Flow compartir-android
+Launch app "${APP_ID}" (launch arguments: {pantalla=productos})... COMPLETED
+Run flow when ".*Inventario, precios y stock.*" is visible...
+Run flow when ".*Inventario, precios y stock.*" is visible... SKIPPED
+Assert that ".*Paracetamol 500mg.*|Reintentar" is visible... COMPLETED
+Run flow when "Reintentar" is visible...
+Run flow when "Reintentar" is visible... SKIPPED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Take screenshot m01-android-listado-precio... COMPLETED
+Tap on ".*Paracetamol 500mg.*", Index: 0... COMPLETED
+Assert that "Compartir|Reintentar" is visible... COMPLETED
+Run flow when "Reintentar" is visible...
+Run flow when "Reintentar" is visible... SKIPPED
+Run flow when "Reintentar" is visible...
+Run flow when "Reintentar" is visible... SKIPPED
+Assert that "Compartir" is visible... COMPLETED
+Take screenshot m02-android-detalle... COMPLETED
+Tap on "Compartir"... COMPLETED
+Wait for animation to end within 10000 ms... COMPLETED
+Take screenshot m03-android-selector-compartir... COMPLETED
