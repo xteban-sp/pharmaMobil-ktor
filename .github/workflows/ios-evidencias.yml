@@ -4,7 +4,9 @@
 # 3) Captura el listado (precio formateado), el detalle y la hoja de compartir
 # Resultado: rama "ci-evidencias-ios" del repositorio (capturas y registros) y
 # artifact "evidencias-ios" en la pestaña Actions.
-name: Evidencias iOS
+# Actividad autonoma 9: el job android-emulador hace lo mismo en un emulador de
+# Android (rama "ci-evidencias-android") y ambos capturan la pantalla Acerca de.
+name: Evidencias iOS y Android
 
 on:
   workflow_dispatch:
@@ -154,6 +156,12 @@ jobs:
               echo "::warning title=Maestro::el flujo por posicion fallo: $(tail -5 maestro-puntos.log | tr '\n' ' ' | cut -c1-800)"
             fi
           fi
+          # Actividad autonoma 9: pantalla Acerca de (InfoDispositivo y formato de moneda).
+          if maestro --device "$UDID" test -e APP_ID="$BUNDLE_ID" "$FLUJOS/acerca-de-ios.yaml" > maestro-acerca.log 2>&1; then
+            echo "::notice title=Maestro::pantalla Acerca de"
+          else
+            echo "::warning title=Maestro::Acerca de fallo: $(tail -5 maestro-acerca.log | tr '\n' ' ' | cut -c1-800)"
+          fi
           xcrun simctl io "$UDID" screenshot 09-ios-estado-final.png || true
 
       - name: Publicar las evidencias en la rama ci-evidencias-ios
@@ -190,6 +198,115 @@ jobs:
         if: always()
         with:
           name: evidencias-ios
+          path: evidencias/
+
+  # Actividad autonoma 9: la misma evidencia en un emulador de Android.
+  android-emulador:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EVID: ${{ github.workspace }}/evidencias
+      RAMA_EVIDENCIAS: ci-evidencias-android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Habilitar KVM (aceleracion del emulador)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Preparar el entorno
+        run: |
+          mkdir -p "$EVID"
+          chmod +x gradlew
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          {
+            echo "== sistema"; lsb_release -ds
+            echo "== java"; java -version
+            echo "== commit"; git log -1 --format='%H %s'
+          } > "$EVID/entorno.txt" 2>&1 || true
+
+      - name: Levantar PharmaSoft (perfil h2)
+        run: |
+          git clone --depth 1 https://github.com/dreyna/pharmaSoft.git backend
+          cp .github/ci/pharmasoft-h2/* backend/src/main/resources/
+          cd backend
+          perl -0pi -e 's#(<artifactId>ojdbc11</artifactId>\s*<scope>runtime</scope>\s*</dependency>)#$1\n\t\t<dependency>\n\t\t\t<groupId>com.h2database</groupId>\n\t\t\t<artifactId>h2</artifactId>\n\t\t\t<scope>runtime</scope>\n\t\t</dependency>#' pom.xml
+          grep -q "com.h2database" pom.xml
+          chmod +x mvnw
+          nohup ./mvnw -q -DskipTests spring-boot:run -Dspring-boot.run.profiles=h2 > "$EVID/backend.log" 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:8080/api/health && break
+            sleep 5
+          done
+          echo
+          curl -sf "http://localhost:8080/api/v1/productos?pagina=0&tamanio=20" > "$EVID/productos.json"
+
+      - name: Compilar la app de Android
+        run: |
+          if ! ./gradlew :androidApp:assembleDebug > "$EVID/gradle-android.log" 2>&1; then
+            ERR=$( (grep -E "^e: |What went wrong|^> " "$EVID/gradle-android.log" | head -25) | tr '\n' ' ' | cut -c1-3500)
+            echo "::error title=Gradle (Android) fallo::$ERR"
+            exit 1
+          fi
+          APK=$(find androidApp/build/outputs/apk/debug -name "*.apk" | head -1)
+          test -n "$APK" || { echo "::error title=Sin APK::assembleDebug no genero el apk"; exit 1; }
+          echo "APK=$PWD/$APK" >> "$GITHUB_ENV"
+
+      - name: Instalar Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash > "$EVID/maestro-instalacion.log" 2>&1
+          "$HOME/.maestro/bin/maestro" --version | tee -a "$EVID/maestro-instalacion.log"
+
+      - name: Emulador, app y capturas (Maestro)
+        continue-on-error: true
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash .github/ci/android-evidencias.sh
+
+      - name: Publicar las evidencias en la rama ci-evidencias-android
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$EVID/maestro-debug"
+          find "$HOME/.maestro/tests" -type f \( -name "*.png" -o -name "*.log" -o -name "*.json" \) -exec cp {} "$EVID/maestro-debug/" \; 2>/dev/null || true
+          find "$EVID" -type f -size +3M -delete
+          cd "$EVID"
+          {
+            echo "# Evidencias Android"
+            echo
+            echo "- Ejecucion: $GITHUB_RUN_NUMBER (id $GITHUB_RUN_ID)"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Rama: $GITHUB_REF_NAME"
+            echo "- Fecha (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+            echo
+            echo "## Archivos"
+            ls -1 | sed 's/^/- /'
+          } > README.md
+          git init -q
+          git checkout -q -b "$RAMA_EVIDENCIAS"
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "Evidencias Android de la ejecucion $GITHUB_RUN_NUMBER ($GITHUB_SHA)"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$RAMA_EVIDENCIAS"
+          echo "::notice title=Evidencias publicadas::https://github.com/${GITHUB_REPOSITORY}/tree/${RAMA_EVIDENCIAS}"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencias-android
           path: evidencias/
 
   # Instalador para un iPhone fisico. Sale sin firma: se firma e instala desde
