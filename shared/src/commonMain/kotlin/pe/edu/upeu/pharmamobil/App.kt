@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocalPharmacy
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.Menu
@@ -64,6 +65,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacion
 import pe.edu.upeu.pharmamobil.navigation.Screen
 import pe.edu.upeu.pharmamobil.platform.AlPulsarAtras
+import pe.edu.upeu.pharmamobil.presentation.acerca.AcercaDeScreen
 import pe.edu.upeu.pharmamobil.presentation.cliente.ClienteScreen
 import pe.edu.upeu.pharmamobil.presentation.components.EstadoVacio
 import pe.edu.upeu.pharmamobil.presentation.detalle.DetalleProductoScreen
@@ -84,15 +86,17 @@ private val DESTINOS = listOf(
     Destino(Screen.Inicio, "Inicio", Icons.Default.Home),
     Destino(Screen.Productos, "Productos", Icons.Default.Medication),
     Destino(Screen.Clientes, "Clientes", Icons.Default.Person),
-    Destino(Screen.Pedidos, "Pedidos", Icons.Default.ShoppingCart)
+    Destino(Screen.Pedidos, "Pedidos", Icons.Default.ShoppingCart),
+    Destino(Screen.AcercaDe, "Acerca de", Icons.Default.Info)
 )
 
 private const val DURACION_TRANSICION_MS = 220
 
 /**
  * @param pantallaInicial pantalla con la que abre la app. Por defecto Inicio;
- * iOS la puede cambiar con el argumento de arranque `-pantalla productos`
- * (lo usa el workflow de GitHub Actions para capturar evidencias en el simulador).
+ * se puede cambiar al arrancar: `-pantalla productos` en iOS y el extra
+ * «pantalla» del Intent en Android (lo usa el workflow de GitHub Actions para
+ * capturar evidencias en el simulador y en el emulador).
  */
 @Composable
 fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
@@ -333,6 +337,9 @@ fun App(pantallaInicial: Screen = Screen.Inicio) = KoinContext {
                                     descripcion = "Este módulo llega en una próxima sesión del curso.",
                                     modifier = Modifier.align(Alignment.Center)
                                 )
+
+                            Screen.AcercaDe ->
+                                AcercaDeScreen()
                         }
                     }
                 }
@@ -439,6 +446,7 @@ private fun tituloDe(
     Screen.Productos -> "Productos"
     Screen.Clientes -> "Clientes"
     Screen.Pedidos -> "Pedidos"
+    Screen.AcercaDe -> "Acerca de"
     is Screen.DetalleProducto -> "Detalle del producto"
     is Screen.FormularioProducto ->
         if (screen.productoId == null) "Nuevo producto" else "Editar producto"

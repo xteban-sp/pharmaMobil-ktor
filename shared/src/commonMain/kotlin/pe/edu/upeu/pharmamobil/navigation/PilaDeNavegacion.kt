@@ -77,6 +77,7 @@ class PilaDeNavegacion(inicial: List<Screen> = listOf(Screen.Inicio)) {
             Screen.Productos -> "productos"
             Screen.Clientes -> "clientes"
             Screen.Pedidos -> "pedidos"
+            Screen.AcercaDe -> "acerca"
             is Screen.DetalleProducto -> "detalle:${pantalla.productoId}"
             is Screen.FormularioProducto -> "formulario:${pantalla.productoId ?: ""}"
         }
@@ -89,6 +90,7 @@ class PilaDeNavegacion(inicial: List<Screen> = listOf(Screen.Inicio)) {
                 "productos" -> Screen.Productos
                 "clientes" -> Screen.Clientes
                 "pedidos" -> Screen.Pedidos
+                "acerca" -> Screen.AcercaDe
                 "detalle" -> valor.toLongOrNull()?.let { Screen.DetalleProducto(it) }
                 "formulario" -> Screen.FormularioProducto(valor.toLongOrNull())
                 else -> null

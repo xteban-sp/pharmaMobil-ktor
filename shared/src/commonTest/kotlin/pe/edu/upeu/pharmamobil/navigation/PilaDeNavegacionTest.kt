@@ -118,4 +118,21 @@ class PilaDeNavegacionTest {
         assertEquals(null, PilaDeNavegacion.desdeTexto("otra-cosa"))
         assertEquals(null, PilaDeNavegacion.desdeTexto("detalle:no-es-numero"))
     }
+
+    @Test
+    fun abreLaPantallaPedidaAlArrancar() {
+
+        assertEquals(Screen.AcercaDe, pantallaPorNombre("acerca"))
+        assertEquals(Screen.Productos, pantallaPorNombre("PRODUCTOS"))
+        assertEquals(Screen.Inicio, pantallaPorNombre("no-existe"))
+        assertEquals(Screen.Inicio, pantallaPorNombre(null))
+    }
+
+    @Test
+    fun acercaDeSeGuardaYSeRestauraComoTexto() {
+
+        val texto = PilaDeNavegacion.aTexto(Screen.AcercaDe)
+
+        assertEquals(Screen.AcercaDe, PilaDeNavegacion.desdeTexto(texto))
+    }
 }

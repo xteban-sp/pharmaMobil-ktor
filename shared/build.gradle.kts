@@ -9,6 +9,12 @@ plugins {
 }
 
 kotlin {
+    // Actividad autonoma 9: InfoDispositivo es una clase expect. Las clases
+    // expect/actual estan en Beta y sin esta opcion el compilador lo advierte.
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
