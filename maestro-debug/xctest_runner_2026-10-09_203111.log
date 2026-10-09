@@ -1,0 +1,813 @@
+2026-10-09 20:31:16.888 xcodebuild[44553:116285] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-09 20:31:16.904 xcodebuild[44553:116285] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:22452A91-4697-4369-8812-53ADB77EB73B, OS:26.2026-10-09 20:31:50.741167+0000 maestro-driver-iosUITests-Runner[45794:119428] [Default] Running tests...
+2026-10-09 20:31:50.960974+0000 maestro-driver-iosUITests-Runner[45794:119700] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name** BUILD INTERRUPTED **
+easurement.FirstFramePresentationMetric
+2026-10-09 20:31:51.003895+0000 maestro-driver-iosUITests-Runner[45794:119694] [General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-10-09 20:31:51.365538+0000 maestro-driver-iosUITests-Runner[45794:119428] snapshotKeyHonorModalViews configured to value: (null)
+objc[45794]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x1087c4310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x107c8c398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-09 20:32:02.548.
+Test Suite 'maestro-driver-iosUITests.xctest' started at 2026-10-09 20:32:02.550.
+Test Suite 'SwipeRouteHandlerV2ClassificationTests' started at 2026-10-09 20:32:02.551.
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testClassifiedTimeoutPreservesTheRealMessage]' started.
+    t =     0.00s Start Test at 2026-10-09 20:32:02.554
+    t =     0.01s Set Up
+    t =     0.01s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testClassifiedTimeoutPreservesTheRealMessage]' passed (0.008 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testMainThreadBusyIsClassifiedAsTimeout]' started.
+    t =     0.00s Start Test at 2026-10-09 20:32:02.562
+    t =     0.00s Set Up
+    t =     0.00s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testMainThreadBusyIsClassifiedAsTimeout]' passed (0.002 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testTimeoutMessageWithWrongDomainStaysInternal]' started.
+    t =     0.00s Start Test at 2026-10-09 20:32:02.567
+    t =     0.00s Set Up
+    t =     0.00s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testTimeoutMessageWithWrongDomainStaysInternal]' passed (0.002 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUIQueryTimeoutIsClassifiedAsTimeout]' started.
+    t =     0.00s Start Test at 2026-10-09 20:32:02.570
+    t =     0.00s Set Up
+    t =     0.01s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUIQueryTimeoutIsClassifiedAsTimeout]' passed (0.007 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUnrelatedXCTFutureErrorStaysInternal]' started.
+    t =     0.09s Start Test at 2026-10-09 20:32:02.665
+    t =     0.09s Set Up
+    t =     0.09s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUnrelatedXCTFutureErrorStaysInternal]' passed (0.091 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testXCTFutureCode1000WithUnrelatedMessageStaysInternal]' started.
+    t =     0.00s Start Test at 2026-10-09 20:32:02.669
+    t =     0.00s Set Up
+    t =     0.00s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testXCTFutureCode1000WithUnrelatedMessageStaysInternal]' passed (0.004 seconds).
+Test Suite 'SwipeRouteHandlerV2ClassificationTests' passed at 2026-10-09 20:32:02.672.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.113 (0.122) seconds
+Test Suite 'maestro_driver_iosUITests' started at 2026-10-09 20:32:02.673.
+    t =      nans Suite Set Up
+Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started.
+    t =     0.09s Start Test at 2026-10-09 20:32:02.759
+    t =     0.09s Set Up
+2026-10-09 20:32:02.767648+0000 maestro-driver-iosUITests-Runner[45794:119698] [maestro_driver_iosUITests] Will start HTTP server
+2026-10-09 20:32:02.905385+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] starting server 127.0.0.1:52074
+2026-10-09 20:32:03.025866+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> open connection
+2026-10-09 20:32:03.053244+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: GET /status
+2026-10-09 20:32:04.708347+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> open connection
+2026-10-09 20:32:04.714204+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =     2.04s Getting device orientation
+2026-10-09 20:32:18.019930+0000 maestro-driver-iosUITests-Runner[45794:119428] Using singleton test manager
+2026-10-09 20:32:18.024398+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    15.36s Getting device orientation
+    t =    15.36s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:19.780291+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:34.677475+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /setPermissions
+2026-10-09 20:32:34.920437+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /terminateApp
+2026-10-09 20:32:34.925355+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] Terminating app pe.edu.upeu.pharmamobil.PharmaMobil
+    t =    32.27s Terminate pe.edu.upeu.pharmamobil.PharmaMobil:38968
+2026-10-09 20:32:36.130733+0000 maestro-driver-iosUITests-Runner[45794:119428] [End] Terminating app pe.edu.upeu.pharmamobil.PharmaMobil
+2026-10-09 20:32:46.530190+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    43.86s Getting device orientation
+2026-10-09 20:32:46.555858+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    43.88s Getting device orientation
+2026-10-09 20:32:46.559986+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:32:46.560300+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:53.781644+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:32:53.874973+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:32:53.882338+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:53.884941+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    51.21s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:54.974289+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:32:54.980115+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:32:54.980848+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    52.31s Checking existence of `StatusBar (First Match)`
+    t =    52.63s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    52.73s Find the StatusBar (Element at index 0)
+    t =    52.77s Find the StatusBar (Element at index 1)
+2026-10-09 20:32:55.515686+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.53426194190979
+2026-10-09 20:32:55.515890+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:32:55.524288+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.008239030838012695
+    t =    52.85s Find the Application 'com.apple.springboard'
+2026-10-09 20:32:55.579991+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:32:56.122112+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    53.45s Getting device orientation
+2026-10-09 20:32:56.131231+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    53.46s Getting device orientation
+2026-10-09 20:32:56.135405+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:32:56.135773+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:56.174604+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:32:56.178690+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:32:56.179220+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:56.179314+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    53.50s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:56.253030+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:32:56.253505+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:32:56.253679+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    53.58s Checking existence of `StatusBar (First Match)`
+    t =    53.60s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    53.64s Find the StatusBar (Element at index 0)
+    t =    53.70s Find the StatusBar (Element at index 1)
+2026-10-09 20:32:56.439905+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.1860949993133545
+2026-10-09 20:32:56.440098+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:32:56.440764+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0006200075149536133
+    t =    53.77s Find the Application 'com.apple.springboard'
+2026-10-09 20:32:56.483235+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:32:56.697553+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    54.02s Getting device orientation
+2026-10-09 20:32:56.704625+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    54.03s Getting device orientation
+2026-10-09 20:32:56.706408+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:32:56.706602+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:56.711188+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:32:56.715331+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:32:56.715859+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:56.716241+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    54.04s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:56.788418+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:32:56.788651+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:32:56.788795+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    54.11s Checking existence of `StatusBar (First Match)`
+    t =    54.14s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    54.18s Find the StatusBar (Element at index 0)
+    t =    54.24s Find the StatusBar (Element at index 1)
+2026-10-09 20:32:56.969709+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.18086111545562744
+2026-10-09 20:32:56.969909+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:32:56.970520+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0005979537963867188
+    t =    54.30s Find the Application 'com.apple.springboard'
+2026-10-09 20:32:57.018905+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:32:57.169090+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    54.50s Getting device orientation
+2026-10-09 20:32:57.175409+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    54.50s Getting device orientation
+2026-10-09 20:32:57.177262+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:32:57.177605+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:57.181555+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:32:57.185604+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:32:57.186333+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:57.186417+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    54.51s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:57.241841+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:32:57.242386+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:32:57.242627+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    54.57s Checking existence of `StatusBar (First Match)`
+    t =    54.59s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    54.63s Find the StatusBar (Element at index 0)
+    t =    54.69s Find the StatusBar (Element at index 1)
+2026-10-09 20:32:57.422610+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.17985403537750244
+2026-10-09 20:32:57.422828+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:32:57.424708+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0016789436340332031
+    t =    54.75s Find the Application 'com.apple.springboard'
+2026-10-09 20:32:57.468453+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:32:57.876847+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    55.20s Getting device orientation
+2026-10-09 20:32:57.882753+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    55.21s Getting device orientation
+2026-10-09 20:32:57.886263+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:32:57.886460+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:57.937027+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:32:57.942485+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:32:57.944767+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:57.945268+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    55.27s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:58.009267+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:32:58.015240+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:32:58.015329+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    55.34s Checking existence of `StatusBar (First Match)`
+    t =    55.36s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    55.41s Find the StatusBar (Element at index 0)
+    t =    55.45s Find the StatusBar (Element at index 1)
+2026-10-09 20:32:58.179009+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.1636209487915039
+2026-10-09 20:32:58.179103+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:32:58.180055+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0009158849716186523
+    t =    55.51s Find the Application 'com.apple.springboard'
+2026-10-09 20:32:58.232831+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:32:58.475115+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    55.80s Getting device orientation
+2026-10-09 20:32:58.483848+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    55.81s Getting device orientation
+2026-10-09 20:32:58.486771+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:32:58.486942+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:58.526031+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:32:58.531905+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:32:58.532588+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:58.532779+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    55.86s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:58.600350+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:32:58.600680+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:32:58.600765+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    55.93s Checking existence of `StatusBar (First Match)`
+    t =    55.95s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    56.00s Find the StatusBar (Element at index 0)
+    t =    56.05s Find the StatusBar (Element at index 1)
+2026-10-09 20:32:58.788772+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.1879580020904541
+2026-10-09 20:32:58.788868+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:32:58.789622+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0007280111312866211
+    t =    56.12s Find the Application 'com.apple.springboard'
+2026-10-09 20:32:58.826558+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:32:58.959186+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: GET /screenshot
+2026-10-09 20:32:59.430385+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    56.76s Getting device orientation
+2026-10-09 20:32:59.501484+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    56.83s Getting device orientation
+2026-10-09 20:32:59.504246+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:32:59.505007+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:32:59.538763+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:32:59.543445+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:32:59.544483+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:59.544597+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    56.87s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:32:59.636666+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:32:59.637872+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:32:59.638122+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    56.96s Checking existence of `StatusBar (First Match)`
+    t =    56.99s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    57.04s Find the StatusBar (Element at index 0)
+    t =    57.08s Find the StatusBar (Element at index 1)
+2026-10-09 20:32:59.831954+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.19364690780639648
+2026-10-09 20:32:59.832432+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:32:59.834625+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.001994013786315918
+    t =    57.16s Find the Application 'com.apple.springboard'
+2026-10-09 20:32:59.872830+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:00.997979+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:02.030158+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: GET /screenshot
+2026-10-09 20:33:03.039726+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /touch
+2026-10-09 20:33:03.051269+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    60.38s Getting device orientation
+2026-10-09 20:33:03.054186+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+    t =    60.38s Getting device orientation
+2026-10-09 20:33:03.055600+0000 maestro-driver-iosUITests-Runner[45794:119428] Tapping 165.0, 222.0
+    t =    60.38s Getting device orientation
+2026-10-09 20:33:03.623627+0000 maestro-driver-iosUITests-Runner[45794:119428] Tapping took 0.556676983833313
+2026-10-09 20:33:03.654547+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:04.197500+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:04.715081+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:05.228464+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:05.745057+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:06.176497+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:06.699188+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    64.03s Getting device orientation
+2026-10-09 20:33:06.730246+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    64.06s Getting device orientation
+2026-10-09 20:33:06.736171+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:06.736774+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:06.781111+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:06.789714+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:06.792124+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:06.792329+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    64.12s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:06.855747+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:06.856324+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:06.856509+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    64.21s Checking existence of `StatusBar (First Match)`
+    t =    64.24s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    64.29s Find the StatusBar (Element at index 0)
+    t =    64.36s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:07.105507+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.24855196475982666
+2026-10-09 20:33:07.106444+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:07.108367+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0018489360809326172
+    t =    64.43s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:07.148099+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:07.466554+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    64.79s Getting device orientation
+2026-10-09 20:33:07.475321+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    64.80s Getting device orientation
+2026-10-09 20:33:07.480563+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:07.481102+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:07.503547+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:07.511072+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:07.512995+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:07.513552+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    64.84s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:07.585530+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:07.586430+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:07.587845+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    64.91s Checking existence of `StatusBar (First Match)`
+    t =    64.94s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    65.00s Find the StatusBar (Element at index 0)
+    t =    65.06s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:07.795819+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.20764505863189697
+2026-10-09 20:33:07.796058+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:07.796793+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0007179975509643555
+    t =    65.12s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:07.829288+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:08.165683+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    65.49s Getting device orientation
+2026-10-09 20:33:08.181187+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    65.51s Getting device orientation
+2026-10-09 20:33:08.184528+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:08.185768+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:08.299765+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:08.307673+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:08.308516+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:08.308684+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    65.63s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:08.345183+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:08.345700+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:08.345794+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    65.69s Checking existence of `StatusBar (First Match)`
+    t =    65.72s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    65.79s Find the StatusBar (Element at index 0)
+    t =    65.84s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:08.569100+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.22322309017181396
+2026-10-09 20:33:08.569588+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:08.572968+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.003188014030456543
+    t =    65.90s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:08.620418+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:08.830603+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    66.16s Getting device orientation
+2026-10-09 20:33:08.838509+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    66.17s Getting device orientation
+2026-10-09 20:33:08.843420+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:08.844002+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:08.887348+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:08.893601+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:08.896172+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:08.896463+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    66.22s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:08.941134+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:08.942016+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:08.942575+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    66.29s Checking existence of `StatusBar (First Match)`
+    t =    66.32s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    66.38s Find the StatusBar (Element at index 0)
+    t =    66.45s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:09.192111+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.24947702884674072
+2026-10-09 20:33:09.192296+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:09.192869+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0005519390106201172
+    t =    66.52s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:09.255584+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:09.518468+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    66.84s Getting device orientation
+2026-10-09 20:33:09.531015+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    66.86s Getting device orientation
+2026-10-09 20:33:09.533524+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:09.533671+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:09.543912+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:09.546895+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:09.547483+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:09.547563+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    66.87s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:09.579871+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:09.580509+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:09.580868+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    66.91s Checking existence of `StatusBar (First Match)`
+    t =    66.97s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    67.00s Find the StatusBar (Element at index 0)
+    t =    67.06s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:09.796179+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.21512997150421143
+2026-10-09 20:33:09.796335+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:09.799348+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.002888917922973633
+    t =    67.13s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:09.848284+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:10.144301+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    67.47s Getting device orientation
+2026-10-09 20:33:10.151795+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    67.48s Getting device orientation
+2026-10-09 20:33:10.156559+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:10.157914+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:10.196272+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:10.202274+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:10.204725+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:10.205098+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    67.53s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:10.231582+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:10.231762+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:10.231829+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    67.59s Checking existence of `StatusBar (First Match)`
+    t =    67.61s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    67.65s Find the StatusBar (Element at index 0)
+    t =    67.72s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:10.461164+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.22908401489257812
+2026-10-09 20:33:10.461355+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:10.463560+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0018639564514160156
+    t =    67.79s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:10.507732+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:10.767490+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    68.10s Getting device orientation
+2026-10-09 20:33:10.778058+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    68.11s Getting device orientation
+2026-10-09 20:33:10.783079+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:10.783611+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:10.861401+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:10.866768+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:10.869034+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:10.869214+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    68.19s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:10.902640+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:10.903155+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:10.903613+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    68.30s Checking existence of `StatusBar (First Match)`
+    t =    68.31s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    68.35s Find the StatusBar (Element at index 0)
+    t =    68.39s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:11.112755+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.20907998085021973
+2026-10-09 20:33:11.112863+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:11.113352+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.00047206878662109375
+    t =    68.44s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:11.148205+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:11.269029+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    68.59s Getting device orientation
+2026-10-09 20:33:11.277881+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    68.60s Getting device orientation
+2026-10-09 20:33:11.279639+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:11.279800+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:11.291175+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:11.297097+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:11.298417+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:11.298992+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    68.62s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:11.346186+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:11.346424+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:11.346716+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    68.70s Checking existence of `StatusBar (First Match)`
+    t =    68.73s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    68.76s Find the StatusBar (Element at index 0)
+    t =    68.79s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:11.509123+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.16231298446655273
+2026-10-09 20:33:11.509272+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:11.509821+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0005140304565429688
+    t =    68.84s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:11.542231+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:11.638737+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    68.96s Getting device orientation
+2026-10-09 20:33:11.644350+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    68.97s Getting device orientation
+2026-10-09 20:33:11.645936+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:11.646220+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:11.679495+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:11.683169+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:11.683635+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:11.683723+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    69.01s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:11.715009+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:11.715437+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:11.715551+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    69.06s Checking existence of `StatusBar (First Match)`
+    t =    69.07s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    69.10s Find the StatusBar (Element at index 0)
+    t =    69.14s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:11.856811+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.14118003845214844
+2026-10-09 20:33:11.856918+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:11.857964+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0010190010070800781
+    t =    69.18s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:11.894039+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:11.944665+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    69.32s Getting device orientation
+2026-10-09 20:33:12.001110+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    69.33s Getting device orientation
+2026-10-09 20:33:12.005950+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:12.006928+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:12.047393+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:12.050932+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:12.051470+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.051540+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    69.38s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.081250+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:12.081730+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:12.081803+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    69.41s Checking existence of `StatusBar (First Match)`
+    t =    69.43s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    69.46s Find the StatusBar (Element at index 0)
+    t =    69.50s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:12.214853+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.13296401500701904
+2026-10-09 20:33:12.214946+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:12.215523+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0005500316619873047
+    t =    69.54s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:12.248928+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:12.279664+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    69.61s Getting device orientation
+2026-10-09 20:33:12.284481+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    69.61s Getting device orientation
+2026-10-09 20:33:12.286114+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:12.286242+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:12.308082+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:12.311869+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:12.312512+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.312584+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    69.64s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.367468+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:12.367781+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:12.367946+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    69.69s Checking existence of `StatusBar (First Match)`
+    t =    69.74s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    69.76s Find the StatusBar (Element at index 0)
+    t =    69.80s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:12.517559+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.1495189666748047
+2026-10-09 20:33:12.517734+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:12.518356+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0005930662155151367
+    t =    69.84s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:12.551758+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:12.610922+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    69.94s Getting device orientation
+2026-10-09 20:33:12.614738+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    69.94s Getting device orientation
+2026-10-09 20:33:12.616358+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:12.616484+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:12.619476+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:12.624874+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:12.625415+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.625493+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    69.98s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.691479+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:12.691787+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:12.692021+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    70.02s Checking existence of `StatusBar (First Match)`
+    t =    70.03s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    70.07s Find the StatusBar (Element at index 0)
+    t =    70.10s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:12.818785+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.126662015914917
+2026-10-09 20:33:12.818894+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:12.819740+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0007959604263305664
+    t =    70.15s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:12.861332+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:12.885283+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    70.21s Getting device orientation
+2026-10-09 20:33:12.889703+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    70.22s Getting device orientation
+2026-10-09 20:33:12.891089+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:12.891204+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:12.905734+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:12.913158+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:12.914014+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.914270+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    70.24s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:12.940282+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:12.940438+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:12.940503+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    70.27s Checking existence of `StatusBar (First Match)`
+    t =    70.29s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    70.33s Find the StatusBar (Element at index 0)
+    t =    70.37s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:13.109682+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.1690680980682373
+2026-10-09 20:33:13.109969+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:13.110839+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0008139610290527344
+    t =    70.44s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:13.158291+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:13.185351+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    70.51s Getting device orientation
+2026-10-09 20:33:13.190027+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    70.52s Getting device orientation
+2026-10-09 20:33:13.191527+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:13.191647+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:13.195471+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:13.199788+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:13.200563+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:13.200840+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    70.55s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:13.247806+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:13.247977+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:13.248079+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    70.57s Checking existence of `StatusBar (First Match)`
+    t =    70.58s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    70.61s Find the StatusBar (Element at index 0)
+    t =    70.66s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:13.366154+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.11798703670501709
+2026-10-09 20:33:13.366249+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:13.366830+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0005509853363037109
+    t =    70.69s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:13.398636+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:13.410849+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    70.74s Getting device orientation
+2026-10-09 20:33:13.414714+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    70.74s Getting device orientation
+2026-10-09 20:33:13.416141+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:13.416264+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:13.420395+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:13.425640+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:13.427046+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:13.427425+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    70.75s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:13.458927+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:13.459331+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:13.459470+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    70.79s Checking existence of `StatusBar (First Match)`
+    t =    70.80s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    70.83s Find the StatusBar (Element at index 0)
+    t =    70.86s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:13.568629+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.10907900333404541
+2026-10-09 20:33:13.568875+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:13.569580+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0006760358810424805
+    t =    70.90s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:13.597109+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:13.630310+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    70.96s Getting device orientation
+2026-10-09 20:33:13.634236+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    70.96s Getting device orientation
+2026-10-09 20:33:13.636873+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:13.637096+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:13.641490+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:13.646063+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:13.647917+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:13.648045+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    70.97s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:13.679945+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:13.680175+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:13.680309+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    71.01s Checking existence of `StatusBar (First Match)`
+    t =    71.03s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    71.07s Find the StatusBar (Element at index 0)
+    t =    71.10s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:13.820629+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.14022600650787354
+2026-10-09 20:33:13.820756+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:13.822059+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0012420415878295898
+    t =    71.15s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:13.854159+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:13.931666+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    71.26s Getting device orientation
+2026-10-09 20:33:13.939664+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    71.27s Getting device orientation
+2026-10-09 20:33:13.942017+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:13.942243+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:13.966563+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:13.969971+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:13.970517+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:13.970582+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    71.30s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:14.017556+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:14.017725+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:14.017790+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    71.34s Checking existence of `StatusBar (First Match)`
+    t =    71.36s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    71.39s Find the StatusBar (Element at index 0)
+    t =    71.44s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:14.160219+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.14222204685211182
+2026-10-09 20:33:14.160497+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:14.161706+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0011069774627685547
+    t =    71.49s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:14.194345+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:14.279498+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    71.61s Getting device orientation
+2026-10-09 20:33:14.285048+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    71.61s Getting device orientation
+2026-10-09 20:33:14.287223+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:14.287509+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:14.290988+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:14.296154+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:14.297467+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:14.297555+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    71.62s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:14.330357+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:14.330539+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:14.331988+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    71.66s Checking existence of `StatusBar (First Match)`
+    t =    71.67s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    71.71s Find the StatusBar (Element at index 0)
+    t =    71.75s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:14.470848+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.13871502876281738
+2026-10-09 20:33:14.470988+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:14.471808+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0007560253143310547
+    t =    71.80s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:14.504493+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:14.598930+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    71.92s Getting device orientation
+2026-10-09 20:33:14.605614+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    71.93s Getting device orientation
+2026-10-09 20:33:14.608389+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:14.608692+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:14.629145+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:14.634913+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:14.635525+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:14.635609+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    71.96s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:14.668080+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:14.668506+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:14.668627+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    72.00s Checking existence of `StatusBar (First Match)`
+    t =    72.01s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    72.04s Find the StatusBar (Element at index 0)
+    t =    72.08s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:14.801557+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.13283097743988037
+2026-10-09 20:33:14.801671+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:14.802454+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0007469654083251953
+    t =    72.13s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:14.843348+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:15.002865+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    72.33s Getting device orientation
+2026-10-09 20:33:15.008985+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    72.34s Getting device orientation
+2026-10-09 20:33:15.012482+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:15.012688+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:15.032303+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:15.036989+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:15.038583+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.038733+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    72.36s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.069277+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:15.069655+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:15.070106+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    72.40s Checking existence of `StatusBar (First Match)`
+    t =    72.42s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    72.46s Find the StatusBar (Element at index 0)
+    t =    72.49s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:15.205822+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.13564598560333252
+2026-10-09 20:33:15.206110+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:15.206923+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0007719993591308594
+    t =    72.53s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:15.230630+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:15.336011+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    72.66s Getting device orientation
+2026-10-09 20:33:15.340680+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    72.67s Getting device orientation
+2026-10-09 20:33:15.342419+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:15.342581+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:15.348347+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:15.352379+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:15.352963+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.353033+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    72.68s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.385045+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:15.385239+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:15.385310+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    72.71s Checking existence of `StatusBar (First Match)`
+    t =    72.72s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    72.74s Find the StatusBar (Element at index 0)
+    t =    72.78s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:15.489834+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.10444498062133789
+2026-10-09 20:33:15.489918+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:15.490500+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.00055694580078125
+    t =    72.82s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:15.514725+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:15.534379+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    72.86s Getting device orientation
+2026-10-09 20:33:15.542203+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    72.87s Getting device orientation
+2026-10-09 20:33:15.543975+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:15.544108+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:15.563502+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:15.567670+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:15.568330+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.568479+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    72.89s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.612944+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:15.613131+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:15.613225+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    72.94s Checking existence of `StatusBar (First Match)`
+    t =    72.95s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    72.99s Find the StatusBar (Element at index 0)
+    t =    73.03s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:15.753469+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.1401519775390625
+2026-10-09 20:33:15.753584+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:15.754306+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0006920099258422852
+    t =    73.08s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:15.779574+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:15.801874+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    73.13s Getting device orientation
+2026-10-09 20:33:15.806185+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    73.13s Getting device orientation
+2026-10-09 20:33:15.807639+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:15.807764+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:15.810260+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:15.813845+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:15.814756+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.814925+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    73.14s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:15.842194+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:15.842371+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:15.842572+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    73.17s Checking existence of `StatusBar (First Match)`
+    t =    73.18s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    73.22s Find the StatusBar (Element at index 0)
+    t =    73.26s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:15.978311+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.13566303253173828
+2026-10-09 20:33:15.978399+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:15.979170+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0007240772247314453
+    t =    73.30s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:16.019054+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:16.074641+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: GET /screenshot
+2026-10-09 20:33:16.296840+0000 maestro-driver-iosUITests-Runner[45794:119698] [FlyingFox] <127.0.0.1> request: POST /deviceInfo
+    t =    73.62s Getting device orientation
+2026-10-09 20:33:16.301539+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    73.63s Getting device orientation
+2026-10-09 20:33:16.303968+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+2026-10-09 20:33:16.304275+0000 maestro-driver-iosUITests-Runner[45794:119428] Device orientation is 1
+2026-10-09 20:33:16.307495+0000 maestro-driver-iosUITests-Runner[45794:119703] [FlyingFox] <127.0.0.1> request: POST /viewHierarchy
+2026-10-09 20:33:16.310262+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+2026-10-09 20:33:16.310845+0000 maestro-driver-iosUITests-Runner[45794:119428] [Start] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:16.310919+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Starting getHierarchyWithFallback for element.
+    t =    73.64s Find the Application 'pe.edu.upeu.pharmamobil.PharmaMobil'
+2026-10-09 20:33:16.333506+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Successfully retrieved element hierarchy.
+2026-10-09 20:33:16.333709+0000 maestro-driver-iosUITests-Runner[45794:119428] Foreground app is not springboard skipping auto tapping on permissions
+2026-10-09 20:33:16.333792+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch status bar hierarchy - start
+    t =    73.66s Checking existence of `StatusBar (First Match)`
+    t =    73.68s Get all elements bound by index for: Descendants matching type StatusBar
+    t =    73.71s Find the StatusBar (Element at index 0)
+    t =    73.74s Find the StatusBar (Element at index 1)
+2026-10-09 20:33:16.447470+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch status bar hierarchy - duration 0.1135939359664917
+2026-10-09 20:33:16.447671+0000 maestro-driver-iosUITests-Runner[45794:119428] [ViewHierarchyHandler] Fetch Safari WebView hierarchy - start
+2026-10-09 20:33:16.448554+0000 maestro-driver-iosUITests-Runner[45794:119428] Fetch Safari WebView hierarchy - duration 0.0008450746536254883
+    t =    73.77s Find the Application 'com.apple.springboard'
+2026-10-09 20:33:16.478044+0000 maestro-driver-iosUITests-Runner[45794:119428] [Done] View hierarchy snapshot for Application 'pe.edu.upeu.pharmamobil.PharmaMobil' 
+2026-10-09 20:33:16.502571+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:16.805620+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: GET /screenshot
+2026-10-09 20:33:17.137006+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: POST /touch
+2026-10-09 20:33:17.145603+0000 maestro-driver-iosUITests-Runner[45794:119428] Detected running apps: ["pe.edu.upeu.pharmamobil.PharmaMobil"]
+    t =    74.47s Getting device orientation
+2026-10-09 20:33:17.151595+0000 maestro-driver-iosUITests-Runner[45794:119428] Returning cached screen size
+    t =    74.48s Getting device orientation
+2026-10-09 20:33:17.153485+0000 maestro-driver-iosUITests-Runner[45794:119428] Tapping 216.0, 643.0
+    t =    74.48s Getting device orientation
+2026-10-09 20:33:17.490968+0000 maestro-driver-iosUITests-Runner[45794:119428] Tapping took 0.33496999740600586
+2026-10-09 20:33:17.509866+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: GET /isScreenStatic
+2026-10-09 20:33:18.893012+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: GET /screenshot
+2026-10-09 20:33:20.318806+0000 maestro-driver-iosUITests-Runner[45794:124296] [FlyingFox] <127.0.0.1> request: GET /screenshot
+2026-10-09 20:33:28.699047+0000 maestro-driver-iosUITests-Runner[45794:119697] [FlyingFox] <127.0.0.1> request: GET /screenshot
+2026-10-09 20:33:34.465569+0000 maestro-driver-iosUITests-Runner[45794:119694] [FlyingFox] <127.0.0.1> request: GET /status

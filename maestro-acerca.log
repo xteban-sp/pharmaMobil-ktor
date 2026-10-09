@@ -1,0 +1,10 @@
+Running on iPhone 17 Pro - iOS 26.5 - 22452A91-4697-4369-8812-53ADB77EB73B
+ > Flow acerca-de-ios
+Launch app "${APP_ID}" (launch arguments: {pantalla=acerca})... COMPLETED
+Run flow when "Sistema" is not visible...
+Run flow when "Sistema" is not visible... SKIPPED
+Assert that "Sistema" is visible... COMPLETED
+Take screenshot m04-ios-acerca-de... COMPLETED
+Scrolling DOWN until "Entre S/ y el monto" is visible with speed 40, visibility percentage 100%, timeout 20000 ms, with centering disabled... COMPLETED
+Scrolling DOWN until "Configuración regional" is visible with speed 40, visibility percentage 100%, timeout 10000 ms, with centering disabled... COMPLETED
+Take screenshot m05-ios-acerca-de-moneda... COMPLETED

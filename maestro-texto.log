@@ -1,0 +1,21 @@
+Running on iPhone 17 Pro - iOS 26.5 - 22452A91-4697-4369-8812-53ADB77EB73B
+ > Flow compartir
+Launch app "${APP_ID}" (launch arguments: {pantalla=productos})... COMPLETED
+Run flow when ".*Inventario, precios y stock.*" is visible...
+Run flow when ".*Inventario, precios y stock.*" is visible... SKIPPED
+Assert that ".*Paracetamol 500mg.*|Reintentar" is visible... COMPLETED
+Run flow when "Reintentar" is visible...
+Run flow when "Reintentar" is visible... SKIPPED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Take screenshot m01-ios-listado-precio... COMPLETED
+Tap on ".*Paracetamol 500mg.*", Index: 0... COMPLETED
+Assert that "Compartir|Reintentar" is visible... COMPLETED
+Run flow when "Reintentar" is visible...
+Run flow when "Reintentar" is visible... SKIPPED
+Run flow when "Reintentar" is visible...
+Run flow when "Reintentar" is visible... SKIPPED
+Assert that "Compartir" is visible... COMPLETED
+Take screenshot m02-ios-detalle... COMPLETED
+Tap on "Compartir"... COMPLETED
+Wait for animation to end within 10000 ms... COMPLETED
+Take screenshot m03-ios-hoja-compartir... COMPLETED

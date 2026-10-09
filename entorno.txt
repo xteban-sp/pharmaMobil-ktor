@@ -1,0 +1,30 @@
+== sistema
+ProductName:		macOS
+ProductVersion:		26.6.2
+BuildVersion:		25G83
+== xcode
+Xcode 26.6
+Build version 17F113
+/Applications/Xcode_26.0.1.app
+/Applications/Xcode_26.0.app
+/Applications/Xcode_26.1.1.app
+/Applications/Xcode_26.1.app
+/Applications/Xcode_26.2.0.app
+/Applications/Xcode_26.2.app
+/Applications/Xcode_26.3.0.app
+/Applications/Xcode_26.3.app
+/Applications/Xcode_26.4.1.app
+/Applications/Xcode_26.4.app
+/Applications/Xcode_26.5.0.app
+/Applications/Xcode_26.5.app
+/Applications/Xcode_26.6.0.app
+/Applications/Xcode_26.6.app
+/Applications/Xcode.app
+== sdk simulador
+26.5
+== java
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+== commit
+71350599852e7f583df15c4c7f007836888f4909 ci(s9a): Acerca de se desplaza hasta el formato de moneda y emulador Pixel 6
