@@ -295,3 +295,51 @@ git checkout feature/expect-actual-istana
 - `DetalleProductoViewModelTest`: carga del detalle, errores y que `compartir()` entrega al `Compartidor` el texto armado en común. Usa `CompartidorFalso`.
 - `PilaDeNavegacionTest`: avanzar, volver, regresar al inventario tras guardar, cambio de módulo desde el menú y guardado de la pila como texto.
 - `AppModuleTest`: Koin resuelve `DetalleProductoViewModel`; el `Compartidor` y el motor HTTP se sustituyen por dobles, de modo que la prueba ya no sale a la red.
+
+---
+
+## Código específico de plataforma (Actividad autónoma 9)
+
+Inventario de todo lo que el proyecto resuelve por plataforma. El resto (dominio, casos de uso, Ktor, ViewModels y pantallas Compose) vive una sola vez en `commonMain`.
+
+Rutas relativas a `shared/src/<sourceSet>/kotlin/pe/edu/upeu/pharmamobil/`.
+
+| Capacidad | Declaración en `commonMain` | `androidMain` (API nativa) | `iosMain` (API nativa) |
+|---|---|---|---|
+| Formato de moneda | `platform/Formato.kt` · `expect fun formatearSoles(valor: Double): String` | `platform/Formato.android.kt` · `java.text.NumberFormat` con `Locale.forLanguageTag("es-PE")` | `platform/Formato.ios.kt` · `NSNumberFormatter` con `NSLocale("es_PE")` |
+| Compartir producto | `domain/platform/Compartidor.kt` · `interface Compartidor` (se inyecta con Koin) | `platform/CompartidorAndroid.kt` · `Intent.ACTION_SEND` + `Intent.createChooser` | `platform/CompartidorIos.kt` · `UIActivityViewController` |
+| Módulo de inyección | `di/AppModule.kt` · `expect val platformModule: Module` | `di/PlatformModule.android.kt` · `module` con `androidContext()`, motor `OkHttp` | `di/PlatformModule.ios.kt` · `module` sin contexto, motor `Darwin` |
+| Información del dispositivo (tercera capacidad) | `platform/InfoDispositivo.kt` · `expect class InfoDispositivo()` con `sistema`, `version` y `modelo` | `platform/InfoDispositivo.android.kt` · `android.os.Build` (`VERSION.RELEASE`, `VERSION.SDK_INT`, `MANUFACTURER`, `MODEL`) | `platform/InfoDispositivo.ios.kt` · `UIDevice.currentDevice` (`systemName`, `systemVersion`, `model`) |
+| Botón Atrás del sistema | `platform/BotonAtras.kt` · `@Composable expect fun AlPulsarAtras(habilitado: Boolean, alVolver: () -> Unit)` | `platform/BotonAtras.android.kt` · `androidx.activity.compose.BackHandler` | `platform/BotonAtras.ios.kt` · vacío a propósito (iOS no tiene ese botón) |
+
+Fuera de `shared`, cada app tiene su punto de entrada: `androidApp/.../MainActivity.kt` y `iosApp/iosApp/*.swift` (interoperabilidad descrita en la sección anterior).
+
+### Tercera capacidad: pantalla «Acerca de»
+
+Se abre desde el menú lateral. Muestra lo que entrega `InfoDispositivo` (sistema, versión y modelo) y cómo formatea la moneda la plataforma: el monto 24.5 pasado por `formatearSoles` y el carácter exacto que queda entre `S/` y el monto (`describirSeparador`, en `presentation/acerca/AcercaDeUi.kt`). Así la diferencia entre plataformas se ve en la propia app.
+
+- `InfoDispositivo` es una clase `expect` porque no necesita dependencias: Android lee campos estáticos de `Build` y iOS pregunta a `UIDevice`. En el simulador de iOS el modelo sale de la variable `SIMULATOR_DEVICE_NAME`.
+- Las clases `expect`/`actual` están en Beta: `shared/build.gradle.kts` activa `-Xexpect-actual-classes` para que el compilador no lo advierta en cada compilación.
+- La pantalla se puede abrir al arrancar con `-pantalla acerca` en iOS y con el extra `pantalla=acerca` del `Intent` en Android (lo usa el workflow de evidencias).
+
+### Cómo se verifica que nada se filtró a `commonMain`
+
+```
+grep -rnE "^import (android\.|platform\.)" shared/src/commonMain   # 0 resultados
+```
+
+### Qué pasa si falta un `actual`
+
+Cada plataforma solo comprueba su propio `actual`. Con el de iOS comentado, `./gradlew :shared:compileAndroidMain` sigue compilando y `./gradlew :shared:compileKotlinIosSimulatorArm64` falla con:
+
+```
+e: .../platform/Formato.kt:11:1 Expected formatearSoles has no actual declaration in module <commonMain> for Native
+```
+
+En Windows no se compila iOS, así que un `actual` de iOS faltante no se nota en la PC: lo detecta el workflow de GitHub Actions al compilar en macOS.
+
+### Pruebas
+
+- `InfoDispositivoTest`: el `actual` de la plataforma de la prueba entrega sistema, versión y modelo.
+- `AcercaDeUiTest`: `describirSeparador` reconoce el espacio normal (U+0020), el de no separación (U+00A0) y el símbolo pegado al monto.
+- `PilaDeNavegacionTest`: la pantalla de arranque por nombre (`acerca`, `productos`) y el guardado de «Acerca de» en la pila.
