@@ -1,5 +1,6 @@
 package pe.edu.upeu.pharmamobil
 
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,8 +18,13 @@ class MainActivity : ComponentActivity() {
         // de GitHub Actions para abrir la app directo en una pantalla.
         val pantallaInicial = pantallaPorNombre(intent?.getStringExtra("pantalla"))
 
+        // Sesion 10: extra «acciones=todas» para provocar un 403 a proposito (la
+        // interfaz muestra acciones que el rol no tiene). Solo en depuracion.
+        val esDepuracion = (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        val mostrarAccionesSinPermiso = esDepuracion && intent?.getStringExtra("acciones") == "todas"
+
         setContent {
-            App(pantallaInicial = pantallaInicial)
+            App(pantallaInicial = pantallaInicial, mostrarAccionesSinPermiso = mostrarAccionesSinPermiso)
         }
     }
 }

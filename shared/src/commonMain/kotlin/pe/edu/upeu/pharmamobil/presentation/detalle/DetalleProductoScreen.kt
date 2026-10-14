@@ -62,7 +62,9 @@ fun DetalleProductoScreen(
     onEditar: () -> Unit,
     onEliminar: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: DetalleProductoViewModel = koinViewModel()
+    viewModel: DetalleProductoViewModel = koinViewModel(),
+    // Sesion 10: sin CATALOGO_ESCRIBIR solo se ofrece compartir.
+    puedeEscribir: Boolean = true
 ) {
 
     val estadoActual by viewModel.uiState.collectAsStateWithLifecycle()
@@ -105,7 +107,8 @@ fun DetalleProductoScreen(
                     producto = estado.producto,
                     onCompartir = viewModel::compartir,
                     onEditar = onEditar,
-                    onEliminar = onEliminar
+                    onEliminar = onEliminar,
+                    puedeEscribir = puedeEscribir
                 )
         }
     }
@@ -117,7 +120,8 @@ private fun DatosDelProducto(
     producto: DetalleProductoUi,
     onCompartir: () -> Unit,
     onEditar: () -> Unit,
-    onEliminar: () -> Unit
+    onEliminar: () -> Unit,
+    puedeEscribir: Boolean
 ) {
 
     val esquema = MaterialTheme.colorScheme
@@ -220,7 +224,7 @@ private fun DatosDelProducto(
             Text("Compartir")
         }
 
-        Row(
+        if (puedeEscribir) Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -262,7 +266,7 @@ private fun DatosDelProducto(
                         onEliminar()
                     }
                 ) {
-                    Text("Eliminar", color = esquema.error)
+                    Text("Sí, eliminar", color = esquema.error)
                 }
             },
             dismissButton = {

@@ -60,7 +60,9 @@ fun ProductoScreen(
     viewModel: ProductoViewModel,
     onNuevo: () -> Unit,
     onVerDetalle: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // Sesion 10: sin CATALOGO_ESCRIBIR no se ofrece registrar ni reactivar.
+    puedeEscribir: Boolean = true
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -125,13 +127,18 @@ fun ProductoScreen(
                                 productos = uiState.dadosDeBaja,
                                 operacion = uiState.operacion,
                                 onReactivar = viewModel::reactivar,
+                                puedeReactivar = puedeEscribir,
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         } else {
                             EstadoVacio(
                                 icono = Icons.Default.Inventory2,
                                 titulo = "Todavía no hay productos",
-                                descripcion = "Registra el primero con el botón Nuevo producto.",
+                                descripcion = if (puedeEscribir) {
+                                    "Registra el primero con el botón Nuevo producto."
+                                } else {
+                                    "Cuando se registren productos aparecerán aquí."
+                                },
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }
@@ -142,6 +149,7 @@ fun ProductoScreen(
                                 productos = uiState.dadosDeBaja,
                                 operacion = uiState.operacion,
                                 onReactivar = viewModel::reactivar,
+                                puedeReactivar = puedeEscribir,
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         } else {
@@ -164,7 +172,7 @@ fun ProductoScreen(
         }
 
         // Con una operacion en curso no se abre el formulario: se espera a que termine.
-        if (!uiState.viendoBajas && uiState.fase !is Fase.Cargando && uiState.fase !is Fase.Error) {
+        if (puedeEscribir && !uiState.viendoBajas && uiState.fase !is Fase.Cargando && uiState.fase !is Fase.Error) {
 
             ExtendedFloatingActionButton(
                 onClick = { if (!uiState.operando) onNuevo() },
@@ -336,6 +344,7 @@ private fun ListaDadosDeBaja(
     productos: List<ProductoUi>,
     operacion: Operacion,
     onReactivar: (Long) -> Unit,
+    puedeReactivar: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -405,7 +414,7 @@ private fun ListaDadosDeBaja(
                             strokeWidth = 2.dp
                         )
 
-                    } else {
+                    } else if (puedeReactivar) {
 
                         FilledTonalButton(
                             onClick = { onReactivar(producto.id) },

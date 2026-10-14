@@ -1,5 +1,6 @@
 package pe.edu.upeu.pharmamobil.presentation.inicio
 
+import pe.edu.upeu.pharmamobil.presentation.components.LogoPharmaMobil
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -71,7 +72,11 @@ private val MODULOS = listOf(
 @Composable
 fun InicioScreen(
     onNavegar: (Screen) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // Sesion 10: saludo con el nombre del usuario y solo los modulos que su rol puede ver.
+    nombreUsuario: String? = null,
+    rol: String? = null,
+    puedeVer: (Screen) -> Boolean = { true }
 ) {
 
     Column(
@@ -82,7 +87,7 @@ fun InicioScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
 
-        Portada()
+        Portada(nombreUsuario = nombreUsuario, rol = rol)
 
         Text(
             text = "Módulos",
@@ -91,7 +96,7 @@ fun InicioScreen(
             modifier = Modifier.padding(top = 8.dp, start = 4.dp)
         )
 
-        MODULOS.forEach { modulo ->
+        MODULOS.filter { puedeVer(it.screen) }.forEach { modulo ->
 
             AccesoAModulo(
                 modulo = modulo,
@@ -105,7 +110,7 @@ fun InicioScreen(
 
 
 @Composable
-private fun Portada() {
+private fun Portada(nombreUsuario: String?, rol: String?) {
 
     val esquema = MaterialTheme.colorScheme
 
@@ -141,12 +146,7 @@ private fun Portada() {
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
 
-            IconoEnRecuadro(
-                icono = Icons.Default.LocalPharmacy,
-                fondo = Color.White.copy(alpha = 0.18f),
-                color = Color.White,
-                lado = 48.dp
-            )
+            LogoPharmaMobil(lado = 56.dp)
 
             Text(
                 text = "PharmaMobil",
@@ -157,10 +157,19 @@ private fun Portada() {
             )
 
             Text(
-                text = "Gestión farmacéutica para tu cadena de boticas.",
+                text = nombreUsuario?.let { "Hola, $it" } ?: "Gestión farmacéutica para tu cadena de boticas.",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White.copy(alpha = 0.9f)
             )
+
+            rol?.let {
+                Etiqueta(
+                    texto = it,
+                    fondo = Color.White.copy(alpha = 0.2f),
+                    color = Color.White,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package pe.edu.upeu.pharmamobil.presentation.acerca
 
+import pe.edu.upeu.pharmamobil.presentation.components.LogoPharmaMobil
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,7 +60,7 @@ fun AcercaDeScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
 
-                IconoEnRecuadro(icono = Icons.Default.LocalPharmacy, lado = 56.dp)
+                LogoPharmaMobil(lado = 56.dp)
 
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
 
