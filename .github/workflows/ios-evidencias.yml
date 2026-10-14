@@ -1,7 +1,7 @@
 # Evidencias de PharmaMobil sin Mac propio: GitHub Actions presta equipos con
 # macOS (simulador de iPhone) y con Linux (emulador de Android y navegador).
 #
-# Sesion 10 (rama feature/auth-jwt-istana), en cada push:
+# Sesion 10 (rama feature/auth-jwt-istana), al lanzarlo a mano:
 #   swagger           PharmaSoft + Swagger UI con un navegador real (401, 200, 403)
 #                     y la matriz de verificacion por rol de la guia
 #   android-emulador  la app en un emulador de Android: login, permisos, 403 y expiracion
@@ -10,10 +10,10 @@
 # Cada job publica sus capturas en una rama ci-evidencias-*-s10 del repositorio.
 name: Evidencias iOS y Android
 
+# Desde la actividad autonoma solo se lanza a mano (Actions > Run workflow): las
+# evidencias de la practica ya estan publicadas y el simulador de iPhone tarda ~45 min.
 on:
   workflow_dispatch:
-  push:
-    branches: [ feature/auth-jwt-istana ]
 
 # Para publicar las capturas en las ramas de evidencias.
 permissions:
