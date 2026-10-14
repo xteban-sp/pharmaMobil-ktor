@@ -6,6 +6,8 @@ import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
 import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.domain.repository.AuthRepository
 import pe.edu.upeu.pharmamobil.presentation.sesion.SesionViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -14,8 +16,11 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.job
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
@@ -63,8 +68,25 @@ class AppModuleTest {
 
     @AfterTest
     fun detenerKoin() {
+        esperarALosViewModel()
         stopKoin()
         Dispatchers.resetMain()
+    }
+
+    /** ViewModel creados en la prueba: se cancelan al terminar (ver esperarALosViewModel). */
+    private val creados = mutableListOf<ViewModel>()
+
+    private inline fun <reified T : ViewModel> Koin.viewModel(): T = get<T>().also { creados += it }
+
+    /**
+     * Sesion 10 (autonoma): la carga del init pasa por Dispatchers.IO (almacen cifrado)
+     * y vuelve a Main. Si la prueba termina antes, vuelve cuando el Main de prueba ya
+     * no existe y la excepcion aparece en OTRA prueba (en CI fallo CrudProductoUseCasesTest).
+     * Se cancelan y se espera a que terminen ANTES de quitar el Main de prueba.
+     */
+    private fun esperarALosViewModel() {
+        runTest { creados.forEach { it.viewModelScope.coroutineContext.job.cancelAndJoin() } }
+        creados.clear()
     }
 
     /**
@@ -141,8 +163,8 @@ class AppModuleTest {
 
         val koin = grafoCompleto()
 
-        koin.get<ProductoViewModel>()
-        koin.get<ClienteViewModel>()
+        koin.viewModel<ProductoViewModel>()
+        koin.viewModel<ClienteViewModel>()
     }
 
     @Test
@@ -152,7 +174,7 @@ class AppModuleTest {
 
         assertIs<AuthRepositorioRest>(koin.get<AuthRepository>())
         assertIs<AlmacenEnMemoria>(koin.get<AlmacenSeguro>())
-        koin.get<SesionViewModel>()
+        koin.viewModel<SesionViewModel>()
     }
 
     @Test
@@ -161,7 +183,7 @@ class AppModuleTest {
         val koin = grafoCompleto()
 
         assertIs<CompartidorFalso>(koin.get<Compartidor>())
-        koin.get<DetalleProductoViewModel>()
+        koin.viewModel<DetalleProductoViewModel>()
     }
 
     private companion object {
