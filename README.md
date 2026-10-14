@@ -343,3 +343,84 @@ En Windows no se compila iOS, así que un `actual` de iOS faltante no se nota en
 - `InfoDispositivoTest`: el `actual` de la plataforma de la prueba entrega sistema, versión y modelo.
 - `AcercaDeUiTest`: `describirSeparador` reconoce el espacio normal (U+0020), el de no separación (U+00A0) y el símbolo pegado al monto.
 - `PilaDeNavegacionTest`: la pantalla de arranque por nombre (`acerca`, `productos`) y el guardado de «Acerca de» en la pila.
+
+---
+
+## Autenticación (Sesión 10 · rama `feature/auth-jwt-istana`)
+
+La app inicia sesión contra PharmaSoft con JWT, guarda el token cifrado en cada plataforma y lo adjunta a cada petición con el plugin `Auth` de Ktor. Ninguna llamada escribe la cabecera `Authorization` a mano.
+
+### Backend
+
+PharmaSoft (rama `master` del profesor) trae Spring Security + JWT y migraciones Flyway escritas para Oracle. Para trabajar sin Oracle, la rama local `feature/perfil-h2-seguridad` de PharmaSoft agrega el perfil `h2`:
+
+- `src/main/resources/db/migration-h2/`: las migraciones V1–V3 traducidas a H2 (mismas tablas y usuarios) y `V4__datos_de_ejemplo.sql` (categorías, 10 productos, 2 clientes).
+- `application-h2.yaml`: Flyway aplica esas migraciones al arrancar y Hibernate solo valida (`ddl-auto: validate`), igual que el perfil `dev`.
+
+```
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=h2"
+```
+
+La colección de Postman del curso («PharmaBackend - Pruebas de seguridad») pasa completa contra este perfil: 63 peticiones, 142 aserciones.
+
+### Usuarios de prueba
+
+| Usuario | Contraseña | Rol | Qué ve en la app |
+|---|---|---|---|
+| `admin` | `Admin123` | ADMIN | Todo: productos (registrar, editar, eliminar), clientes y pedidos |
+| `vendedor` | `Vendedor123` | VENDEDOR | Productos solo lectura (sin «Nuevo producto», sin Editar ni Eliminar), clientes y pedidos |
+| `almacen` | `Almacen123` | ALMACENERO | Productos con escritura; no se le ofrecen clientes ni pedidos |
+
+### Piezas
+
+| Capa | Archivo | Qué hace |
+|---|---|---|
+| Dominio | `domain/model/Sesion.kt` | `Credenciales`, `Sesion` (`puede(permiso)`) y los nombres de los permisos |
+| Dominio | `domain/model/ErrorSesion.kt` | `CredencialesInvalidas`, `SesionExpirada`, `SesionInvalida`, `SinPermiso`, `SinConexion` |
+| Dominio | `domain/repository/AuthRepository.kt` | `iniciarSesion`, `sesionGuardada`, `cerrarSesion` y el aviso `sesionTerminada` |
+| Dominio | `domain/usecase/SesionUseCases.kt` | Casos de uso de la sesión |
+| Datos | `data/local/AlmacenSeguro.kt` | Interfaz del almacén del token |
+| Android | `androidMain/.../data/local/AlmacenSeguroAndroid.kt` | `EncryptedSharedPreferences` con una llave AES-256 del Android Keystore |
+| iOS | `iosMain/.../data/local/AlmacenSeguroIos.kt` | Keychain (`SecItemAdd` / `SecItemCopyMatching` / `SecItemDelete`) |
+| Datos | `data/remote/HttpClientFactory.kt` | Plugins `Auth` (bearer), `Logging` saneado y `SesionVencida` |
+| Datos | `data/remote/ErroresDeSesion.kt` | `mapearErrorSesion`: único lugar que traduce 401/403 a `ErrorSesion` |
+| Datos | `data/repository/AuthRepositorioRest.kt` | `POST auth/login`, `GET auth/me` y cierre de sesión |
+| Presentación | `presentation/sesion/` | `SesionUiState`, `SesionViewModel` y `LoginScreen` |
+
+`AlmacenSeguro` es una interfaz y no un `expect`: la versión de Android necesita un `Context` en el constructor y la de iOS no recibe nada. Se registra en el `platformModule` de cada plataforma, como el `Compartidor` de la sesión 9.
+
+### Cómo viaja el token
+
+```kotlin
+install(Auth) {
+    bearer {
+        loadTokens { almacen.leerToken()?.let { BearerTokens(it, null) } }
+        sendWithoutRequest { peticion -> !peticion.url.encodedPath.endsWith("auth/login") }
+    }
+}
+```
+
+- `loadTokens` se lee una vez y queda en caché: después del login y al cerrar sesión se llama a `authProvider<BearerAuthProvider>()?.clearToken()`.
+- `sendWithoutRequest` hace que el token viaje desde la primera petición. Sin él, Ktor envía sin token, recibe 401 y repite: cada llamada se duplica.
+- `Logging` registra cabeceras solo en una compilación de depuración (`registroHttp`, que decide cada plataforma) y muestra `Authorization: ***`.
+
+### 401 y 403
+
+- **401 en cualquier petición** (token vencido o inválido): el plugin `SesionVencida` borra el token y avisa; `SesionViewModel` vuelve al login con «Tu sesión expiró. Vuelve a iniciar sesión.». PharmaSoft distingue el motivo por el mensaje («El token ha expirado…» o «El token no es válido»).
+- **403** (el rol no tiene el permiso): la sesión sigue y la pantalla muestra «No tienes permiso para realizar esta operación.».
+- La interfaz oculta lo que el rol no puede hacer (`sesion.puede("CATALOGO_ESCRIBIR")`, `CLIENTES_LEER`, `VENTAS_LEER`). Quien autoriza es el servidor.
+- Para provocar el 403 a propósito (evidencia): con el extra `acciones=todas` en Android o el argumento `-acciones todas` en iOS, solo en depuración, la app muestra las acciones aunque el rol no las tenga.
+
+### La sesión al arrancar
+
+Si hay un token guardado, la app consulta `GET auth/me`: si sigue vigente entra directo (la sesión sobrevive al cierre de la app) y si venció vuelve al login con el aviso. Sin conexión, el token no se descarta.
+
+### Pruebas
+
+- `AuthRepositorioRestTest` (MockEngine): el login guarda el token y no envía `Authorization`; la primera petición después del login ya lleva `Bearer`; un segundo login usa el token nuevo y no el de la caché; un 401 borra el token y avisa; un 403 no; cerrar sesión deja de enviar el token.
+- `MapearErrorSesionTest`: los mensajes reales de PharmaSoft.
+- `SesionViewModelTest`: arranque con y sin token, validación de campos, credenciales incorrectas, 401 en otra pantalla y cerrar sesión.
+
+### Evidencias sin Mac
+
+El workflow `.github/workflows/ios-evidencias.yml` corre con cada push de la rama: levanta PharmaSoft con el perfil `h2`, repite el paso 1 de la guía en Swagger UI con un navegador real y recorre la app en un emulador de Android y en un simulador de iPhone con Maestro (`.github/ci/maestro/s10-*.yaml`). Para la expiración, reinicia el backend con tokens de 1 minuto y espera a que venzan. Las capturas quedan en las ramas `ci-evidencias-swagger-s10`, `ci-evidencias-android-s10` y `ci-evidencias-ios-s10`.
