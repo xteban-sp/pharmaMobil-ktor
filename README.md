@@ -1,0 +1,50 @@
+# Evidencias (autonoma)
+
+- Ejecucion: 1 (id 38649658881)
+- Commit: c2917399dee88cac5517fab0d63210bbbe97d923
+- Rama: feature/auth-jwt-istana
+- Fecha (UTC): 2026-10-14 23:01:02
+
+## Archivos
+- 99-android-estado-final.png
+- README.md
+- adb-install.log
+- almacen-1-sesion-abierta.txt
+- almacen-2-tras-token-alterado.txt
+- almacen-3-antes-de-cerrar-sesion.txt
+- almacen-4-despues-de-cerrar-sesion.txt
+- almacen-5-tras-expirar.txt
+- android-version.txt
+- backend-token-1min.log
+- backend-token-60min.log
+- cierre-sesion-real.txt
+- entorno.txt
+- escenarios-token.json
+- escenarios-token.txt
+- gradle-android.log
+- ktor-cierre.log
+- ktor-esc1-valido.log
+- ktor-esc2-expirado.log
+- ktor-esc3-alterado.log
+- ktor-esc6-deshabilitado.log
+- ktor-esc6-previo.log
+- ktor-otro-usuario.log
+- ktor-persistencia.log
+- maestro-debug
+- maestro-instalacion.log
+- maestro-s10-expira-1.log
+- maestro-s10-expira-2-1.log
+- maestro-s10a-alterado-1.log
+- maestro-s10a-deshabilitado-1.log
+- maestro-s10a-login-admin-1.log
+- maestro-s10a-login-vendedor-1.log
+- maestro-s10a-logout-1.log
+- maestro-s10a-matriz-1.log
+- maestro-s10a-otro-usuario-1.log
+- maestro-s10a-reabrir-1.log
+- maestro-s10a-valido-1.log
+- pruebas-resumen.txt
+- pruebas-shared.log
+- pruebas-xml
+- sql-deshabilitar.txt
+- sql-reactivar.txt

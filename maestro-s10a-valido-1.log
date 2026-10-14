@@ -1,0 +1,24 @@
+Running on test
+ > Flow s10a-valido
+Launch app "${APP_ID}" with clear state... COMPLETED
+Run login.yaml...
+  Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible...
+  Run flow when "Abrir menú" is visible... SKIPPED
+  Tap on "Usuario"... COMPLETED
+  Erase 30 characters... COMPLETED
+  Input text ${USUARIO}... COMPLETED
+  Tap on "Contraseña"... COMPLETED
+  Input text ${CLAVE}... COMPLETED
+  Run flow when Platform is ANDROID...
+    Hide Keyboard... COMPLETED
+    Tap on "Ingresar"... COMPLETED
+  Run flow when Platform is ANDROID... COMPLETED
+  Run flow when Platform is IOS...
+  Run flow when Platform is IOS... SKIPPED
+  Assert that ".*Hola,.*" is visible... COMPLETED
+Run login.yaml... COMPLETED
+Take screenshot e01-${PLATAFORMA}-inicio-vendedor-sesion-valida... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Take screenshot e02-${PLATAFORMA}-productos-200... COMPLETED

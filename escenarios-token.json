@@ -1,0 +1,68 @@
+[
+ {
+  "n": 1,
+  "nombre": "Token valido",
+  "hora": "2026-10-14 22:45:02",
+  "descripcion": "Token recien emitido, sin modificar.",
+  "peticion": "GET /api/v1/productos",
+  "authorization": "Bearer eyJhbGciOiJI...UWI_3Q",
+  "http": 200,
+  "message": ""
+ },
+ {
+  "n": 3,
+  "nombre": "Token alterado",
+  "hora": "2026-10-14 22:45:02",
+  "descripcion": "Se cambia un caracter de la firma (el 6.º: «O» por «A») del token valido.",
+  "peticion": "GET /api/v1/productos",
+  "authorization": "Bearer eyJhbGciOiJI...(firma: 01tZi[A]UI0k3...)",
+  "http": 401,
+  "message": "El token no es válido"
+ },
+ {
+  "n": 4,
+  "nombre": "Sin header Authorization",
+  "hora": "2026-10-14 22:45:02",
+  "descripcion": "Peticion sin cabecera Authorization.",
+  "peticion": "GET /api/v1/productos",
+  "authorization": "(sin cabecera)",
+  "http": 401,
+  "message": "Debe iniciar sesión para acceder a este recurso"
+ },
+ {
+  "n": 5,
+  "nombre": "Prefijo incorrecto",
+  "hora": "2026-10-14 22:45:02",
+  "descripcion": "Token valido pero con el prefijo «bearer» en minuscula.",
+  "peticion": "GET /api/v1/productos",
+  "authorization": "bearer eyJhbGciOiJI...UWI_3Q",
+  "http": 401,
+  "message": "Debe iniciar sesión para acceder a este recurso"
+ },
+ {
+  "n": 6,
+  "nombre": "Usuario deshabilitado",
+  "hora": "2026-10-14 22:45:02",
+  "descripcion": "El mismo token (aun vigente) de un usuario con estado = false.",
+  "peticion": "GET /api/v1/productos",
+  "authorization": "Bearer eyJhbGciOiJI..._3Bdsw",
+  "http": 401,
+  "message": "El usuario está deshabilitado"
+ },
+ {
+  "n": "6b",
+  "nombre": "Login de usuario deshabilitado",
+  "http": 401,
+  "message": "Usuario o contraseña incorrectos"
+ },
+ {
+  "n": 2,
+  "nombre": "Token expirado",
+  "hora": "2026-10-14 22:46:13",
+  "descripcion": "El token del escenario 1 despues de 70 s (vida de 60 s).",
+  "peticion": "GET /api/v1/productos",
+  "authorization": "Bearer eyJhbGciOiJI...UWI_3Q",
+  "http": 401,
+  "message": "El token ha expirado. Inicie sesión nuevamente"
+ }
+]

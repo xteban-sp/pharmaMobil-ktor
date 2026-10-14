@@ -1,0 +1,13 @@
+$ adb shell run-as pe.edu.upeu.pharmamobil ls -l shared_prefs
+total 8
+-rw-rw---- 1 u0_a209 u0_a209 1144 2026-10-14 22:54 sesion_segura.xml
+
+$ adb shell run-as pe.edu.upeu.pharmamobil cat shared_prefs/sesion_segura.xml
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="__androidx_security_crypto_encrypted_prefs_key_keyset__">12a90112787e661d5fbc09bf14115b780b067907cc959e5a04a0bf02d0d0a8f3e0c46b23ea3f6e6a7055cf3d05a754a2ff87f0c0fd997e337f1d8f0339a918920ec5ea012d565dfccc8f41d031b7550792a8ff49caf4093c2b3159168dee3f5346f2f00410646cc08c6cbe12d815d4343eb63427a5da58e14a3a368f52647eaf1719f1d3d630f16d30abec06f10dcde5253570a86555225e6b00a0c0be40086fd09ec8bf8c0d02bbfe5a38941a4408afe2d9af01123c0a30747970652e676f6f676c65617069732e636f6d2f676f6f676c652e63727970746f2e74696e6b2e4165735369764b6579100118afe2d9af012001</string>
+    <string name="__androidx_security_crypto_encrypted_prefs_value_keyset__">128801605a3d39bb632b7d1eff0f183c6c2f0c928fed02d386c9f0cd032b7950c0a842dacfc48c58a7965510a6fe9dd9674103edf48d5099db5af985cbcd55389ea653dfe2ba2f4a26b78be3909280e771a5a31a7bb70808c866e7d62b58432832e23d74e421c8c6789d58631f6945eaec4a8f9bb8c9d76421c089137e545032ad739330c9c48b830245ec1a4408c9feb5cc07123c0a30747970652e676f6f676c65617069732e636f6d2f676f6f676c652e63727970746f2e74696e6b2e41657347636d4b6579100118c9feb5cc072001</string>
+</map>
+
+$ grep -c 'eyJ' sesion_segura.xml   # cabecera base64 de todo JWT (eyJhbGciOi...)
+0

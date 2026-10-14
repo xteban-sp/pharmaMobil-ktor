@@ -1,0 +1,6 @@
+Running on test
+ > Flow s10a-deshabilitado
+Tap on ".*Ibuprofeno 400mg.*"... COMPLETED
+Assert that "Tu usuario fue deshabilitado. Consulta con el administrador." is visible... COMPLETED
+Assert that "Ingresar" is visible... COMPLETED
+Take screenshot e06-${PLATAFORMA}-usuario-deshabilitado... COMPLETED

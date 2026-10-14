@@ -1,0 +1,25 @@
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => REQUEST: http://10.0.2.2:8080/api/v1/auth/me
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => METHOD: GET
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => COMMON HEADERS
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => -> Accept: application/json
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => -> Authorization: ***
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => -> Content-Type: application/json
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => CONTENT HEADERS
+10-14 22:54:24.319  4820  4820 I System.out: KtorHttp => -> Content-Length: 0
+10-14 22:54:24.977  4820  4820 I System.out: KtorHttp => RESPONSE: 401 
+10-14 22:54:24.977  4820  4820 I System.out: KtorHttp => METHOD: GET
+10-14 22:54:24.977  4820  4820 I System.out: KtorHttp => FROM: http://10.0.2.2:8080/api/v1/auth/me
+10-14 22:54:24.977  4820  4820 I System.out: KtorHttp => COMMON HEADERS
+10-14 22:54:24.977  4820  4820 I System.out: KtorHttp => -> cache-control: no-cache, no-store, max-age=0, must-revalidate
+10-14 22:54:24.977  4820  4820 I System.out: KtorHttp => -> connection: keep-alive
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> content-length: 165
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> content-type: application/json;charset=UTF-8
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> date: Wed, 14 Oct 2026 22:54:24 GMT
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> expires: 0
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> keep-alive: timeout=60
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> pragma: no-cache
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> vary: Origin; Access-Control-Request-Method; Access-Control-Request-Headers
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> www-authenticate: Bearer
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> x-content-type-options: nosniff
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> x-frame-options: DENY
+10-14 22:54:24.978  4820  4820 I System.out: KtorHttp => -> x-xss-protection: 0

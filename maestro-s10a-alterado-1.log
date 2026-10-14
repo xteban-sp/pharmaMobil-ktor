@@ -1,0 +1,6 @@
+Running on test
+ > Flow s10a-alterado
+Launch app "${APP_ID}" (launch arguments: {token=alterado})... COMPLETED
+Assert that "Tu sesión ya no es válida. Vuelve a iniciar sesión." is visible... COMPLETED
+Assert that "Ingresar" is visible... COMPLETED
+Take screenshot e04-${PLATAFORMA}-token-alterado... COMPLETED
