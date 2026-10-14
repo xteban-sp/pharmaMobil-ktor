@@ -1,0 +1,3 @@
+sw01-productos-sin-token-401 GET /api/v1/productos sin token -> 401
+sw02-productos-admin-200 GET /api/v1/productos con token de admin -> 200
+sw03-clientes-almacen-403 GET /api/v1/clientes con token de almacen -> 403

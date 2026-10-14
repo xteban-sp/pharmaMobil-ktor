@@ -1,0 +1,94 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.7)
+
+2026-10-14T21:10:07.637Z  INFO 2654 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : Starting PharmaBackendApplication using Java 21.0.12.1 with PID 2654 (/home/runner/work/pharmaMobil-ktor/pharmaMobil-ktor/backend/target/classes started by runner in /home/runner/work/pharmaMobil-ktor/pharmaMobil-ktor/backend)
+2026-10-14T21:10:07.639Z DEBUG 2654 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : Running with Spring Boot v4.0.7, Spring v7.0.8
+2026-10-14T21:10:07.640Z  INFO 2654 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : The following 1 profile is active: "h2"
+2026-10-14T21:10:08.324Z  INFO 2654 --- [PharmaBackend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-14T21:10:08.378Z  INFO 2654 --- [PharmaBackend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 48 ms. Found 8 JPA repository interfaces.
+2026-10-14T21:10:08.865Z  INFO 2654 --- [PharmaBackend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-14T21:10:08.890Z  INFO 2654 --- [PharmaBackend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-14T21:10:08.890Z  INFO 2654 --- [PharmaBackend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-14T21:10:08.987Z  INFO 2654 --- [PharmaBackend] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1297 ms
+2026-10-14T21:10:09.203Z  INFO 2654 --- [PharmaBackend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-14T21:10:09.645Z  INFO 2654 --- [PharmaBackend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:pharmadb user=SA
+2026-10-14T21:10:09.646Z  INFO 2654 --- [PharmaBackend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-14T21:10:09.681Z  INFO 2654 --- [PharmaBackend] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:mem:pharmadb (H2 2.4)
+2026-10-14T21:10:09.687Z  WARN 2654 --- [PharmaBackend] [           main] o.f.c.internal.database.base.Database    : Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2026-10-14T21:10:09.707Z  INFO 2654 --- [PharmaBackend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2026-10-14T21:10:09.709Z  INFO 2654 --- [PharmaBackend] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.011s)
+2026-10-14T21:10:09.713Z  INFO 2654 --- [PharmaBackend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2026-10-14T21:10:09.739Z  INFO 2654 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2026-10-14T21:10:09.748Z  INFO 2654 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - esquema inicial"
+2026-10-14T21:10:09.775Z  INFO 2654 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - seguridad empleados usuarios"
+2026-10-14T21:10:09.789Z  INFO 2654 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - datos iniciales seguridad"
+2026-10-14T21:10:09.801Z  INFO 2654 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - datos de ejemplo"
+2026-10-14T21:10:09.813Z  INFO 2654 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "PUBLIC", now at version v4 (execution time 00:00.040s)
+2026-10-14T21:10:09.879Z  INFO 2654 --- [PharmaBackend] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-14T21:10:09.911Z  INFO 2654 --- [PharmaBackend] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.19.Final
+2026-10-14T21:10:10.217Z  INFO 2654 --- [PharmaBackend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-14T21:10:10.268Z  INFO 2654 --- [PharmaBackend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:pharmadb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: PHARMADB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-14T21:10:11.012Z  INFO 2654 --- [PharmaBackend] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-14T21:10:11.032Z  INFO 2654 --- [PharmaBackend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-14T21:10:11.134Z  INFO 2654 --- [PharmaBackend] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-14T21:10:11.625Z  INFO 2654 --- [PharmaBackend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name usuarioDetailsService
+2026-10-14T21:10:12.373Z  WARN 2654 --- [PharmaBackend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-14T21:10:12.936Z  INFO 2654 --- [PharmaBackend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-14T21:10:12.942Z  INFO 2654 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : Started PharmaBackendApplication in 5.74 seconds (process running for 6.041)
+2026-10-14T21:10:12.946Z  WARN 2654 --- [PharmaBackend] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-10-14T21:10:14.392Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-14T21:10:14.392Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-14T21:10:14.394Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-10-14T21:10:40.442Z  INFO 2654 --- [PharmaBackend] [io-8080-exec-10] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 312 ms
+2026-10-14T21:10:43.315Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=admin
+2026-10-14T21:10:43.644Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=admin roles=[ADMIN]
+2026-10-14T21:10:45.515Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-3] p.e.u.P.s.impl.ProductoServiceImpl       : Inicio listar productos | pagina=0 | tamanio=20 | ordenarPor=id | direccion=asc
+2026-10-14T21:10:45.544Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-3] p.e.u.P.s.impl.ProductoServiceImpl       : Fin listar productos | filas=10 | total=10 | duracionMs=29
+2026-10-14T21:10:47.054Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-5] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=almacen
+2026-10-14T21:10:47.148Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-5] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=almacen roles=[ALMACENERO]
+2026-10-14T21:10:49.068Z  WARN 2654 --- [PharmaBackend] [nio-8080-exec-7] p.e.u.P.s.RestAccessDeniedHandler        : Acceso denegado: GET /api/v1/clientes usuario=almacen
+2026-10-14T21:10:50.570Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-1] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=admin
+2026-10-14T21:10:50.657Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-1] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=admin roles=[ADMIN]
+2026-10-14T21:10:50.663Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.s.impl.ProductoServiceImpl       : Inicio listar productos | pagina=0 | tamanio=5 | ordenarPor=id | direccion=asc
+2026-10-14T21:10:50.668Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.s.impl.ProductoServiceImpl       : Fin listar productos | filas=5 | total=10 | duracionMs=5
+2026-10-14T21:10:50.725Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-5] p.e.u.P.service.impl.ClienteServiceImpl  : Inicio listar clientes | pagina=0 | tamanio=5 | ordenarPor=id | direccion=asc
+2026-10-14T21:10:50.728Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-5] p.e.u.P.service.impl.ClienteServiceImpl  : Fin listar clientes | filas=2 | total=2 | duracionMs=3
+2026-10-14T21:10:50.772Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-7] p.e.u.P.service.impl.VentaServiceImpl    : Inicio registrar venta | clienteId=1 | items=1
+2026-10-14T21:10:50.794Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-7] p.e.u.P.service.impl.VentaServiceImpl    : Fin registrar venta | ventaId=1 | total=3.50 | filas=1 | duracionMs=22
+2026-10-14T21:10:50.809Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-4] p.e.u.P.service.impl.ReporteServiceImpl  : Inicio reporte ventas por categoria | desde=null | hasta=null
+2026-10-14T21:10:50.821Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-4] p.e.u.P.service.impl.ReporteServiceImpl  : Fin reporte ventas por categoria | desde=null | hasta=null | filas=1 | duracionMs=12
+2026-10-14T21:10:50.835Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-9] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=vendedor
+2026-10-14T21:10:50.921Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-9] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=vendedor roles=[VENDEDOR]
+2026-10-14T21:10:50.928Z  INFO 2654 --- [PharmaBackend] [io-8080-exec-10] p.e.u.P.s.impl.ProductoServiceImpl       : Inicio listar productos | pagina=0 | tamanio=5 | ordenarPor=id | direccion=asc
+2026-10-14T21:10:50.931Z  INFO 2654 --- [PharmaBackend] [io-8080-exec-10] p.e.u.P.s.impl.ProductoServiceImpl       : Fin listar productos | filas=5 | total=11 | duracionMs=3
+2026-10-14T21:10:50.937Z  WARN 2654 --- [PharmaBackend] [nio-8080-exec-6] p.e.u.P.s.RestAccessDeniedHandler        : Acceso denegado: POST /api/v1/productos usuario=vendedor
+2026-10-14T21:10:50.942Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-1] p.e.u.P.service.impl.ClienteServiceImpl  : Inicio listar clientes | pagina=0 | tamanio=5 | ordenarPor=id | direccion=asc
+2026-10-14T21:10:50.944Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-1] p.e.u.P.service.impl.ClienteServiceImpl  : Fin listar clientes | filas=2 | total=2 | duracionMs=2
+2026-10-14T21:10:50.949Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.service.impl.VentaServiceImpl    : Inicio registrar venta | clienteId=1 | items=1
+2026-10-14T21:10:50.955Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.service.impl.VentaServiceImpl    : Fin registrar venta | ventaId=2 | total=3.50 | filas=1 | duracionMs=6
+2026-10-14T21:10:50.960Z  WARN 2654 --- [PharmaBackend] [nio-8080-exec-3] p.e.u.P.s.RestAccessDeniedHandler        : Acceso denegado: GET /api/v1/reportes/ventas-por-categoria usuario=vendedor
+2026-10-14T21:10:50.968Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-7] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=almacen
+2026-10-14T21:10:51.054Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-7] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=almacen roles=[ALMACENERO]
+2026-10-14T21:10:51.061Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-4] p.e.u.P.s.impl.ProductoServiceImpl       : Inicio listar productos | pagina=0 | tamanio=5 | ordenarPor=id | direccion=asc
+2026-10-14T21:10:51.065Z  INFO 2654 --- [PharmaBackend] [nio-8080-exec-4] p.e.u.P.s.impl.ProductoServiceImpl       : Fin listar productos | filas=5 | total=11 | duracionMs=4
+2026-10-14T21:10:51.078Z  WARN 2654 --- [PharmaBackend] [nio-8080-exec-9] p.e.u.P.s.RestAccessDeniedHandler        : Acceso denegado: GET /api/v1/clientes usuario=almacen
+2026-10-14T21:10:51.083Z  WARN 2654 --- [PharmaBackend] [io-8080-exec-10] p.e.u.P.s.RestAccessDeniedHandler        : Acceso denegado: POST /api/v1/ventas usuario=almacen
+2026-10-14T21:10:51.087Z  WARN 2654 --- [PharmaBackend] [nio-8080-exec-6] p.e.u.P.s.RestAccessDeniedHandler        : Acceso denegado: GET /api/v1/reportes/ventas-por-categoria usuario=almacen
