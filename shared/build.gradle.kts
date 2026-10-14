@@ -52,6 +52,8 @@ kotlin {
             implementation(libs.compose.uiTooling)
             // Sesion 9: BackHandler para el actual de AlPulsarAtras.
             implementation(libs.androidx.activity.compose)
+            // Sesion 10: EncryptedSharedPreferences para el token (AlmacenSeguroAndroid)
+            implementation(libs.androidx.security.crypto)
             // api: MainApplication (androidApp) usa androidContext() al arrancar Koin.
             api(libs.koin.android)
             // Sesion 7: motor de red de Android
@@ -84,6 +86,8 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
+            // Sesion 10: plugin Auth (bearer) para adjuntar el JWT a cada peticion
+            implementation(libs.ktor.client.auth)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
