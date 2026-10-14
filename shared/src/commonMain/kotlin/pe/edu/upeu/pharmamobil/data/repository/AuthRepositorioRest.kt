@@ -12,6 +12,9 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.io.IOException
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
@@ -48,7 +51,8 @@ class AuthRepositorioRest(
             attributes.put(AuthCircuitBreaker, Unit)
             setBody(LoginRequestDto(credenciales.usuario, credenciales.clave))
         }.body()
-        almacen.guardarToken(dto.token)
+        // El almacen cifrado hace E/S y criptografia (Keystore, Keychain): fuera del hilo principal.
+        withContext(Dispatchers.IO) { almacen.guardarToken(dto.token) }
         // loadTokens quedo en cache con el valor anterior (o con null): se vacia
         // para que la proxima peticion lea el token recien guardado.
         cliente.authProvider<BearerAuthProvider>()?.clearToken()
@@ -62,14 +66,14 @@ class AuthRepositorioRest(
      * ya lo borro.
      */
     override suspend fun sesionGuardada(): Sesion? {
-        val token = almacen.leerToken() ?: return null
+        val token = withContext(Dispatchers.IO) { almacen.leerToken() } ?: return null
         return traducirErrores(enLogin = false) {
             cliente.get("auth/me").body<UsuarioActualDto>().aSesion(token)
         }
     }
 
     override suspend fun cerrarSesion() {
-        almacen.borrarToken()
+        withContext(Dispatchers.IO) { almacen.borrarToken() }
         cliente.authProvider<BearerAuthProvider>()?.clearToken()
     }
 

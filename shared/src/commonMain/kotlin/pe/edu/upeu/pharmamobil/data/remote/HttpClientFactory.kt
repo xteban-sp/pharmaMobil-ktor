@@ -22,7 +22,10 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
 import pe.edu.upeu.pharmamobil.data.remote.dto.ErrorResponseDto
@@ -81,7 +84,9 @@ fun crearHttpClient(
                 // Se consulta una vez y queda en cache: tras el login y el cierre de
                 // sesion se llama a clearToken() para que vuelva a leer el almacen.
                 loadTokens {
-                    almacen.leerToken()?.let { token -> BearerTokens(accessToken = token, refreshToken = null) }
+                    // El almacen cifrado hace E/S y criptografia: fuera del hilo principal.
+                    withContext(Dispatchers.IO) { almacen.leerToken() }
+                        ?.let { token -> BearerTokens(accessToken = token, refreshToken = null) }
                 }
                 // El token viaja desde la primera peticion (salvo en el login): sin esto
                 // Ktor envia sin token, recibe 401 y repite, duplicando cada llamada.
@@ -97,7 +102,7 @@ fun crearHttpClient(
                 val ruta = respuesta.call.request.url.encodedPath
                 if (respuesta.status == HttpStatusCode.Unauthorized && !ruta.endsWith(RUTA_LOGIN)) {
                     val mensaje = runCatching { respuesta.body<ErrorResponseDto>().message }.getOrNull()
-                    almacen.borrarToken()
+                    withContext(Dispatchers.IO) { almacen.borrarToken() }
                     clienteHttp.authProvider<BearerAuthProvider>()?.clearToken()
                     avisos.avisar(mapearErrorSesion(respuesta.status, mensaje))
                 }
