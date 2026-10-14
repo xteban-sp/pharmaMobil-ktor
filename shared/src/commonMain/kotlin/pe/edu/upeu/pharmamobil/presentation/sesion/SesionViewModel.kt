@@ -105,26 +105,37 @@ class SesionViewModel(
     fun cerrarSesion() {
         viewModelScope.launch {
             cerrarSesionUseCase()
-            terminarSesion("Cerraste sesión.")
+            terminarSesion("Cerraste sesión.", conservarUsuario = false)
         }
     }
 
-    /** Se conserva el usuario escrito para que solo falte la contrasena. */
-    private fun terminarSesion(aviso: String) {
-        _uiState.update { SesionUiState(usuario = it.sesion?.usuario ?: it.usuario, verificando = false, aviso = aviso) }
+    /**
+     * Vuelve al login con el estado limpio. Si el servidor rechazo el token se
+     * conserva el usuario para que solo falte la contrasena; al cerrar sesion a
+     * proposito no queda nada de quien estuvo (otra persona puede usar el telefono).
+     */
+    private fun terminarSesion(aviso: String, conservarUsuario: Boolean = true) {
+        _uiState.update {
+            SesionUiState(
+                usuario = if (conservarUsuario) it.sesion?.usuario ?: it.usuario else "",
+                verificando = false,
+                aviso = aviso
+            )
+        }
     }
 
     private fun mensajePara(error: ErrorSesion?): String = when (error) {
         ErrorSesion.CredencialesInvalidas -> "Usuario o contraseña incorrectos."
         ErrorSesion.SinConexion -> "No se pudo conectar con el servidor. Revisa tu conexión."
         ErrorSesion.SinPermiso -> "Tu usuario no tiene permiso para ingresar."
-        ErrorSesion.SesionExpirada, ErrorSesion.SesionInvalida -> avisoPara(error)
+        ErrorSesion.SesionExpirada, ErrorSesion.SesionInvalida, ErrorSesion.UsuarioDeshabilitado -> avisoPara(error)
         null -> "Ocurrió un error inesperado. Intenta de nuevo."
     }
 
     private fun avisoPara(error: ErrorSesion): String = when (error) {
         ErrorSesion.SesionExpirada -> "Tu sesión expiró. Vuelve a iniciar sesión."
         ErrorSesion.SesionInvalida -> "Tu sesión ya no es válida. Vuelve a iniciar sesión."
+        ErrorSesion.UsuarioDeshabilitado -> "Tu usuario fue deshabilitado. Consulta con el administrador."
         else -> mensajePara(error)
     }
 }

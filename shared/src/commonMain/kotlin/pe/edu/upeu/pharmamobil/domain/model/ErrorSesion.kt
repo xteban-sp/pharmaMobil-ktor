@@ -12,6 +12,9 @@ sealed interface ErrorSesion {
     /** 401 con un token que el servidor no acepta (alterado, de otro servidor...). */
     data object SesionInvalida : ErrorSesion
 
+    /** 401 de un usuario que el administrador deshabilito con la sesion abierta. */
+    data object UsuarioDeshabilitado : ErrorSesion
+
     /** 403: la sesion sigue, pero el rol no tiene ese permiso. */
     data object SinPermiso : ErrorSesion
 

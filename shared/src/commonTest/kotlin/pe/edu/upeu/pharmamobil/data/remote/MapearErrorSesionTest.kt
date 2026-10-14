@@ -31,6 +31,23 @@ class MapearErrorSesionTest {
     }
 
     @Test
+    fun un401DeUnUsuarioDeshabilitadoEsUsuarioDeshabilitado() {
+        assertEquals(
+            ErrorSesion.UsuarioDeshabilitado,
+            mapearErrorSesion(HttpStatusCode.Unauthorized, "El usuario está deshabilitado")
+        )
+    }
+
+    @Test
+    fun sinCabeceraOConPrefijoMalEscritoElServidorDiceQueDebeIniciarSesion() {
+        // «Debe iniciar sesión...» es el 401 de Spring Security (sin token util): sesion invalida.
+        assertEquals(
+            ErrorSesion.SesionInvalida,
+            mapearErrorSesion(HttpStatusCode.Unauthorized, "Debe iniciar sesión para acceder a este recurso")
+        )
+    }
+
+    @Test
     fun un403EsFaltaDePermisos() {
         assertEquals(
             ErrorSesion.SinPermiso,

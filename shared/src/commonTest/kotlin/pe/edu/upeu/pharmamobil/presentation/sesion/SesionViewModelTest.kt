@@ -169,6 +169,35 @@ class SesionViewModelTest {
     }
 
     @Test
+    fun unUsuarioDeshabilitadoVuelveAlLoginConSuPropioAviso() = runTest {
+
+        val repositorio = FakeAuthRepository(guardada = SESION_ADMIN)
+        val vm = viewModel(repositorio)
+
+        repositorio.fin.emit(ErrorSesion.UsuarioDeshabilitado)
+
+        val estado = vm.uiState.value
+        assertNull(estado.sesion)
+        assertEquals("Tu usuario fue deshabilitado. Consulta con el administrador.", estado.aviso)
+    }
+
+    @Test
+    fun cerrarSesionNoDejaNadaDeLaSesionAnterior() = runTest {
+
+        val repositorio = FakeAuthRepository(guardada = SESION_ADMIN)
+        val vm = viewModel(repositorio)
+        vm.onClaveChange("Admin123")
+
+        vm.cerrarSesion()
+
+        val estado = vm.uiState.value
+        assertNull(estado.sesion)
+        assertEquals("", estado.usuario)
+        assertEquals("", estado.clave)
+        assertNull(estado.error)
+    }
+
+    @Test
     fun cerrarSesionBorraElTokenYVuelveAlLogin() = runTest {
 
         val repositorio = FakeAuthRepository(guardada = SESION_ADMIN)

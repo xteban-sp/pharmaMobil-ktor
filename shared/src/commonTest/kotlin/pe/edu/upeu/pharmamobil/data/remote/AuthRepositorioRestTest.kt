@@ -170,6 +170,31 @@ class AuthRepositorioRestTest {
     }
 
     @Test
+    fun un401DeUsuarioDeshabilitadoBorraElTokenYAvisaConSuPropioMotivo() = runTest {
+
+        val e = escenario(token = "valido.x.y") {
+            respond(error(401, "El usuario está deshabilitado"), HttpStatusCode.Unauthorized, json)
+        }
+        val aviso = async(UnconfinedTestDispatcher(testScheduler)) { e.avisos.sesionTerminada.first() }
+
+        assertFailsWith<ErrorApiException> { e.productos.listar() }
+
+        assertNull(e.almacen.token)
+        assertEquals(ErrorSesion.UsuarioDeshabilitado, aviso.await())
+    }
+
+    @Test
+    fun siempreSeEnviaElPrefijoBearerConMayuscula() = runTest {
+
+        val e = escenario(token = "valido.x.y") { respond(paginaVacia, HttpStatusCode.OK, json) }
+
+        e.productos.listar()
+
+        // El servidor solo reconoce «Bearer » (con mayuscula): la app nunca manda «bearer».
+        assertEquals(listOf<String?>("Bearer valido.x.y"), e.authorizationDe("productos"))
+    }
+
+    @Test
     fun un403MantieneLaSesionYNoAvisa() = runTest {
 
         val e = escenario(token = "valido.x.y") {
