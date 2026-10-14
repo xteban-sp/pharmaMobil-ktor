@@ -5,13 +5,20 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import pe.edu.upeu.pharmamobil.data.remote.AvisosDeSesion
+import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
 import pe.edu.upeu.pharmamobil.data.remote.ProductoApi
 import pe.edu.upeu.pharmamobil.data.remote.crearHttpClient
 import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
+import pe.edu.upeu.pharmamobil.domain.repository.AuthRepository
 import pe.edu.upeu.pharmamobil.domain.repository.ClienteRepository
 import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
 import pe.edu.upeu.pharmamobil.domain.usecase.ActualizarProductoUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.CerrarSesionUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.IniciarSesionUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarFinDeSesionUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerSesionGuardadaUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarClientesUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
@@ -22,6 +29,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import pe.edu.upeu.pharmamobil.presentation.cliente.ClienteViewModel
 import pe.edu.upeu.pharmamobil.presentation.detalle.DetalleProductoViewModel
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoViewModel
+import pe.edu.upeu.pharmamobil.presentation.sesion.SesionViewModel
 
 
 /**
@@ -32,7 +40,10 @@ const val CATEGORIA_POR_DEFECTO = 1L
 
 val dataModule = module {
     // Sesion 7: un solo HttpClient; motor y URL base los aporta platformModule.
-    single { crearHttpClient(engine = get(), config = get()) }
+    // Sesion 10: el almacen del token tambien llega del platformModule.
+    single { AvisosDeSesion() }
+    single { crearHttpClient(engine = get(), config = get(), almacen = get(), avisos = get()) }
+    single<AuthRepository> { AuthRepositorioRest(get(), get(), get()) }
     single { ProductoApi(get()) }
     // Sesion 8: el repositorio REST reemplaza a ProductoRepositorioEnMemoria.
     single<ProductoRepository> { ProductoRepositorioRest(get(), CATEGORIA_POR_DEFECTO) }
@@ -48,6 +59,11 @@ val domainModule = module {
     factory { ReactivarProductoUseCase(get()) }
     factory { RegistrarClienteUseCase(get()) }
     factory { ListarClientesUseCase(get()) }
+    // Sesion 10
+    factory { IniciarSesionUseCase(get()) }
+    factory { ObtenerSesionGuardadaUseCase(get()) }
+    factory { CerrarSesionUseCase(get()) }
+    factory { ObservarFinDeSesionUseCase(get()) }
 }
 
 val presentationModule = module {
@@ -55,6 +71,8 @@ val presentationModule = module {
     viewModel { ClienteViewModel(get(), get()) }
     // Sesion 9: el Compartidor lo aporta el platformModule de cada plataforma.
     viewModel { DetalleProductoViewModel(get(), get()) }
+    // Sesion 10: decide si se muestra el login o la app.
+    viewModel { SesionViewModel(get(), get(), get(), get()) }
 }
 
 

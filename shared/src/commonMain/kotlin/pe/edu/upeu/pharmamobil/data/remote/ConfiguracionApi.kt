@@ -11,7 +11,9 @@ data class ConfiguracionApi(
     val urlBase: String,
     val requestTimeoutMs: Long = 15_000,
     val connectTimeoutMs: Long = 10_000,
-    val escenario: EscenarioPrueba = EscenarioPrueba.NINGUNO
+    val escenario: EscenarioPrueba = EscenarioPrueba.NINGUNO,
+    /** Sesion 10: registro de cabeceras HTTP. Solo en depuracion; lo decide cada plataforma. */
+    val registroHttp: Boolean = true
 )
 
 /**

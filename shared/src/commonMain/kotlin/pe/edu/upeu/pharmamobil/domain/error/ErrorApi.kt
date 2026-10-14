@@ -15,8 +15,11 @@ sealed interface ErrorApi {
     /** 409: una regla de negocio impide la operacion (p. ej. nombre duplicado). */
     data class Conflicto(val mensaje: String) : ErrorApi
 
-    /** 401 / 403: sin permiso (cobrara sentido con JWT). */
-    data object NoAutorizado : ErrorApi
+    /** 401: no hay sesion o el token ya no vale (vencido o invalido). */
+    data object NoAutenticado : ErrorApi
+
+    /** 403: hay sesion, pero el rol no tiene permiso para esta operacion. */
+    data object SinPermiso : ErrorApi
 
     /** 5xx: fallo del servidor, no del usuario. */
     data object Servidor : ErrorApi

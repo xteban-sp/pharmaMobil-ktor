@@ -48,7 +48,8 @@ private suspend fun traducirCliente(e: ClientRequestException): ErrorApi {
     }.getOrNull()
     return when (e.response.status.value) {
         400 -> ErrorApi.Validacion(cuerpo?.validationErrors.orEmpty())
-        401, 403 -> ErrorApi.NoAutorizado
+        401 -> ErrorApi.NoAutenticado
+        403 -> ErrorApi.SinPermiso
         404 -> ErrorApi.NoEncontrado
         409 -> ErrorApi.Conflicto(cuerpo?.message ?: "Operación no permitida")
         else -> ErrorApi.Servidor

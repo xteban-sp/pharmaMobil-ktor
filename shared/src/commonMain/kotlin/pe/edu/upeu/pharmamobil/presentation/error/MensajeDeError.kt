@@ -16,7 +16,8 @@ fun mensajeDe(error: ErrorApi): String = when (error) {
     is ErrorApi.Validacion -> "Revisa los datos ingresados."
     ErrorApi.NoEncontrado -> "El producto ya no existe en el servidor."
     is ErrorApi.Conflicto -> error.mensaje
-    ErrorApi.NoAutorizado -> "No tienes permiso para realizar esta operación."
+    ErrorApi.NoAutenticado -> "Tu sesión terminó. Vuelve a iniciar sesión."
+    ErrorApi.SinPermiso -> "No tienes permiso para realizar esta operación."
     ErrorApi.Servidor -> "El servidor tuvo un problema. Intenta de nuevo en un momento."
     ErrorApi.SinConexion -> "No se pudo conectar con el servidor. Revisa tu conexión."
     ErrorApi.TiempoAgotado -> "El servidor tardó demasiado en responder."
