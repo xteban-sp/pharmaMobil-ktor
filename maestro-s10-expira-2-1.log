@@ -1,0 +1,5 @@
+Running on iPhone 17 Pro - iOS 26.5 - 22452A91-4697-4369-8812-53ADB77EB73B
+ > Flow s10-expira-2
+Tap on ".*Ibuprofeno 400mg.*"... COMPLETED
+Assert that "Tu sesión expiró. Vuelve a iniciar sesión." is visible... COMPLETED
+Take screenshot d02-${PLATAFORMA}-sesion-expirada... COMPLETED

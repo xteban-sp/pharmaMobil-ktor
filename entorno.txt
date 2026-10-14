@@ -1,0 +1,16 @@
+== sistema
+ProductName:		macOS
+ProductVersion:		26.6.2
+BuildVersion:		25G83
+== xcode
+Xcode 26.6
+Build version 17F113
+== sdk simulador
+26.5
+== java
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+== commit
+3d2e9791b766d16f828d8b294ffb2a20c0c6c870 ci(s10): Swagger espera el boton Try it out antes de ejecutar
+backend: fff44f9 seguridad

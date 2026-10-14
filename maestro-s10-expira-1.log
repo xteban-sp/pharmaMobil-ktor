@@ -1,0 +1,22 @@
+Running on iPhone 17 Pro - iOS 26.5 - 22452A91-4697-4369-8812-53ADB77EB73B
+ > Flow s10-expira
+Launch app "${APP_ID}"... COMPLETED
+Run login.yaml...
+  Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible...
+  Run flow when "Abrir menú" is visible... SKIPPED
+  Tap on "Usuario"... COMPLETED
+  Erase 30 characters... COMPLETED
+  Input text ${USUARIO}... COMPLETED
+  Tap on "Contraseña"... COMPLETED
+  Input text ${CLAVE}... COMPLETED
+  Run flow when Platform is ANDROID...
+  Run flow when Platform is ANDROID... SKIPPED
+  Run flow when Platform is IOS...
+    Press Enter key... COMPLETED
+  Run flow when Platform is IOS... COMPLETED
+  Assert that ".*Hola,.*" is visible... COMPLETED
+Run login.yaml... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Take screenshot d01-${PLATAFORMA}-antes-de-expirar... COMPLETED
