@@ -47,12 +47,16 @@ jobs:
 
       - name: Paso 1 de la guia en Swagger UI (Playwright)
         run: |
-          pip install --quiet playwright==1.56.0
-          python -m playwright install --with-deps chromium > /dev/null
-          python .github/ci/swagger_capturas.py http://localhost:8080 "$EVID"
+          # Entorno virtual: el Python del sistema no admite pip install (PEP 668).
+          python3 -m venv /tmp/pw
+          /tmp/pw/bin/pip install --quiet playwright==1.56.0 > "$EVID/playwright-instalacion.log" 2>&1
+          /tmp/pw/bin/python -m playwright install --with-deps chromium >> "$EVID/playwright-instalacion.log" 2>&1
+          /tmp/pw/bin/python .github/ci/swagger_capturas.py http://localhost:8080 "$EVID" 2>&1 | tee "$EVID/swagger.log"
+          test "${PIPESTATUS[0]}" -eq 0
           echo "::notice title=Swagger::$(tr '\n' ' ' < "$EVID/swagger-resumen.txt")"
 
       - name: Verificacion por rol (seccion 6 de la guia)
+        if: always()
         run: |
           python .github/ci/matriz_roles.py http://localhost:8080 "$EVID"
           echo "::notice title=Matriz por rol::$(tr '\n' ' ' < "$EVID/matriz-roles.md")"

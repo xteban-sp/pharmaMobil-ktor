@@ -14,7 +14,9 @@ appId: ${APP_ID}
       - extendedWaitUntil:
           visible: "Ingresar"
           timeout: 30000
+# Al cerrar sesion la app conserva el usuario anterior: se borra antes de escribir.
 - tapOn: "Usuario"
+- eraseText: 30
 - inputText: ${USUARIO}
 - tapOn: "Contraseña"
 - inputText: ${CLAVE}
