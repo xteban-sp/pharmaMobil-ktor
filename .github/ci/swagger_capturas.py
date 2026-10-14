@@ -33,9 +33,12 @@ def abrir(page, metodo, ruta):
     op.scroll_into_view_if_needed()
     if "is-open" not in (op.get_attribute("class") or ""):
         op.locator(".opblock-summary").first.click()
-    boton = op.locator(".try-out__btn")
-    if boton.count() and boton.first.inner_text().strip().lower().startswith("try"):
-        boton.first.click()
+    # El bloque se despliega con una animacion: se espera el boton antes de leerlo.
+    boton = op.locator(".try-out__btn").first
+    boton.wait_for(timeout=20000)
+    if boton.inner_text().strip().lower().startswith("try"):
+        boton.click()
+    op.locator(".execute").first.wait_for(timeout=20000)
     return op
 
 
