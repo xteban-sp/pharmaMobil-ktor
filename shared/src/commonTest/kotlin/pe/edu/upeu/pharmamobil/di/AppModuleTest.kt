@@ -1,5 +1,11 @@
 package pe.edu.upeu.pharmamobil.di
 
+import pe.edu.upeu.pharmamobil.data.remote.ConfiguracionApi
+import pe.edu.upeu.pharmamobil.data.local.AlmacenEnMemoria
+import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
+import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
+import pe.edu.upeu.pharmamobil.domain.repository.AuthRepository
+import pe.edu.upeu.pharmamobil.presentation.sesion.SesionViewModel
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -71,6 +77,10 @@ class AppModuleTest {
      */
     private val doblesDePlataforma = module {
         single<Compartidor> { CompartidorFalso() }
+        // Sesion 10: el almacen real de Android necesita un Context.
+        single<AlmacenSeguro> { AlmacenEnMemoria() }
+        // La configuracion de Android consulta el Context para saber si es depuracion.
+        single { ConfiguracionApi(urlBase = "http://localhost:8080/api/v1/") }
         single<HttpClientEngine> {
             MockEngine {
                 respond(
@@ -133,6 +143,16 @@ class AppModuleTest {
 
         koin.get<ProductoViewModel>()
         koin.get<ClienteViewModel>()
+    }
+
+    @Test
+    fun resuelveLaSesionConSuRepositorioYSuViewModel() {
+
+        val koin = grafoCompleto()
+
+        assertIs<AuthRepositorioRest>(koin.get<AuthRepository>())
+        assertIs<AlmacenEnMemoria>(koin.get<AlmacenSeguro>())
+        koin.get<SesionViewModel>()
     }
 
     @Test

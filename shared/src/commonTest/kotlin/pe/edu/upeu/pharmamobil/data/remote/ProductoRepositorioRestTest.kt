@@ -9,6 +9,7 @@ import io.ktor.http.content.TextContent
 import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.IOException
+import pe.edu.upeu.pharmamobil.data.local.AlmacenEnMemoria
 import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
@@ -32,7 +33,7 @@ class ProductoRepositorioRestTest {
     private val CATEGORIA = 1L
 
     private fun repositorioCon(engine: MockEngine) =
-        ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, config)), CATEGORIA)
+        ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, config, AlmacenEnMemoria())), CATEGORIA)
 
     private fun casoDeUsoCon(engine: MockEngine) =
         ListarProductosUseCase(repositorioCon(engine))
@@ -127,7 +128,7 @@ class ProductoRepositorioRestTest {
     fun caso5b_sinIgnoreUnknownKeys_seTraduceARespuestaInesperada() = runTest {
         val estricto = config.copy(escenario = EscenarioPrueba.JSON_ESTRICTO)
         val engine = MockEngine { respond(paginaValida, HttpStatusCode.OK, jsonHeaders) }
-        val casoDeUso = ListarProductosUseCase(ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, estricto)), CATEGORIA))
+        val casoDeUso = ListarProductosUseCase(ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, estricto, AlmacenEnMemoria())), CATEGORIA))
 
         val fallo = casoDeUso().exceptionOrNull()
 

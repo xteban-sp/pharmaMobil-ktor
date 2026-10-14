@@ -9,6 +9,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
+import pe.edu.upeu.pharmamobil.data.local.AlmacenEnMemoria
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import kotlin.test.Test
@@ -26,7 +27,7 @@ class EjecutarLlamadaTest {
     private val config = ConfiguracionApi(urlBase = "http://10.0.2.2:8080/api/v1/")
 
     private suspend fun errorAl(status: HttpStatusCode, cuerpo: String): ErrorApi {
-        val cliente = crearHttpClient(MockEngine { respond(cuerpo, status, jsonHeaders) }, config)
+        val cliente = crearHttpClient(MockEngine { respond(cuerpo, status, jsonHeaders) }, config, AlmacenEnMemoria())
         val fallo = ejecutarLlamada { cliente.get("productos").body<String>() }.exceptionOrNull()
         return assertIs<ErrorApiException>(fallo).error
     }
@@ -73,9 +74,9 @@ class EjecutarLlamadaTest {
     }
 
     @Test
-    fun el401Y403SonNoAutorizado() = runTest {
-        assertEquals(ErrorApi.NoAutorizado, errorAl(HttpStatusCode.Unauthorized, "{}"))
-        assertEquals(ErrorApi.NoAutorizado, errorAl(HttpStatusCode.Forbidden, "{}"))
+    fun el401EsNoAutenticadoYEl403SinPermiso() = runTest {
+        assertEquals(ErrorApi.NoAutenticado, errorAl(HttpStatusCode.Unauthorized, "{}"))
+        assertEquals(ErrorApi.SinPermiso, errorAl(HttpStatusCode.Forbidden, "{}"))
     }
 
     @Test
