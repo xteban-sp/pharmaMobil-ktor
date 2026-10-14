@@ -2,7 +2,7 @@
 # de sesion»: GitHub Actions presta un Linux con emulador de Android y PharmaSoft
 # real (perfil h2). Todo se ejecuta de verdad; las capturas y registros se publican
 # en la rama ci-evidencias-autonoma-s10.
-#   1. PharmaSoft con tokens de 1 minuto: los 6 escenarios de token por HTTP
+#   1. PharmaSoft con tokens de 1 minuto: los 6 escenarios de token y la matriz de permisos por HTTP
 #   2. Pruebas del modulo shared (incluida la del cierre de sesion contra el servidor real)
 #   3. Emulador: escenarios en la app, almacen cifrado, cierre de sesion y matriz de permisos
 name: S10 Autonoma (sesion y token)
@@ -64,6 +64,10 @@ jobs:
       - name: Escenarios de token por HTTP (6 escenarios)
         continue-on-error: true
         run: python3 .github/ci/escenarios_token.py
+
+      - name: Matriz de permisos por HTTP (6 operaciones x 3 roles)
+        continue-on-error: true
+        run: python3 .github/ci/matriz_roles.py http://localhost:8080 "$EVID"
 
       - name: Pruebas del modulo shared (con el servidor real)
         continue-on-error: true
