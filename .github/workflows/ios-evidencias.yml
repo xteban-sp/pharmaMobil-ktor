@@ -2,7 +2,8 @@
 # macOS (simulador de iPhone) y con Linux (emulador de Android y navegador).
 #
 # Sesion 10 (rama feature/auth-jwt-istana), en cada push:
-#   swagger           PharmaSoft + Swagger UI con un navegador real: 401, 200 y 403
+#   swagger           PharmaSoft + Swagger UI con un navegador real (401, 200, 403)
+#                     y la matriz de verificacion por rol de la guia
 #   android-emulador  la app en un emulador de Android: login, permisos, 403 y expiracion
 #   ios-simulador     lo mismo en un simulador de iPhone
 #   ios-dispositivo   instalador .ipa sin firma para un iPhone fisico (Sideloadly)
@@ -50,6 +51,11 @@ jobs:
           python -m playwright install --with-deps chromium > /dev/null
           python .github/ci/swagger_capturas.py http://localhost:8080 "$EVID"
           echo "::notice title=Swagger::$(tr '\n' ' ' < "$EVID/swagger-resumen.txt")"
+
+      - name: Verificacion por rol (seccion 6 de la guia)
+        run: |
+          python .github/ci/matriz_roles.py http://localhost:8080 "$EVID"
+          echo "::notice title=Matriz por rol::$(tr '\n' ' ' < "$EVID/matriz-roles.md")"
 
       - name: Publicar en la rama ci-evidencias-swagger-s10
         if: always()
