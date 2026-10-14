@@ -1,0 +1,52 @@
+Running on test
+ > Flow s10-login
+Launch app "${APP_ID}"... COMPLETED
+Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+Run flow when "Abrir menú" is visible...
+Run flow when "Abrir menú" is visible... SKIPPED
+Take screenshot a01-${PLATAFORMA}-login... COMPLETED
+Run login.yaml...
+  Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible...
+  Run flow when "Abrir menú" is visible... SKIPPED
+  Tap on "Usuario"... COMPLETED
+  Erase 30 characters... COMPLETED
+  Input text ${USUARIO}... COMPLETED
+  Tap on "Contraseña"... COMPLETED
+  Input text ${CLAVE}... COMPLETED
+  Run flow when Platform is ANDROID...
+    Hide Keyboard... COMPLETED
+    Tap on "Ingresar"... COMPLETED
+  Run flow when Platform is ANDROID... COMPLETED
+  Run flow when Platform is IOS...
+  Run flow when Platform is IOS... SKIPPED
+  Assert that ".*Hola,.*" is visible... COMPLETED
+Run login.yaml... COMPLETED
+Take screenshot a02-${PLATAFORMA}-inicio-admin... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Take screenshot a03-${PLATAFORMA}-productos-admin... COMPLETED
+Tap on "Nuevo producto"... COMPLETED
+Tap on "Nombre"... COMPLETED
+Input text Omeprazol 20mg... COMPLETED
+Tap on "Precio"... COMPLETED
+Input text 4.50... COMPLETED
+Tap on "Stock"... COMPLETED
+Input text 40... COMPLETED
+Run flow when Platform is ANDROID...
+  Hide Keyboard... COMPLETED
+Run flow when Platform is ANDROID... COMPLETED
+Take screenshot a04-${PLATAFORMA}-formulario... COMPLETED
+Tap on "Registrar producto"... COMPLETED
+Assert that ".*Omeprazol 20mg.*registrado.*" is visible... COMPLETED
+Take screenshot a05-${PLATAFORMA}-producto-registrado... COMPLETED
+Stop ${APP_ID}... COMPLETED
+Launch app "${APP_ID}"... COMPLETED
+Assert that ".*Hola,.*" is visible... COMPLETED
+Assert that "Ingresar" is not visible... COMPLETED
+Take screenshot a06-${PLATAFORMA}-reabierta-sesion-activa... COMPLETED
+Tap on "Abrir menú"... COMPLETED
+Take screenshot a07-${PLATAFORMA}-menu-admin... COMPLETED
+Tap on "Cerrar sesión"... COMPLETED
+Assert that "Cerraste sesión." is visible... COMPLETED
+Take screenshot a08-${PLATAFORMA}-sesion-cerrada... COMPLETED
