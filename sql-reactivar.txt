@@ -1,0 +1,7 @@
+SQL> UPDATE usuarios SET estado = TRUE WHERE username = 'vendedor';
+(Update count: 1, 2 ms)
+USERNAME | ESTADO
+admin    | TRUE
+almacen  | TRUE
+vendedor | TRUE
+(3 rows, 5 ms)

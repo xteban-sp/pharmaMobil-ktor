@@ -1,0 +1,21 @@
+Running on test
+ > Flow s10a-otro-usuario
+Run login.yaml...
+  Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible...
+  Run flow when "Abrir menú" is visible... SKIPPED
+  Tap on "Usuario"... COMPLETED
+  Erase 30 characters... COMPLETED
+  Input text ${USUARIO}... COMPLETED
+  Tap on "Contraseña"... COMPLETED
+  Input text ${CLAVE}... COMPLETED
+  Run flow when Platform is ANDROID...
+    Hide Keyboard... COMPLETED
+    Tap on "Ingresar"... COMPLETED
+  Run flow when Platform is ANDROID... COMPLETED
+  Run flow when Platform is IOS...
+  Run flow when Platform is IOS... SKIPPED
+  Assert that ".*Hola,.*" is visible... COMPLETED
+Run login.yaml... COMPLETED
+Assert that ".*Carlos.*" is not visible... COMPLETED
+Take screenshot f05-${PLATAFORMA}-entra-almacen... COMPLETED

@@ -1,0 +1,50 @@
+PharmaSoft: http://localhost:8080  |  tokens de 1 minuto  |  2026-10-21
+
+login vendedor OK: iat=1792587654 exp=1792587714 (vida 60 s)
+
+[2026-10-21 13:00:54] Escenario 1: Token valido
+  Token recien emitido, sin modificar.
+  > GET /api/v1/productos   Authorization: Bearer eyJhbGciOiJI...POUbIQ
+  < HTTP 200  message: ""
+
+[2026-10-21 13:00:54] Escenario 3: Token alterado
+  Se cambia un caracter de la firma (el 6.º: «M» por «A») del token valido.
+  > GET /api/v1/productos   Authorization: Bearer eyJhbGciOiJI...(firma: gkFTZ[A]9rr3a...)
+  < HTTP 401  message: "El token no es válido"
+
+[2026-10-21 13:00:54] Escenario 4: Sin header Authorization
+  Peticion sin cabecera Authorization.
+  > GET /api/v1/productos   Authorization: (sin cabecera)
+  < HTTP 401  message: "Debe iniciar sesión para acceder a este recurso"
+
+[2026-10-21 13:00:54] Escenario 5: Prefijo incorrecto
+  Token valido pero con el prefijo «bearer» en minuscula.
+  > GET /api/v1/productos   Authorization: bearer eyJhbGciOiJI...POUbIQ
+  < HTTP 401  message: "Debe iniciar sesión para acceder a este recurso"
+
+Antes de deshabilitar: GET /api/v1/productos con token de vendedor -> HTTP 200
+SQL> UPDATE usuarios SET estado = FALSE WHERE username = 'vendedor';
+USERNAME | ESTADO
+vendedor | FALSE
+(1 row, 6 ms)
+
+[2026-10-21 13:00:55] Escenario 6: Usuario deshabilitado
+  El mismo token (aun vigente) de un usuario con estado = false.
+  > GET /api/v1/productos   Authorization: Bearer eyJhbGciOiJI...aWZOMQ
+  < HTTP 401  message: "El usuario está deshabilitado"
+
+Login con el usuario deshabilitado -> HTTP 401  message: "Usuario o contraseña incorrectos"
+
+SQL> UPDATE usuarios SET estado = TRUE WHERE username = 'vendedor';
+USERNAME | ESTADO
+vendedor | TRUE
+(1 row, 4 ms)
+
+Usuario reactivado: el mismo token vuelve a dar HTTP 200
+
+Esperando 70 s para que venza el token del escenario 1 ...
+[2026-10-21 13:02:06] Escenario 2: Token expirado
+  El token del escenario 1 despues de 70 s (vida de 60 s).
+  > GET /api/v1/productos   Authorization: Bearer eyJhbGciOiJI...POUbIQ
+  < HTTP 401  message: "El token ha expirado. Inicie sesión nuevamente"
+

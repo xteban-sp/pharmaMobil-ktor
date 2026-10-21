@@ -1,0 +1,83 @@
+{
+  "admin": {
+    "login": 200,
+    "Listar productos": {
+      "codigo": 200,
+      "mensaje": null
+    },
+    "Registrar producto": {
+      "codigo": 201,
+      "mensaje": null
+    },
+    "Listar clientes": {
+      "codigo": 200,
+      "mensaje": null
+    },
+    "Registrar venta": {
+      "codigo": 201,
+      "mensaje": null
+    },
+    "Ver reportes": {
+      "codigo": 200,
+      "mensaje": null
+    },
+    "Consultar /auth/me": {
+      "codigo": 200,
+      "mensaje": null
+    }
+  },
+  "vendedor": {
+    "login": 200,
+    "Listar productos": {
+      "codigo": 200,
+      "mensaje": null
+    },
+    "Registrar producto": {
+      "codigo": 403,
+      "mensaje": "No tiene permisos para realizar esta operación"
+    },
+    "Listar clientes": {
+      "codigo": 200,
+      "mensaje": null
+    },
+    "Registrar venta": {
+      "codigo": 201,
+      "mensaje": null
+    },
+    "Ver reportes": {
+      "codigo": 403,
+      "mensaje": "No tiene permisos para realizar esta operación"
+    },
+    "Consultar /auth/me": {
+      "codigo": 200,
+      "mensaje": null
+    }
+  },
+  "almacen": {
+    "login": 200,
+    "Listar productos": {
+      "codigo": 200,
+      "mensaje": null
+    },
+    "Registrar producto": {
+      "codigo": 201,
+      "mensaje": null
+    },
+    "Listar clientes": {
+      "codigo": 403,
+      "mensaje": "No tiene permisos para realizar esta operación"
+    },
+    "Registrar venta": {
+      "codigo": 403,
+      "mensaje": "No tiene permisos para realizar esta operación"
+    },
+    "Ver reportes": {
+      "codigo": 403,
+      "mensaje": "No tiene permisos para realizar esta operación"
+    },
+    "Consultar /auth/me": {
+      "codigo": 200,
+      "mensaje": null
+    }
+  }
+}

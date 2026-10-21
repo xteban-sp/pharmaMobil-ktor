@@ -1,0 +1,101 @@
+Running on test
+ > Flow s10a-matriz
+Launch app "${APP_ID}"... COMPLETED
+Run login.yaml...
+  Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible...
+    Tap on "Abrir menú"... COMPLETED
+    Tap on "Cerrar sesión"... COMPLETED
+    Assert that "Ingresar" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible... COMPLETED
+  Tap on "Usuario"... COMPLETED
+  Erase 30 characters... COMPLETED
+  Input text ${USUARIO}... COMPLETED
+  Tap on "Contraseña"... COMPLETED
+  Input text ${CLAVE}... COMPLETED
+  Run flow when Platform is ANDROID...
+    Hide Keyboard... COMPLETED
+    Tap on "Ingresar"... COMPLETED
+  Run flow when Platform is ANDROID... COMPLETED
+  Run flow when Platform is IOS...
+  Run flow when Platform is IOS... SKIPPED
+  Assert that ".*Hola,.*" is visible... COMPLETED
+Run login.yaml... COMPLETED
+Tap on "Abrir menú"... COMPLETED
+Assert that "Productos" is visible... COMPLETED
+Assert that "Clientes" is visible... COMPLETED
+Assert that "Pedidos" is visible... COMPLETED
+Take screenshot g01-${PLATAFORMA}-menu-admin... COMPLETED
+Tap on "Inicio"... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Assert that "Nuevo producto" is visible... COMPLETED
+Take screenshot g02-${PLATAFORMA}-productos-admin... COMPLETED
+Tap on "Volver"... COMPLETED
+Run login.yaml...
+  Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible...
+    Tap on "Abrir menú"... COMPLETED
+    Tap on "Cerrar sesión"... COMPLETED
+    Assert that "Ingresar" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible... COMPLETED
+  Tap on "Usuario"... COMPLETED
+  Erase 30 characters... COMPLETED
+  Input text ${USUARIO}... COMPLETED
+  Tap on "Contraseña"... COMPLETED
+  Input text ${CLAVE}... COMPLETED
+  Run flow when Platform is ANDROID...
+    Hide Keyboard... COMPLETED
+    Tap on "Ingresar"... COMPLETED
+  Run flow when Platform is ANDROID... COMPLETED
+  Run flow when Platform is IOS...
+  Run flow when Platform is IOS... SKIPPED
+  Assert that ".*Hola,.*" is visible... COMPLETED
+Run login.yaml... COMPLETED
+Tap on "Abrir menú"... COMPLETED
+Assert that "Productos" is visible... COMPLETED
+Assert that "Clientes" is visible... COMPLETED
+Assert that "Pedidos" is visible... COMPLETED
+Take screenshot g03-${PLATAFORMA}-menu-vendedor... COMPLETED
+Tap on "Inicio"... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Assert that "Nuevo producto" is not visible... COMPLETED
+Take screenshot g04-${PLATAFORMA}-productos-vendedor... COMPLETED
+Tap on ".*Paracetamol 500mg.*"... COMPLETED
+Assert that "Compartir" is visible... COMPLETED
+Assert that "Editar" is not visible... COMPLETED
+Assert that "Eliminar" is not visible... COMPLETED
+Take screenshot g05-${PLATAFORMA}-detalle-vendedor... COMPLETED
+Tap on "Volver"... COMPLETED
+Tap on "Volver"... COMPLETED
+Run login.yaml...
+  Assert that "Ingresar|Abrir menú" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible...
+    Tap on "Abrir menú"... COMPLETED
+    Tap on "Cerrar sesión"... COMPLETED
+    Assert that "Ingresar" is visible... COMPLETED
+  Run flow when "Abrir menú" is visible... COMPLETED
+  Tap on "Usuario"... COMPLETED
+  Erase 30 characters... COMPLETED
+  Input text ${USUARIO}... COMPLETED
+  Tap on "Contraseña"... COMPLETED
+  Input text ${CLAVE}... COMPLETED
+  Run flow when Platform is ANDROID...
+    Hide Keyboard... COMPLETED
+    Tap on "Ingresar"... COMPLETED
+  Run flow when Platform is ANDROID... COMPLETED
+  Run flow when Platform is IOS...
+  Run flow when Platform is IOS... SKIPPED
+  Assert that ".*Hola,.*" is visible... COMPLETED
+Run login.yaml... COMPLETED
+Tap on "Abrir menú"... COMPLETED
+Assert that "Productos" is visible... COMPLETED
+Assert that "Clientes" is not visible... COMPLETED
+Assert that "Pedidos" is not visible... COMPLETED
+Take screenshot g06-${PLATAFORMA}-menu-almacen... COMPLETED
+Tap on "Inicio"... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that ".*Paracetamol 500mg.*" is visible... COMPLETED
+Assert that "Nuevo producto" is visible... COMPLETED
+Take screenshot g07-${PLATAFORMA}-productos-almacen... COMPLETED

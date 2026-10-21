@@ -1,0 +1,9 @@
+== sistema
+Ubuntu 24.04.5 LTS
+== java
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+== commit
+ee24a3b72348db306e55503e90780779009a0dc9 ci(s10): la corrida de la actividad autonoma tambien levanta la matriz de permisos por HTTP
+backend: fff44f9 seguridad

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pe.edu.upeu.pharmamobil.data.remote.CierreDeSesionRealTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-21T13:04:49.375Z" hostname="runnervmxehtw" time="0.384">
+  <properties/>
+  <testcase name="trasCerrarSesionLaSiguientePeticionSaleSinTokenYDa401" classname="pe.edu.upeu.pharmamobil.data.remote.CierreDeSesionRealTest" time="0.384"/>
+  <system-out><![CDATA[== 1. Login de vendedor
+KtorHttp => REQUEST: http://localhost:8080/api/v1/auth/login
+KtorHttp => METHOD: POST
+KtorHttp => COMMON HEADERS
+KtorHttp => -> Accept: application/json
+KtorHttp => CONTENT HEADERS
+KtorHttp => -> Content-Length: 48
+KtorHttp => -> Content-Type: application/json
+KtorHttp => RESPONSE: 200 
+KtorHttp => METHOD: POST
+KtorHttp => FROM: http://localhost:8080/api/v1/auth/login
+KtorHttp => COMMON HEADERS
+KtorHttp => -> cache-control: no-cache, no-store, max-age=0, must-revalidate
+KtorHttp => -> connection: keep-alive
+KtorHttp => -> content-type: application/json
+KtorHttp => -> date: Wed, 21 Oct 2026 13:04:49 GMT
+KtorHttp => -> expires: 0
+KtorHttp => -> keep-alive: timeout=60
+KtorHttp => -> pragma: no-cache
+KtorHttp => -> transfer-encoding: chunked
+KtorHttp => -> vary: Origin; Access-Control-Request-Method; Access-Control-Request-Headers
+KtorHttp => -> x-content-type-options: nosniff
+KtorHttp => -> x-frame-options: DENY
+KtorHttp => -> x-xss-protection: 0
+   sesion de vendedor; token en el almacen: SI
+== 2. GET productos con la sesion abierta
+KtorHttp => REQUEST: http://localhost:8080/api/v1/productos
+KtorHttp => METHOD: GET
+KtorHttp => COMMON HEADERS
+KtorHttp => -> Accept: application/json
+KtorHttp => -> Authorization: ***
+KtorHttp => -> Content-Type: application/json
+KtorHttp => CONTENT HEADERS
+KtorHttp => -> Content-Length: 0
+KtorHttp => RESPONSE: 200 
+KtorHttp => METHOD: GET
+KtorHttp => FROM: http://localhost:8080/api/v1/productos
+KtorHttp => COMMON HEADERS
+KtorHttp => -> cache-control: no-cache, no-store, max-age=0, must-revalidate
+KtorHttp => -> connection: keep-alive
+KtorHttp => -> content-type: application/json
+KtorHttp => -> date: Wed, 21 Oct 2026 13:04:49 GMT
+KtorHttp => -> expires: 0
+KtorHttp => -> keep-alive: timeout=60
+KtorHttp => -> pragma: no-cache
+KtorHttp => -> transfer-encoding: chunked
+KtorHttp => -> vary: Origin; Access-Control-Request-Method; Access-Control-Request-Headers
+KtorHttp => -> x-content-type-options: nosniff
+KtorHttp => -> x-frame-options: DENY
+KtorHttp => -> x-xss-protection: 0
+   HTTP 200
+== 3. cerrarSesion()
+   token en el almacen: NO (borrado 1 vez)
+== 4. GET productos tras cerrar sesion (el cliente no debe recordar el token)
+KtorHttp => REQUEST: http://localhost:8080/api/v1/productos
+KtorHttp => METHOD: GET
+KtorHttp => COMMON HEADERS
+KtorHttp => -> Accept: application/json
+KtorHttp => -> Content-Type: application/json
+KtorHttp => CONTENT HEADERS
+KtorHttp => -> Content-Length: 0
+KtorHttp => RESPONSE: 401 
+KtorHttp => METHOD: GET
+KtorHttp => FROM: http://localhost:8080/api/v1/productos
+KtorHttp => COMMON HEADERS
+KtorHttp => -> cache-control: no-cache, no-store, max-age=0, must-revalidate
+KtorHttp => -> connection: keep-alive
+KtorHttp => -> content-length: 193
+KtorHttp => -> content-type: application/json;charset=UTF-8
+KtorHttp => -> date: Wed, 21 Oct 2026 13:04:49 GMT
+KtorHttp => -> expires: 0
+KtorHttp => -> keep-alive: timeout=60
+KtorHttp => -> pragma: no-cache
+KtorHttp => -> vary: Origin; Access-Control-Request-Method; Access-Control-Request-Headers
+KtorHttp => -> www-authenticate: Bearer
+KtorHttp => -> x-content-type-options: nosniff
+KtorHttp => -> x-frame-options: DENY
+KtorHttp => -> x-xss-protection: 0
+   HTTP 401  message: "Debe iniciar sesión para acceder a este recurso"
+]]></system-out>
+  <system-err><![CDATA[Possibly running android unit test without robolectric
+java.lang.RuntimeException: Method isLoggable in android.util.Log not mocked. See https://developer.android.com/r/studio-ui/build/not-mocked for details.
+	at android.util.Log.isLoggable(Log.java)
+	at okhttp3.internal.platform.android.AndroidLog.enableLogging(AndroidLog.kt:132)
+	at okhttp3.internal.platform.android.AndroidLog.enable(AndroidLog.kt:109)
+	at okhttp3.internal.platform.PlatformRegistry.findPlatform(PlatformRegistry.kt:25)
+	at okhttp3.internal.platform.Platform$Companion.findPlatform(Platform.kt:228)
+	at okhttp3.internal.platform.Platform$Companion.access$findPlatform(Platform.kt:206)
+	at okhttp3.internal.platform.Platform.<clinit>(Platform.kt:207)
+	at okhttp3.OkHttpClient.<init>(OkHttpClient.kt:292)
+	at okhttp3.OkHttpClient$Builder.build(OkHttpClient.kt:1382)
+	at io.ktor.client.engine.okhttp.OkHttpEngine.okHttpClientPrototype_delegate$lambda$0(OkHttpEngine.kt:154)
+	at kotlin.SynchronizedLazyImpl.getValue(LazyJVM.kt:86)
+	at io.ktor.client.engine.okhttp.OkHttpEngine$Companion.getOkHttpClientPrototype(OkHttpEngine.kt:153)
+	at io.ktor.client.engine.okhttp.OkHttpEngine.createOkHttpClient(OkHttpEngine.kt:159)
+	at io.ktor.client.engine.okhttp.OkHttpEngine.access$createOkHttpClient(OkHttpEngine.kt:29)
+	at io.ktor.client.engine.okhttp.OkHttpEngine$clientCache$1.invoke(OkHttpEngine.kt:41)
+	at io.ktor.client.engine.okhttp.OkHttpEngine$clientCache$1.invoke(OkHttpEngine.kt:41)
+	at io.ktor.util.LRUCache.get(Cache.kt:53)
+	at java.base/java.util.Collections$SynchronizedMap.get(Collections.java:2893)
+	at io.ktor.client.engine.okhttp.OkHttpEngine.execute(OkHttpEngine.kt:66)
+	at io.ktor.client.engine.HttpClientEngine$executeWithinCallContext$2.invokeSuspend(HttpClientEngine.kt:180)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:124)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:798)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+]]></system-err>
+</testsuite>
