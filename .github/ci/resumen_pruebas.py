@@ -12,9 +12,14 @@ CLASES_S11 = ("ProductoRepositorioOfflineTest", "ProductoLocalTest")
 EXTRA_S11 = ("sinConexionMuestraLaListaGuardadaConElAvisoDeRed", "registrarNoVuelveAPedirLaLista",
              "sinServidorSeEntraConElPerfilDeLaUltimaSesion", "cerrarSesionBorraTambienElPerfilLocal",
              "abreLaBaseLocalConElDriverRegistrado")
+# Actividad autonoma: la suite de 6 pruebas y lo nuevo de "Actualizado hace..." / primera apertura sin red
+CLASES_AUTONOMA = ("SuiteOfflineTest", "AntiguedadTest")
+EXTRA_AUTONOMA = ("primeraAperturaSinRedEsUnEstadoVacioInformativoYNoUnError",
+                  "laPantallaRecibeLaHoraDeLaUltimaSincronizacionCorrecta")
 
 total = fallos = 0
 lineas = []
+autonoma = []
 for archivo in sorted(glob.glob(sys.argv[1] + "/*.xml")):
     raiz = ET.parse(archivo).getroot()
     for caso in raiz.iter("testcase"):
@@ -23,12 +28,16 @@ for archivo in sorted(glob.glob(sys.argv[1] + "/*.xml")):
         fallos += fallo
         clase = caso.get("classname").rsplit(".", 1)[-1]
         nombre = caso.get("name")
+        linea = f"  {'FALLO' if fallo else 'PASO '} {clase} > {nombre}  ({float(caso.get('time')):.3f} s)"
         if clase in CLASES_S11 or nombre in EXTRA_S11:
-            estado = "FALLO" if fallo else "PASO "
-            lineas.append(f"  {estado} {clase} > {nombre}  ({float(caso.get('time')):.3f} s)")
+            lineas.append(linea)
+        if clase in CLASES_AUTONOMA or nombre in EXTRA_AUTONOMA:
+            autonoma.append(linea)
 
 with open(sys.argv[2], "w", encoding="utf-8") as salida:
     salida.write(f"$ ./gradlew :shared:testAndroidHostTest\n")
     salida.write(f"{total} pruebas, {fallos} con fallo\n\nPruebas de la sesion 11 (offline-first):\n")
     salida.write("\n".join(lineas) + "\n")
+    salida.write("\nActividad autonoma (suite offline, antiguedad, primera apertura):\n")
+    salida.write("\n".join(sorted(autonoma, key=lambda l: ("SuiteOffline" not in l, l))) + "\n")
 print(open(sys.argv[2], encoding="utf-8").read())
