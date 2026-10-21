@@ -14,6 +14,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.Medication
@@ -26,7 +29,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -83,6 +88,16 @@ fun ProductoScreen(
                     cantidadDeBaja = uiState.dadosDeBaja.size,
                     viendoBajas = uiState.viendoBajas,
                     onVerBajas = viewModel::verDadosDeBaja
+                )
+            }
+
+            // Sesion 11: estado de la sincronizacion y boton para sincronizar a mano.
+            if (uiState.fase !is Fase.Error) {
+                BarraSincronizacion(
+                    sincronizando = uiState.sincronizando,
+                    avisoRed = uiState.avisoRed,
+                    pendientes = uiState.pendientes,
+                    onSincronizar = viewModel::sincronizar
                 )
             }
 
@@ -184,6 +199,75 @@ fun ProductoScreen(
                     // Nombre accesible del boton para lectores de pantalla y pruebas.
                     .semantics { contentDescription = "Nuevo producto" }
             )
+        }
+    }
+}
+
+
+/**
+ * Sesion 11: la lista sale de la base local; esta barra dice si esta al dia.
+ * Sin conexion muestra el aviso y cuantos productos esperan para subir.
+ */
+@Composable
+private fun BarraSincronizacion(
+    sincronizando: Boolean,
+    avisoRed: String?,
+    pendientes: Int,
+    onSincronizar: () -> Unit
+) {
+
+    val esquema = MaterialTheme.colorScheme
+    val sinRed = avisoRed != null && !sincronizando
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        color = if (sinRed) esquema.tertiaryContainer else esquema.surfaceVariant,
+        contentColor = if (sinRed) esquema.onTertiaryContainer else esquema.onSurfaceVariant
+    ) {
+
+        Row(
+            modifier = Modifier.padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+            if (sincronizando) {
+                CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
+            } else {
+                Icon(
+                    imageVector = if (sinRed) Icons.Default.CloudOff else Icons.Default.CloudDone,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = when {
+                        sincronizando -> "Sincronizando con PharmaSoft…"
+                        avisoRed != null -> avisoRed
+                        else -> "Inventario al día"
+                    },
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                if (pendientes > 0) {
+                    Text(
+                        text = if (pendientes == 1) "1 producto pendiente de enviar"
+                               else "$pendientes productos pendientes de enviar",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+
+            TextButton(
+                onClick = onSincronizar,
+                enabled = !sincronizando,
+                modifier = Modifier.semantics { contentDescription = "Sincronizar" }
+            ) {
+                Icon(Icons.Default.Sync, contentDescription = null, modifier = Modifier.size(18.dp))
+                Text("Sincronizar", modifier = Modifier.padding(start = 6.dp))
+            }
         }
     }
 }
@@ -306,6 +390,15 @@ private fun ProductoItem(
                             texto = "Reponer",
                             fondo = esquema.errorContainer,
                             color = esquema.onErrorContainer
+                        )
+                    }
+
+                    // Sesion 11: creado sin red, todavia no esta en PharmaSoft.
+                    if (producto.pendiente) {
+                        Etiqueta(
+                            texto = "Pendiente",
+                            fondo = esquema.tertiaryContainer,
+                            color = esquema.onTertiaryContainer
                         )
                     }
                 }
