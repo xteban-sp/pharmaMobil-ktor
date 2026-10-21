@@ -1,0 +1,77 @@
+2026-10-21 20:24:15.150 xcodebuild[36633:97901] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:24:15.298 xcodebuild[36633:97901] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:24:23.119 xcodebuild[36633:97901] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARN2026-10-21 20:26:57.817839+0000 maestro-driver-iosUITests-Runner[39096:104546] [Default] Running tests...
+2026-10-21 20:26:59.044565+0000 maestro-driver-iosUITests-Runner[39096:104546] snapshotKeyHonorModalViews configured to value: (null)
+objc[39096]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10a50c310) and /Library/Develope2026-10-21 20:34:58.325 xcodebuild[36633:97901] [MT] IDETestOperationsObserverDebug: 630.593 elapsed -- Testing started completed.
+2026-10-21 20:34:58.329 xcodebuild[36633:97901] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-21 20:34:58.329 xcodebuild[36633:97901] [MT] IDETestOperationsObserverDebug: 630.593 sec, +630.593 sec -- end
+Failing tests:
+	maestro_driver_iosUITests.testHttpServer()
+
+** TEST EXECUTE FAILED **
+
+ Suite 'maestro-driver-iosUITests.xctest' started at 2026-10-21 20:27:24.530.
+Test Suite 'SwipeRouteHandlerV2ClassificationTests' started at 2026-10-21 20:27:24.532.
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testClassifiedTimeoutPreservesTheRealMessage]' started.
+    t =     0.01s Start Test at 2026-10-21 20:27:24.544
+    t =     0.07s Set Up
+    t =     0.08s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testClassifiedTimeoutPreservesTheRealMessage]' passed (0.075 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testMainThreadBusyIsClassifiedAsTimeout]' started.
+    t =     0.00s Start Test at 2026-10-21 20:27:24.621
+    t =     0.01s Set Up
+    t =     0.01s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testMainThreadBusyIsClassifiedAsTimeout]' passed (0.012 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testTimeoutMessageWithWrongDomainStaysInternal]' started.
+    t =     0.00s Start Test at 2026-10-21 20:27:24.636
+    t =     0.01s Set Up
+    t =     0.01s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testTimeoutMessageWithWrongDomainStaysInternal]' passed (0.014 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUIQueryTimeoutIsClassifiedAsTimeout]' started.
+    t =     0.00s Start Test at 2026-10-21 20:27:25.238
+    t =     0.01s Set Up
+    t =     0.02s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUIQueryTimeoutIsClassifiedAsTimeout]' passed (0.025 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUnrelatedXCTFutureErrorStaysInternal]' started.
+    t =     0.00s Start Test at 2026-10-21 20:27:25.264
+    t =     0.00s Set Up
+    t =     0.01s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUnrelatedXCTFutureErrorStaysInternal]' passed (0.009 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testXCTFutureCode1000WithUnrelatedMessageStaysInternal]' started.
+    t =     0.65s Start Test at 2026-10-21 20:27:25.927
+    t =     0.66s Set Up
+    t =     0.66s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testXCTFutureCode1000WithUnrelatedMessageStaysInternal]' passed (0.664 seconds).
+Test Suite 'SwipeRouteHandlerV2ClassificationTests' passed at 2026-10-21 20:27:25.938.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.799 (1.406) seconds
+Test Suite 'maestro_driver_iosUITests' started at 2026-10-21 20:27:25.939.
+    t =      nans Suite Set Up
+Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started.
+    t =     0.00s Start Test at 2026-10-21 20:27:25.943
+    t =     0.01s Set Up
+2026-10-21 20:27:25.953362+0000 maestro-driver-iosUITests-Runner[39096:105497] [maestro_driver_iosUITests] Will start HTTP server
+2026-10-21 20:27:26.412170+0000 maestro-driver-iosUITests-Runner[39096:105493] [FlyingFox] starting server 127.0.0.1:51093
+2026-10-21 20:31:48.906914+0000 maestro-driver-iosUITests-Runner[45368:120900] [Default] Running tests...
+2026-10-21 20:31:49.098298+0000 maestro-driver-iosUITests-Runner[45368:120900] snapshotKeyHonorModalViews configured to value: (null)
+    t =      nans Interface orientation changed to Portrait
+
+Restarting after unexpected exit, crash, or test timeout; summary will include totals from previous launches.
+
+objc[45368]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x108598310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10788c398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+Test Suite 'Selected tests' started at 2026-10-21 20:32:05.291.
+Test Suite 'maestro-driver-iosUITests.xctest' started at 2026-10-21 20:32:05.296.
+Test Suite 'maestro_driver_iosUITests' started at 2026-10-21 20:32:05.297.
+    t =      nans Suite Set Up
+    t =      nans Suite Tear Down
+Test Suite 'maestro_driver_iosUITests' passed at 2026-10-21 20:32:05.302.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.005) seconds
+Test Suite 'maestro-driver-iosUITests.xctest' passed at 2026-10-21 20:32:05.304.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.008) seconds
+Test Suite 'Selected tests' passed at 2026-10-21 20:32:05.305.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.014) seconds
+
+Test session results, code coverage, and logs:
+	/var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T/maestro_xctestrunner_xcodebuild_output7274964014940506867/Logs/Test/Test-maestro-driver-ios-2026.10.21_20-24-23-+0000.xcresult
+
+Testing started

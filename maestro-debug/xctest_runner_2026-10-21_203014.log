@@ -1,0 +1,19 @@
+2026-10-21 20:30:40.895 xcodebuild[43087:115310] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:30:40.991 xcodebuild[43087:115310] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:30:44.625 xcodebuild[43087:115310] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: W2026-10-21 20:31:43.670507+0000 maestro-driver-iosUITests-Runner[44746:119334] [Default] Running tests...
+2026-10-21 20:31:44.997643+0000 maestro-driver-iosUITests-Runner[44746:119334] snapshotKeyHonorModalViews configured to value: (null)
+
+Test session results, code coverage, and logs:
+	/var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T/maestro_xctestrunner_xcodebuild_output18001714306123234337/Logs/Test/Test-maestro-driver-ios-2026.10.21_20-30-44-+0000.xcresult
+
+Testing started
+estination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:34:58.312 xcodebuild[43087:115310] [MT] IDETestOperationsObserverDebug: 231.735 elapsed -- Testing started completed.
+2026-10-21 20:34:58.316 xcodebuild[43087:115310] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-21 20:34:58.316 xcodebuild[43087:115310] [MT] IDETestOperationsObserverDebug: 231.735 sec, +231.735 sec -- end
+Testing failed:
+	maestro-driver-iosUITests-Runner (44746) encountered an error (Early unexpected exit, operation never finished bootstrapping - no restart will be attempted. (Underlying Error: Test crashed with signal kill while preparing to run tests.))
+
+** TEST EXECUTE FAILED **
+

@@ -1,0 +1,80 @@
+2026-10-21 20:33:11.493 xcodebuild[47656:127021] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:33:11.543 xcodebuild[47656:127021] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:E839A11B-51B4-4AD3-ACF4-A53B95B7C957, OS:262026-10-21 20:35:43.881828+0000 maestro-driver-iosUITests-Runner[49676:135157] [Default] Running tests...
+2026-10-21 20:35:44.375446+0000 maestro-driver-iosUITests-Runner[49676:136603] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name:2026-10-21 20:44:05.847 xcodebuild[47656:127021] [MT] IDETestOperationsObserverDebug: 647.181 elapsed -- Testing started completed.
+2026-10-21 20:44:05.848 xcodebuild[47656:127021] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-21 20:44:05.848 xcodebuild[47656:127021] [MT] IDETestOperationsObserverDebug: 647.181 sec, +647.181 sec -- end
+Failing tests:
+	maestro_driver_iosUITests.testHttpServer()
+
+** TEST EXECUTE FAILED **
+
+rientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-21 20:35:58.413.
+Test Suite 'maestro-driver-iosUITests.xctest' started at 2026-10-21 20:35:58.417.
+Test Suite 'SwipeRouteHandlerV2ClassificationTests' started at 2026-10-21 20:35:58.418.
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testClassifiedTimeoutPreservesTheRealMessage]' started.
+    t =     0.02s Start Test at 2026-10-21 20:35:58.443
+    t =     0.05s Set Up
+    t =     0.09s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testClassifiedTimeoutPreservesTheRealMessage]' passed (0.076 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testMainThreadBusyIsClassifiedAsTimeout]' started.
+    t =     0.00s Start Test at 2026-10-21 20:35:58.513
+    t =     0.02s Set Up
+    t =     0.02s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testMainThreadBusyIsClassifiedAsTimeout]' passed (0.026 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testTimeoutMessageWithWrongDomainStaysInternal]' started.
+    t =     0.00s Start Test at 2026-10-21 20:35:58.541
+    t =     1.77s Set Up
+    t =     1.79s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testTimeoutMessageWithWrongDomainStaysInternal]' passed (1.816 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUIQueryTimeoutIsClassifiedAsTimeout]' started.
+    t =     0.00s Start Test at 2026-10-21 20:36:00.360
+    t =     0.00s Set Up
+    t =     0.08s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUIQueryTimeoutIsClassifiedAsTimeout]' passed (0.082 seconds).
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUnrelatedXCTFutureErrorStaysInternal]' started.
+    t =     0.00s Start Test at 2026-10-21 20:36:00.443
+    t =     0.01s Set Up
+    t =     0.01s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testUnrelatedXCTFutureErrorStaysInternal]' passed (0.010 seconds).
+XCTobjc[49676]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x109bc4310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106b78398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+estOutputBarrierTest Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testXCTFutureCode1000WithUnrelatedMessageStaysInternal]' started.
+    t =     0.00s Start Test at 2026-10-21 20:36:00.881
+    t =     0.01s Set Up
+    t =     0.01s Tear Down
+Test Case '-[maestro_driver_iosUITests.SwipeRouteHandlerV2ClassificationTests testXCTFutureCode1000WithUnrelatedMessageStaysInternal]' passed (0.016 seconds).
+Test Suite 'SwipeRouteHandlerV2ClassificationTests' passed at 2026-10-21 20:36:01.759.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 2.026 (3.341) seconds
+Test Suite 'maestro_driver_iosUITests' started at 2026-10-21 20:36:01.763.
+    t =      nans Suite Set Up
+Test Case '-[maestro_driver_iosUITests.maestro_driver_iosUITests testHttpServer]' started.
+    t =     0.00s Start Test at 2026-10-21 20:36:01.766
+    t =     0.00s Set Up
+2026-10-21 20:36:01.776451+0000 maestro-driver-iosUITests-Runner[49676:137305] [maestro_driver_iosUITests] Will start HTTP server
+2026-10-21 20:36:03.614104+0000 maestro-driver-iosUITests-Runner[49676:136608] [FlyingFox] starting server 127.0.0.1:55838
+2026-10-21 20:42:01.898028+0000 maestro-driver-iosUITests-Runner[57971:156085] [Default] Running tests...
+2026-10-21 20:42:02.122203+0000 maestro-driver-iosUITests-Runner[57971:156085] snapshotKeyHonorModalViews configured to value: (null)
+2026-10-21 20:42:02.133441+0000 maestro-driver-iosUITests-Runner[57971:156190] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-10-21 20:42:02.180469+0000 maestro-driver-iosUITests-Runner[57971:156189] [General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+    t =      nans Interface orientation changed to Portrait
+
+Restarting after unexpected exit, crash, or test timeout; summary will include totals from previous launches.
+
+Test Suite 'Selected tests' started at 2026-10-21 20:42:08.615.
+Test Suite 'maestro-driver-iosUITests.xctest' started at 2026-10-21 20:42:08.624.
+Test Suite 'maestro_driver_iosUITests' started at 2026-10-21 20:42:08.624.
+    t =      nans Suite Set Up
+    t =      nans Suite Tear Down
+Test Suite 'maestro_driver_iosUITests' passed at 2026-10-21 20:42:08.627.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+Test Suite 'maestro-driver-iosUITests.xctest' passed at 2026-10-21 20:42:08.628.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.003) seconds
+Test Suite 'Selected tests' passed at 2026-10-21 20:42:08.628.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.013) seconds
+
+Test session results, code coverage, and logs:
+	/var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T/maestro_xctestrunner_xcodebuild_output8733131783997078979/Logs/Test/Test-maestro-driver-ios-2026.10.21_20-33-11-+0000.xcresult
+
+Testing started

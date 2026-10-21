@@ -1,0 +1,16 @@
+== sistema
+ProductName:		macOS
+ProductVersion:		26.6.2
+BuildVersion:		25G83
+== xcode
+Xcode 26.6
+Build version 17F113
+== sdk simulador
+26.5
+== java
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+== commit
+33dfa67027b35168b2c6757b17d66c4c422f4ea6 ci(s11): en iOS el registro KtorHttp va a NSLog y el workflow lo lee con log stream
+backend: fff44f9 seguridad

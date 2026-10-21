@@ -1,0 +1,4 @@
+== PharmaSoft apagado
+GET /api/health -> 000
+== PharmaSoft encendido
+PharmaSoft listo (tokens de 60 min, base memoria)

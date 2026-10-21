@@ -1,0 +1,15 @@
+2026-10-21 20:40:47.713 xcodebuild[55164:148791] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:40:48.209 xcodebuild[55164:148791] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-10-21 20:40:48.309 xcodebuild[55164:148791] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: W2026-10-21 20:41:49.174204+0000 maestro-driver-iosUITests-Runner[57783:155455] [Default] Running tests...
+2026-10-21 20:41:49.793367+0000 maestro-driver-iosUITests-Runner[57783:155828] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name2026-10-21 20:44:05.857 xcodebuild[55164:148791] [MT] IDETestOperationsObserverDebug: 172.475 elapsed -- Testing started completed.
+2026-10-21 20:44:05.859 xcodebuild[55164:148791] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-21 20:44:05.859 xcodebuild[55164:148791] [MT] IDETestOperationsObserverDebug: 172.475 sec, +172.475 sec -- end
+Testing failed:
+	maestro-driver-iosUITests-Runner (57783) encountered an error (Early unexpected exit, operation never finished bootstrapping - no restart will be attempted. (Underlying Error: Test crashed with signal kill while preparing to run tests.))
+
+** TEST EXECUTE FAILED **
+
+st/Test-maestro-driver-ios-2026.10.21_20-40-48-+0000.xcresult
+
+Testing started
