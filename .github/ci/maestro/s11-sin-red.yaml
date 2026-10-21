@@ -3,8 +3,14 @@
 # base local con el aviso y registra un producto que queda pendiente.
 appId: ${APP_ID}
 ---
-- launchApp:
-    stopApp: true
+# En iOS la app la abre s11-ios.sh con «simctl launch --console-pty» para guardar
+# su salida (registro KtorHttp); aqui solo se abre en Android.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - launchApp:
+          stopApp: true
 - extendedWaitUntil:
     visible: ".*Hola,.*"
     timeout: 90000
