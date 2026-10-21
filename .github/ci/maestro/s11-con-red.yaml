@@ -2,15 +2,9 @@
 # Instalacion limpia: la base local empieza vacia y se llena con PharmaSoft.
 appId: ${APP_ID}
 ---
-# En iOS la app la abre s11-ios.sh con «simctl launch --console-pty» para guardar
-# su salida (registro KtorHttp); aqui solo se abre en Android.
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - launchApp:
-          clearState: true
-          stopApp: true
+- launchApp:
+    clearState: true
+    stopApp: true
 - runFlow:
     file: login.yaml
     env:

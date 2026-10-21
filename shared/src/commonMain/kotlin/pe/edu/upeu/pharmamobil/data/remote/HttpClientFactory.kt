@@ -29,6 +29,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
 import pe.edu.upeu.pharmamobil.data.remote.dto.ErrorResponseDto
+import pe.edu.upeu.pharmamobil.platform.escribirRegistro
 
 private const val RETARDO_RESPUESTA_LENTA_MS = 8_000L
 
@@ -73,7 +74,7 @@ fun crearHttpClient(
                 // Ktor manda bloques de varias lineas: se antepone el prefijo a CADA linea
                 // para que el filtro de Logcat las muestre todas.
                 override fun log(message: String) =
-                    message.lineSequence().forEach { linea -> println("KtorHttp => $linea") }
+                    message.lineSequence().forEach { linea -> escribirRegistro("KtorHttp => $linea") }
             }
             // El token nunca se imprime: el registro muestra "Authorization: ***".
             sanitizeHeader { header -> header == HttpHeaders.Authorization }
