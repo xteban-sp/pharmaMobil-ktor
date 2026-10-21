@@ -15,7 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import pe.edu.upeu.pharmamobil.data.local.AlmacenEnMemoria
 import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
-import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
+import pe.edu.upeu.pharmamobil.data.remote.ProductoRemoto
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.model.Credenciales
@@ -60,7 +60,7 @@ class AuthRepositorioRestTest {
     ) {
         val cliente = crearHttpClient(motor, config, almacen, avisos)
         val auth = AuthRepositorioRest(cliente, almacen, avisos)
-        val productos = ProductoRepositorioRest(ProductoApi(cliente), 1L)
+        val productos = ProductoRemoto(ProductoApi(cliente), 1L)
 
         fun authorizationDe(ruta: String): List<String?> =
             peticiones.filter { it.url.encodedPath.endsWith(ruta) }.map { it.headers[HttpHeaders.Authorization] }

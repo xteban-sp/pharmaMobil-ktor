@@ -1,6 +1,10 @@
 package pe.edu.upeu.pharmamobil.data.repository
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
@@ -12,46 +16,40 @@ import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
  * Almacenamiento en memoria de productos. El id lo asigna el repositorio,
  * no la pantalla, para evitar identificadores duplicados.
  *
- * Desde la sesion 8 Koin inyecta ProductoRepositorioRest; esta implementacion
- * se conserva como alternativa sin red y para las pruebas. El delay simula la
- * latencia del backend.
+ * Desde la sesion 8 Koin inyecta otra implementacion (REST y, desde la 11,
+ * ProductoRepositorioOffline); esta se conserva como alternativa sin red.
+ * Sesion 11: la lista vive en un StateFlow, asi observar() emite con cada cambio.
  *
- * Koin lo registra como single, asi que es un objeto compartido y sus metodos
- * son suspend: nada garantiza que dos llamadas no se crucen. El [Mutex]
- * protege la lista y el contador de ids de esa carrera.
+ * El [Mutex] protege el contador de ids de dos registros que se crucen.
  */
 class ProductoRepositorioEnMemoria : ProductoRepository {
 
     private val candado = Mutex()
-    private val productos = mutableListOf<Producto>()
+    private val productos = MutableStateFlow<List<Producto>>(emptyList())
     private var siguienteId = 1L
+
+    override fun observar(): Flow<List<Producto>> = productos.asStateFlow()
+
+    /** No hay servidor: la memoria ya es la fuente de verdad. */
+    override suspend fun sincronizar() = Unit
 
     override suspend fun registrar(producto: Producto): Producto {
         delay(RETARDO_REGISTRO_MS)
         return candado.withLock {
             val guardado = producto.copy(id = siguienteId++)
-            productos.add(guardado)
+            productos.update { it + guardado }
             guardado
         }
     }
 
-    override suspend fun listar(): List<Producto> {
-        delay(RETARDO_LISTADO_MS)
-        return candado.withLock {
-            productos.toList()
-        }
-    }
-
-    override suspend fun obtener(id: Long): Producto = candado.withLock {
-        productos.firstOrNull { it.id == id } ?: throw ErrorApiException(ErrorApi.NoEncontrado)
-    }
+    override suspend fun obtener(id: Long): Producto =
+        productos.value.firstOrNull { it.id == id } ?: throw ErrorApiException(ErrorApi.NoEncontrado)
 
     override suspend fun actualizar(producto: Producto): Producto {
         delay(RETARDO_REGISTRO_MS)
         return candado.withLock {
-            val indice = productos.indexOfFirst { it.id == producto.id }
-            if (indice < 0) throw ErrorApiException(ErrorApi.NoEncontrado)
-            productos[indice] = producto
+            if (productos.value.none { it.id == producto.id }) throw ErrorApiException(ErrorApi.NoEncontrado)
+            productos.update { lista -> lista.map { if (it.id == producto.id) producto else it } }
             producto
         }
     }
@@ -59,12 +57,12 @@ class ProductoRepositorioEnMemoria : ProductoRepository {
     override suspend fun eliminar(id: Long) {
         delay(RETARDO_REGISTRO_MS)
         candado.withLock {
-            if (!productos.removeAll { it.id == id }) throw ErrorApiException(ErrorApi.NoEncontrado)
+            if (productos.value.none { it.id == id }) throw ErrorApiException(ErrorApi.NoEncontrado)
+            productos.update { lista -> lista.filterNot { it.id == id } }
         }
     }
 
     private companion object {
         const val RETARDO_REGISTRO_MS = 400L
-        const val RETARDO_LISTADO_MS = 600L
     }
 }

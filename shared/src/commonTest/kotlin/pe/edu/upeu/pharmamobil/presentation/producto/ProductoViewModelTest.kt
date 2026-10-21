@@ -16,10 +16,11 @@ import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.usecase.ActualizarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
-import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.SincronizarProductosUseCase
 import pe.edu.upeu.pharmamobil.platform.formatearSoles
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -49,7 +50,8 @@ class ProductoViewModelTest {
     private fun nuevoViewModel(
         repositorio: FakeProductoRepository = FakeProductoRepository()
     ) = ProductoViewModel(
-        listarProductos = ListarProductosUseCase(repositorio),
+        observarProductos = ObservarProductosUseCase(repositorio),
+        sincronizarProductos = SincronizarProductosUseCase(repositorio),
         obtenerProducto = ObtenerProductoUseCase(repositorio),
         registrarProducto = RegistrarProductoUseCase(repositorio),
         actualizarProducto = ActualizarProductoUseCase(repositorio),
@@ -99,7 +101,7 @@ class ProductoViewModelTest {
     fun pasaAFaseErrorCuandoElRepositorioFalla() = runTest {
 
         val repositorio = FakeProductoRepository().apply {
-            fallaAlListar = IllegalStateException("Sin conexión")
+            fallaAlSincronizar = IllegalStateException("Sin conexión")
         }
 
         val fase = assertIs<ProductoUiState.Fase.Error>(
@@ -421,7 +423,7 @@ class ProductoViewModelTest {
     fun laCargaPasaDeCargandoAConProductosConLaListaEsperada() = runTest {
 
         val repositorio = repositorioConDos()
-        val compuerta = CompletableDeferred<Unit>().also { repositorio.compuertaAlListar = it }
+        val compuerta = CompletableDeferred<Unit>().also { repositorio.compuertaAlSincronizar = it }
 
         val viewModel = nuevoViewModel(repositorio)
 

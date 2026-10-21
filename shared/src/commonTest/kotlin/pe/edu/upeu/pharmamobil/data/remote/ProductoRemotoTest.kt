@@ -10,11 +10,9 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.IOException
 import pe.edu.upeu.pharmamobil.data.local.AlmacenEnMemoria
-import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.model.Producto
-import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -26,17 +24,17 @@ import kotlin.test.assertTrue
  * El repositorio REST probado sin depender de que PharmaSoft este encendido:
  * MockEngine reemplaza al motor real y responde con los cuerpos del backend.
  */
-class ProductoRepositorioRestTest {
+class ProductoRemotoTest {
 
     private val jsonHeaders = headersOf(HttpHeaders.ContentType, "application/json")
     private val config = ConfiguracionApi(urlBase = "http://10.0.2.2:8080/api/v1/")
     private val CATEGORIA = 1L
 
     private fun repositorioCon(engine: MockEngine) =
-        ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, config, AlmacenEnMemoria())), CATEGORIA)
+        ProductoRemoto(ProductoApi(crearHttpClient(engine, config, AlmacenEnMemoria())), CATEGORIA)
 
-    private fun casoDeUsoCon(engine: MockEngine) =
-        ListarProductosUseCase(repositorioCon(engine))
+    /** Sesion 11: el listado ya no es un caso de uso de la pantalla; lo usa la sincronizacion. */
+    private suspend fun listarCon(engine: MockEngine) = runCatching { repositorioCon(engine).listar() }
 
     private val productoJson = """
         {"id":11,"nombre":"Omeprazol 20mg","precio":4.5,"stock":40,"estado":true,
@@ -64,7 +62,7 @@ class ProductoRepositorioRestTest {
             respond(paginaValida, HttpStatusCode.OK, jsonHeaders)
         }
 
-        val productos = casoDeUsoCon(engine)().getOrThrow()
+        val productos = listarCon(engine).getOrThrow()
 
         assertEquals(2, productos.size)
         with(productos.first()) {
@@ -76,14 +74,14 @@ class ProductoRepositorioRestTest {
         }
         // estado=false llega como producto dado de baja: la pantalla lo separa para reactivarlo.
         assertFalse(productos.last().activo)
-        assertEquals("http://10.0.2.2:8080/api/v1/productos?pagina=0&tamanio=20", urlPedida)
+        assertEquals("http://10.0.2.2:8080/api/v1/productos?pagina=0&tamanio=100", urlPedida)
     }
 
     @Test
     fun caso2_error404_seTraduceANoEncontrado() = runTest {
         val engine = MockEngine { respond("""{"mensaje":"No encontrado"}""", HttpStatusCode.NotFound, jsonHeaders) }
 
-        val fallo = casoDeUsoCon(engine)().exceptionOrNull()
+        val fallo = listarCon(engine).exceptionOrNull()
 
         assertIs<ErrorApiException>(fallo)
         assertEquals(ErrorApi.NoEncontrado, fallo.error)
@@ -93,7 +91,7 @@ class ProductoRepositorioRestTest {
     fun caso3_sinConexion_seTraduceASinConexion() = runTest {
         val engine = MockEngine { throw IOException("Failed to connect to /10.0.2.2:8080") }
 
-        val fallo = casoDeUsoCon(engine)().exceptionOrNull()
+        val fallo = listarCon(engine).exceptionOrNull()
 
         assertIs<ErrorApiException>(fallo)
         assertEquals(ErrorApi.SinConexion, fallo.error)
@@ -103,7 +101,7 @@ class ProductoRepositorioRestTest {
     fun caso4_timeout_seTraduceATiempoAgotado() = runTest {
         val engine = MockEngine { throw HttpRequestTimeoutException("productos", 15_000) }
 
-        val fallo = casoDeUsoCon(engine)().exceptionOrNull()
+        val fallo = listarCon(engine).exceptionOrNull()
 
         assertIs<ErrorApiException>(fallo)
         assertEquals(ErrorApi.TiempoAgotado, fallo.error)
@@ -119,7 +117,7 @@ class ProductoRepositorioRestTest {
         """.trimIndent()
         val engine = MockEngine { respond(conCampoNuevo, HttpStatusCode.OK, jsonHeaders) }
 
-        val productos = casoDeUsoCon(engine)().getOrThrow()
+        val productos = listarCon(engine).getOrThrow()
 
         assertEquals(listOf("Loratadina"), productos.map { it.nombre })
     }
@@ -128,9 +126,9 @@ class ProductoRepositorioRestTest {
     fun caso5b_sinIgnoreUnknownKeys_seTraduceARespuestaInesperada() = runTest {
         val estricto = config.copy(escenario = EscenarioPrueba.JSON_ESTRICTO)
         val engine = MockEngine { respond(paginaValida, HttpStatusCode.OK, jsonHeaders) }
-        val casoDeUso = ListarProductosUseCase(ProductoRepositorioRest(ProductoApi(crearHttpClient(engine, estricto, AlmacenEnMemoria())), CATEGORIA))
+        val remoto = ProductoRemoto(ProductoApi(crearHttpClient(engine, estricto, AlmacenEnMemoria())), CATEGORIA)
 
-        val fallo = casoDeUso().exceptionOrNull()
+        val fallo = runCatching { remoto.listar() }.exceptionOrNull()
 
         assertIs<ErrorApiException>(fallo)
         assertEquals(ErrorApi.RespuestaInesperada, fallo.error)
@@ -144,7 +142,7 @@ class ProductoRepositorioRestTest {
             "pagina":0,"tamanio":20,"totalElementos":2,"totalPaginas":1,"ultima":true}"""
         val engine = MockEngine { respond(json, HttpStatusCode.OK, jsonHeaders) }
 
-        val productos = casoDeUsoCon(engine)().getOrThrow()
+        val productos = listarCon(engine).getOrThrow()
 
         assertEquals(listOf("Valido"), productos.map { it.nombre })
     }

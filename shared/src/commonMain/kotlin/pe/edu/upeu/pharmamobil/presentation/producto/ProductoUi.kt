@@ -9,7 +9,9 @@ data class ProductoUi(
     val nombre: String,
     val precio: String,
     val stock: String,
-    val requiereReposicion: Boolean
+    val requiereReposicion: Boolean,
+    /** Sesion 11: creado sin red; todavia no esta en PharmaSoft. */
+    val pendiente: Boolean = false
 )
 
 /**
@@ -22,5 +24,6 @@ fun Producto.aUi(): ProductoUi = ProductoUi(
     nombre = nombre,
     precio = formatearSoles(precio),
     stock = "$stock u.",
-    requiereReposicion = requiereReposicion
+    requiereReposicion = requiereReposicion,
+    pendiente = pendiente
 )

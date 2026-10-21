@@ -43,7 +43,7 @@ class CrudProductoUseCasesTest {
             .getOrThrow()
 
         assertEquals(Producto(1L, "Paracetamol 500mg", 15.0, 20, categoriaId = 2), actualizado)
-        assertEquals(actualizado, repositorio.listar().single())
+        assertEquals(actualizado, repositorio.enServidor.single())
     }
 
     @Test
@@ -59,7 +59,7 @@ class CrudProductoUseCasesTest {
         assertEquals("El nombre es obligatorio", errores.nombre)
         assertEquals("El precio debe ser un número válido", errores.precio)
         assertEquals("El stock no puede ser negativo", errores.stock)
-        assertEquals(paracetamol, repositorio.listar().single())
+        assertEquals(paracetamol, repositorio.enServidor.single())
     }
 
     @Test
@@ -71,7 +71,7 @@ class CrudProductoUseCasesTest {
         val reactivado = ReactivarProductoUseCase(repositorio).invoke(1L).getOrThrow()
 
         assertEquals(paracetamol, reactivado)
-        assertTrue(repositorio.listar().single().activo)
+        assertTrue(repositorio.enServidor.single().activo)
     }
 
     @Test
@@ -82,7 +82,7 @@ class CrudProductoUseCasesTest {
         val resultado = EliminarProductoUseCase(repositorio).invoke(1L)
 
         assertTrue(resultado.isSuccess)
-        assertTrue(repositorio.listar().isEmpty())
+        assertTrue(repositorio.enServidor.isEmpty())
     }
 
     @Test
@@ -95,6 +95,6 @@ class CrudProductoUseCasesTest {
         val fallo = EliminarProductoUseCase(repositorio).invoke(1L).exceptionOrNull()
 
         assertEquals(ErrorApi.Servidor, assertIs<ErrorApiException>(fallo).error)
-        assertEquals(1, repositorio.listar().size)
+        assertEquals(1, repositorio.enServidor.size)
     }
 }

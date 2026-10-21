@@ -19,8 +19,16 @@ data class ProductoUiState(
     /** Productos dados de baja (eliminados): se pueden reactivar. */
     val dadosDeBaja: List<ProductoUi> = emptyList(),
     /** true cuando el usuario mira la lista de dados de baja en vez del inventario activo. */
-    val viendoBajas: Boolean = false
+    val viendoBajas: Boolean = false,
+    /** Sesion 11: true mientras se sube lo pendiente y se baja la lista del servidor. */
+    val sincronizando: Boolean = false,
+    /** Sesion 11: aviso cuando la ultima sincronizacion fallo (p. ej. sin conexion). */
+    val avisoRed: String? = null
 ) {
+
+    /** Sesion 11: productos creados sin red que aun no llegan al servidor. */
+    val pendientes: Int
+        get() = ((fase as? Fase.ConProductos)?.productos.orEmpty() + dadosDeBaja).count { it.pendiente }
 
     /** true mientras hay una operacion contra el servidor: los botones se deshabilitan. */
     val operando: Boolean

@@ -12,7 +12,9 @@ import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
 import pe.edu.upeu.pharmamobil.data.remote.ProductoApi
 import pe.edu.upeu.pharmamobil.data.remote.crearHttpClient
-import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
+import pe.edu.upeu.pharmamobil.data.local.ProductoLocal
+import pe.edu.upeu.pharmamobil.data.remote.ProductoRemoto
+import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioOffline
 import pe.edu.upeu.pharmamobil.domain.repository.AuthRepository
 import pe.edu.upeu.pharmamobil.domain.repository.ClienteRepository
 import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
@@ -24,7 +26,8 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerSesionGuardadaUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarClientesUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
-import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.SincronizarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
@@ -49,13 +52,16 @@ val dataModule = module {
     single { crearHttpClient(engine = get(), config = get(), almacen = get(), avisos = get()) }
     single<AuthRepository> { AuthRepositorioRest(get(), get(), get()) }
     single { ProductoApi(get()) }
-    // Sesion 8: el repositorio REST reemplaza a ProductoRepositorioEnMemoria.
-    single<ProductoRepository> { ProductoRepositorioRest(get(), CATEGORIA_POR_DEFECTO) }
+    // Sesion 11: offline-first. La pantalla lee de la base local; PharmaSoft solo sincroniza.
+    single { ProductoLocal(get()) }
+    single { ProductoRemoto(get(), CATEGORIA_POR_DEFECTO) }
+    single<ProductoRepository> { ProductoRepositorioOffline(get(), get()) }
     single<ClienteRepository> { ClienteRepositorioEnMemoria() }
 }
 
 val domainModule = module {
-    factory { ListarProductosUseCase(get()) }
+    factory { ObservarProductosUseCase(get()) }
+    factory { SincronizarProductosUseCase(get()) }
     factory { ObtenerProductoUseCase(get()) }
     factory { RegistrarProductoUseCase(get()) }
     factory { ActualizarProductoUseCase(get()) }
@@ -71,7 +77,7 @@ val domainModule = module {
 }
 
 val presentationModule = module {
-    viewModel { ProductoViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { ProductoViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ClienteViewModel(get(), get()) }
     // Sesion 9: el Compartidor lo aporta el platformModule de cada plataforma.
     viewModel { DetalleProductoViewModel(get(), get()) }

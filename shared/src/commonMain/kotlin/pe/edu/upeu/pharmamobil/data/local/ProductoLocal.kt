@@ -85,10 +85,10 @@ class ProductoLocal(base: PharmaDb) {
     }
 
     /** PharmaSoft no borra: desactiva. Se refleja igual en la copia local. */
-    suspend fun marcarDeBaja(id: Long) = enDisco { consultas.marcarDeBaja(id) }
+    suspend fun marcarDeBaja(id: Long) { enDisco { consultas.marcarDeBaja(id) } }
 
     /** Un pendiente que el usuario elimina antes de sincronizar nunca llega al servidor. */
-    suspend fun borrar(id: Long) = enDisco { consultas.borrarPorId(id) }
+    suspend fun borrar(id: Long) { enDisco { consultas.borrarPorId(id) } }
 
     private fun insertar(p: Producto) {
         consultas.insertar(

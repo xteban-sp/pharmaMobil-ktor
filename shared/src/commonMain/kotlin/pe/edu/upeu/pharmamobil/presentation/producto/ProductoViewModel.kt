@@ -12,11 +12,12 @@ import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.model.Producto
 import pe.edu.upeu.pharmamobil.domain.usecase.ActualizarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
-import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ProductoInvalidoException
 import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.SincronizarProductosUseCase
 import pe.edu.upeu.pharmamobil.presentation.error.mensajeDe
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Fase
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Operacion
@@ -26,9 +27,14 @@ import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Operacion.T
  * Cada operacion sigue el mismo patron: marcar en curso, ejecutar el caso de
  * uso (que devuelve Result y nunca lanza) y resolver con exito o con error.
  * No importa nada de io.ktor: solo conoce ErrorApi.
+ *
+ * Sesion 11 (offline-first): la lista ya no se pide. El ViewModel se suscribe una
+ * vez a la base local y cada registro, edicion o baja se ve porque la tabla cambia
+ * y el Flow emite. La red queda en [sincronizar], que tambien llama el boton de recarga.
  */
 class ProductoViewModel(
-    private val listarProductos: ListarProductosUseCase,
+    private val observarProductos: ObservarProductosUseCase,
+    private val sincronizarProductos: SincronizarProductosUseCase,
     private val obtenerProducto: ObtenerProductoUseCase,
     private val registrarProducto: RegistrarProductoUseCase,
     private val actualizarProducto: ActualizarProductoUseCase,
@@ -42,22 +48,54 @@ class ProductoViewModel(
     /** Version del servidor del producto en edicion: conserva lo que el formulario no muestra. */
     private var productoEnEdicion: Producto? = null
 
+    /** Lo ultimo que emitio la base local (activos y dados de baja). */
+    private var ultimaLista: List<Producto> = emptyList()
+
+    /** false hasta que termina la primera sincronizacion: con la base vacia se sigue en Cargando. */
+    private var sincronizoAlgunaVez = false
+
     init {
-        cargarProductos()
+        // La pantalla se suscribe UNA vez: la base local es la fuente de verdad.
+        viewModelScope.launch {
+            observarProductos().collect { productos ->
+                ultimaLista = productos
+                mostrarInventario(productos)
+            }
+        }
+        sincronizar()
     }
 
-    /** Carga inicial y boton Reintentar: aqui si se muestra la fase Cargando. */
-    fun cargarProductos() {
+    /**
+     * Sube lo pendiente y trae la lista del servidor. La invocan el init, el boton
+     * «Sincronizar» y «Reintentar». No toca la lista: si la base cambia, el Flow emite.
+     */
+    fun sincronizar() {
+        if (_uiState.value.sincronizando) return
         viewModelScope.launch {
-            _uiState.update { it.copy(fase = Fase.Cargando) }
-            listarProductos().fold(
-                onSuccess = ::mostrarInventario,
-                onFailure = { fallo ->
-                    _uiState.update { it.copy(fase = Fase.Error(mensajeDe(fallo))) }
-                }
-            )
+            _uiState.update { it.copy(sincronizando = true) }
+            val resultado = sincronizarProductos()
+            sincronizoAlgunaVez = true
+            val fallo = resultado.exceptionOrNull()
+            _uiState.update {
+                it.copy(
+                    sincronizando = false,
+                    avisoRed = fallo?.let(::avisoDeSincronizacion)
+                )
+            }
+            // Sin nada guardado y sin servidor no hay que mostrar: ahi si es un error.
+            if (fallo != null && ultimaLista.isEmpty()) {
+                _uiState.update { it.copy(fase = Fase.Error(mensajeDe(fallo))) }
+            } else {
+                mostrarInventario(ultimaLista)
+            }
         }
     }
+
+    /** Boton Reintentar de la fase Error. */
+    fun cargarProductos() = sincronizar()
+
+    private fun avisoDeSincronizacion(fallo: Throwable): String =
+        if (esFaltaDeRed(fallo)) AVISO_SIN_CONEXION else mensajeDe(fallo)
 
     fun onNombreChange(nombre: String) {
         _uiState.update {
@@ -126,16 +164,18 @@ class ProductoViewModel(
             resultado.fold(
                 onSuccess = { producto ->
                     productoEnEdicion = null
-                    refrescarInventario()
+                    // Sin recargar nada: el repositorio escribio en la base y el Flow ya emitio.
                     _uiState.update {
                         it.copy(
                             operacion = Operacion.Inactiva,
                             formulario = FormularioProducto(),
-                            mensajeExito = if (tipo == Tipo.Crear) {
-                                "Producto \"${producto.nombre}\" registrado correctamente"
-                            } else {
-                                "Producto \"${producto.nombre}\" actualizado correctamente"
-                            }
+                            mensajeExito = when {
+                                producto.pendiente ->
+                                    "Producto \"${producto.nombre}\" guardado sin conexión: se enviará al sincronizar"
+                                tipo == Tipo.Crear -> "Producto \"${producto.nombre}\" registrado correctamente"
+                                else -> "Producto \"${producto.nombre}\" actualizado correctamente"
+                            },
+                            avisoRed = if (producto.pendiente) AVISO_SIN_CONEXION else it.avisoRed
                         )
                     }
                 },
@@ -196,7 +236,6 @@ class ProductoViewModel(
                 onSuccess = {
                     val estabaEnEdicion = productoEnEdicion?.id == id
                     if (estabaEnEdicion) productoEnEdicion = null
-                    refrescarInventario()
                     _uiState.update {
                         it.copy(
                             operacion = Operacion.Inactiva,
@@ -223,13 +262,10 @@ class ProductoViewModel(
 
             reactivarProducto(id).fold(
                 onSuccess = { producto ->
-                    refrescarInventario()
                     _uiState.update {
                         it.copy(
                             operacion = Operacion.Inactiva,
-                            mensajeExito = "Producto \"${producto.nombre}\" reactivado",
-                            // Si ya no queda ninguno de baja, se regresa al inventario activo.
-                            viendoBajas = it.viendoBajas && it.dadosDeBaja.isNotEmpty()
+                            mensajeExito = "Producto \"${producto.nombre}\" reactivado"
                         )
                     }
                 },
@@ -250,25 +286,24 @@ class ProductoViewModel(
         }
     }
 
-    /**
-     * Recarga tras una mutacion SIN pasar por Fase.Cargando: lo que se ve en
-     * pantalla siempre es lo que existe en el servidor, y la lista no parpadea.
-     * Si la recarga falla, se conserva la lista que ya estaba.
-     */
-    private suspend fun refrescarInventario() {
-        listarProductos().onSuccess(::mostrarInventario)
-    }
-
-    /** Separa lo que llega del servidor: activos a la fase, dados de baja a su propia lista. */
+    /** Separa lo que emite la base local: activos a la fase, dados de baja a su propia lista. */
     private fun mostrarInventario(productos: List<Producto>) {
 
         val (activos, bajas) = productos.partition { it.activo }
 
         _uiState.update {
             it.copy(
-                fase = if (activos.isEmpty()) Fase.SinProductos
-                       else Fase.ConProductos(activos.map { p -> p.aUi() }),
-                dadosDeBaja = bajas.map { p -> p.aUi() }
+                fase = when {
+                    activos.isNotEmpty() -> Fase.ConProductos(activos.map { p -> p.aUi() })
+                    // Base vacia al abrir por primera vez: se espera a la primera sincronizacion.
+                    !sincronizoAlgunaVez -> Fase.Cargando
+                    it.fase is Fase.Error -> it.fase
+                    else -> Fase.SinProductos
+                },
+                dadosDeBaja = bajas.map { p -> p.aUi() },
+                // Si ya no queda ninguno de baja (se reactivo el ultimo), se vuelve al inventario
+                // activo. Va aqui porque la base emite DESPUES de que la operacion termina.
+                viendoBajas = it.viendoBajas && bajas.isNotEmpty()
             )
         }
     }
@@ -310,10 +345,10 @@ class ProductoViewModel(
                     )
                 }
 
-            // 404: el producto ya no existe. Se refresca la lista y se abandona la edicion.
+            // 404: el producto ya no existe. El repositorio ya puso al dia la base local;
+            // aqui solo se abandona la edicion.
             error is ErrorApi.NoEncontrado -> {
                 productoEnEdicion = null
-                refrescarInventario()
                 _uiState.update {
                     it.copy(
                         operacion = Operacion.Fallida(mensajeDe(fallo)),
@@ -324,9 +359,8 @@ class ProductoViewModel(
 
             // 409: una regla de negocio impide la operacion. Suele indicar que la lista
             // quedo desactualizada (p. ej. eliminar un producto que otro usuario ya dio
-            // de baja), asi que se refresca antes de avisar.
+            // de baja); el repositorio sincroniza la base local y aqui solo se avisa.
             error is ErrorApi.Conflicto -> {
-                refrescarInventario()
                 _uiState.update {
                     it.copy(
                         operacion = Operacion.Fallida(
@@ -354,7 +388,11 @@ class ProductoViewModel(
         return nombre.isNotEmpty() && estado.dadosDeBaja.any { it.nombre.equals(nombre, ignoreCase = true) }
     }
 
+    private fun esFaltaDeRed(fallo: Throwable): Boolean =
+        (fallo as? ErrorApiException)?.error.let { it == ErrorApi.SinConexion || it == ErrorApi.TiempoAgotado }
+
     private companion object {
         val CAMPOS_DEL_FORMULARIO = setOf("nombre", "precio", "stock")
+        const val AVISO_SIN_CONEXION = "Sin conexión: mostrando datos guardados"
     }
 }

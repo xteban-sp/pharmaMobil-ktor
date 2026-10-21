@@ -30,7 +30,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
-import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioRest
+import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioOffline
 import pe.edu.upeu.pharmamobil.domain.platform.Compartidor
 import pe.edu.upeu.pharmamobil.domain.platform.CompartidorFalso
 import pe.edu.upeu.pharmamobil.domain.repository.ClienteRepository
@@ -39,7 +39,8 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ActualizarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.EliminarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ListarClientesUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
-import pe.edu.upeu.pharmamobil.domain.usecase.ListarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.SincronizarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
@@ -129,8 +130,8 @@ class AppModuleTest {
 
         val koin = grafoCompleto()
 
-        // Sesion 8: el inventario se lee y se escribe en el backend via Ktor.
-        assertIs<ProductoRepositorioRest>(koin.get<ProductoRepository>())
+        // Sesion 11: offline-first; la pantalla lee de la base local.
+        assertIs<ProductoRepositorioOffline>(koin.get<ProductoRepository>())
         assertIs<ClienteRepositorioEnMemoria>(koin.get<ClienteRepository>())
     }
 
@@ -155,7 +156,8 @@ class AppModuleTest {
         val koin = grafoCompleto()
 
         koin.get<RegistrarProductoUseCase>()
-        koin.get<ListarProductosUseCase>()
+        koin.get<ObservarProductosUseCase>()
+        koin.get<SincronizarProductosUseCase>()
         koin.get<ObtenerProductoUseCase>()
         koin.get<ActualizarProductoUseCase>()
         koin.get<EliminarProductoUseCase>()
