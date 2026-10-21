@@ -6,6 +6,8 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguroIos
+import pe.edu.upeu.pharmamobil.data.local.CreadorDeDriver
+import pe.edu.upeu.pharmamobil.data.local.CreadorDeDriverIos
 import pe.edu.upeu.pharmamobil.data.remote.ConfiguracionApi
 import pe.edu.upeu.pharmamobil.domain.platform.Compartidor
 import pe.edu.upeu.pharmamobil.platform.CompartidorIos
@@ -21,6 +23,8 @@ actual val platformModule: Module = module {
     single<Compartidor> { CompartidorIos() }
     // Sesion 10: el token va al Keychain. A diferencia de Android, no recibe nada.
     single<AlmacenSeguro> { AlmacenSeguroIos() }
+    // Sesion 11: base local con el driver nativo de SQLite.
+    single<CreadorDeDriver> { CreadorDeDriverIos() }
 }
 
 @OptIn(ExperimentalNativeApi::class)

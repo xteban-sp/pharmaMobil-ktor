@@ -5,7 +5,9 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import pe.edu.upeu.pharmamobil.data.local.CreadorDeDriver
 import pe.edu.upeu.pharmamobil.data.remote.AvisosDeSesion
+import pe.edu.upeu.pharmamobil.db.PharmaDb
 import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
 import pe.edu.upeu.pharmamobil.data.remote.ProductoApi
@@ -42,6 +44,8 @@ val dataModule = module {
     // Sesion 7: un solo HttpClient; motor y URL base los aporta platformModule.
     // Sesion 10: el almacen del token tambien llega del platformModule.
     single { AvisosDeSesion() }
+    // Sesion 11: una sola base local; el driver lo aporta el platformModule de cada plataforma.
+    single { PharmaDb(get<CreadorDeDriver>().crear()) }
     single { crearHttpClient(engine = get(), config = get(), almacen = get(), avisos = get()) }
     single<AuthRepository> { AuthRepositorioRest(get(), get(), get()) }
     single { ProductoApi(get()) }

@@ -8,6 +8,8 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguroAndroid
+import pe.edu.upeu.pharmamobil.data.local.CreadorDeDriver
+import pe.edu.upeu.pharmamobil.data.local.CreadorDeDriverAndroid
 import pe.edu.upeu.pharmamobil.data.remote.ConfiguracionApi
 import pe.edu.upeu.pharmamobil.data.remote.EscenarioPrueba
 import pe.edu.upeu.pharmamobil.domain.platform.Compartidor
@@ -33,4 +35,6 @@ actual val platformModule: Module = module {
     single<Compartidor> { CompartidorAndroid(androidContext()) }
     // Sesion 10: el token se guarda cifrado. Igual que el Compartidor, necesita un Context.
     single<AlmacenSeguro> { AlmacenSeguroAndroid(androidContext()) }
+    // Sesion 11: quien abre la base local (pharma.db). Tambien necesita el Context.
+    single<CreadorDeDriver> { CreadorDeDriverAndroid(androidContext()) }
 }

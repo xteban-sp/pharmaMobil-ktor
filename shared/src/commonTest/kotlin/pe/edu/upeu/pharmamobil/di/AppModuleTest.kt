@@ -3,6 +3,8 @@ package pe.edu.upeu.pharmamobil.di
 import pe.edu.upeu.pharmamobil.data.remote.ConfiguracionApi
 import pe.edu.upeu.pharmamobil.data.local.AlmacenEnMemoria
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
+import pe.edu.upeu.pharmamobil.data.local.CreadorDeDriver
+import pe.edu.upeu.pharmamobil.data.local.CreadorDeDriverEnMemoria
 import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.domain.repository.AuthRepository
 import pe.edu.upeu.pharmamobil.presentation.sesion.SesionViewModel
@@ -23,6 +25,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.koin.core.Koin
+import pe.edu.upeu.pharmamobil.db.PharmaDb
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
@@ -46,6 +49,7 @@ import pe.edu.upeu.pharmamobil.presentation.producto.ProductoViewModel
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertSame
 
@@ -101,6 +105,8 @@ class AppModuleTest {
         single<Compartidor> { CompartidorFalso() }
         // Sesion 10: el almacen real de Android necesita un Context.
         single<AlmacenSeguro> { AlmacenEnMemoria() }
+        // Sesion 11: la base local en memoria (el driver real necesita un Context o iOS).
+        single<CreadorDeDriver> { CreadorDeDriverEnMemoria() }
         // La configuracion de Android consulta el Context para saber si es depuracion.
         single { ConfiguracionApi(urlBase = "http://localhost:8080/api/v1/") }
         single<HttpClientEngine> {
@@ -175,6 +181,17 @@ class AppModuleTest {
         assertIs<AuthRepositorioRest>(koin.get<AuthRepository>())
         assertIs<AlmacenEnMemoria>(koin.get<AlmacenSeguro>())
         koin.viewModel<SesionViewModel>()
+    }
+
+    @Test
+    fun abreLaBaseLocalConElDriverRegistrado() {
+
+        val koin = grafoCompleto()
+
+        // Sesion 11: si el esquema o el driver estuvieran mal, fallaria aqui.
+        val base = koin.get<PharmaDb>()
+        assertSame(base, koin.get<PharmaDb>())
+        assertEquals(0, base.productoQueries.listarTodos().executeAsList().size)
     }
 
     @Test
