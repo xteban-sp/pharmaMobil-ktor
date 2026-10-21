@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-21T20:06:09.850Z" hostname="runnervm8k3b6" time="0.007">
+  <properties/>
+  <testcase name="rechazaNombreVacio" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.002"/>
+  <testcase name="aceptaUnClienteValido" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.001"/>
+  <testcase name="elIdLoAsignaElRepositorio" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.001"/>
+  <testcase name="devuelveFailureCuandoElRepositorioFalla" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.001"/>
+  <testcase name="rechazaCorreoConFormatoInvalido" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.0"/>
+  <testcase name="rechazaTelefonoConMenosDeSeisDigitos" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.001"/>
+  <testcase name="elTelefonoEsOpcionalYSeGuardaComoNull" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.0"/>
+  <testcase name="reportaLosTresErroresALaVez" classname="pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCaseTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,18 @@
+$ ./gradlew :shared:testAndroidHostTest
+166 pruebas, 0 con fallo
+
+Pruebas de la sesion 11 (offline-first):
+  PASO  ProductoLocalTest > losPendientesRecibenIdsLocalesNegativosYDistintos  (0.196 s)
+  PASO  ProductoLocalTest > confirmarLaSubidaCambiaElIdLocalPorElReal  (0.011 s)
+  PASO  ProductoLocalTest > laListaDelServidorNoBorraLoCreadoSinRed  (0.004 s)
+  PASO  AuthRepositorioRestTest > cerrarSesionBorraTambienElPerfilLocal  (0.012 s)
+  PASO  AuthRepositorioRestTest > sinServidorSeEntraConElPerfilDeLaUltimaSesion  (0.019 s)
+  PASO  ProductoRepositorioOfflineTest > un pendiente que el servidor rechaza no bloquea la bajada de la lista  (0.019 s)
+  PASO  ProductoRepositorioOfflineTest > con red el producto se sube y queda con el id del servidor  (0.006 s)
+  PASO  ProductoRepositorioOfflineTest > sincronizar sube lo pendiente antes de bajar y no se pierde nada  (0.012 s)
+  PASO  ProductoRepositorioOfflineTest > sin red el producto queda pendiente y la pantalla lo ve  (0.004 s)
+  PASO  ProductoRepositorioOfflineTest > si la red se corta a la mitad lo ya subido no se vuelve a enviar  (0.008 s)
+  PASO  ProductoRepositorioOfflineTest > sin red el detalle se muestra desde la copia local  (0.006 s)
+  PASO  AppModuleTest > abreLaBaseLocalConElDriverRegistrado  (0.002 s)
+  PASO  ProductoViewModelTest > sinConexionMuestraLaListaGuardadaConElAvisoDeRed  (0.001 s)
+  PASO  ProductoViewModelTest > registrarNoVuelveAPedirLaLista  (0.001 s)
