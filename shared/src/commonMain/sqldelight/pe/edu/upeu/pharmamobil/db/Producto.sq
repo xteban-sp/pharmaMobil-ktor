@@ -17,6 +17,7 @@ listarTodos:
 SELECT * FROM producto ORDER BY nombre ASC;
 
 listarPendientes:
+-- Los ids locales bajan (-1, -2, ...): DESC los entrega en el orden en que se crearon.
 SELECT * FROM producto WHERE pendiente = 1 ORDER BY id DESC;
 
 obtenerPorId:

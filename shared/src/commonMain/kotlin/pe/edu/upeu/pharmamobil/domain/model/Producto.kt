@@ -10,7 +10,10 @@ data class Producto(
     val categoriaId: Long? = null,
     // false = dado de baja. PharmaSoft no borra productos: los desactiva para
     // que sigan en ventas y reportes. Un producto dado de baja se puede reactivar.
-    val activo: Boolean = true
+    val activo: Boolean = true,
+    // Sesion 11: true mientras el producto solo existe en el dispositivo (se creo sin red)
+    // y todavia no llega a PharmaSoft. Su id es negativo hasta que se sincroniza.
+    val pendiente: Boolean = false
 ) {
 
 
