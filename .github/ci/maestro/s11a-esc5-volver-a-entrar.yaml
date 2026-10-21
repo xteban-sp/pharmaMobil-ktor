@@ -1,12 +1,17 @@
-# Autonoma 11, escenario 5 (parte 4): se vuelve a iniciar sesion y, al abrir el
-# inventario, el pendiente que quedo con el token vencido se envia.
+# Autonoma 11, escenario 5 (parte 4): tras la sesion expirada la app conserva el usuario
+# en el login; solo se escribe la contrasena. Al abrir el inventario, el pendiente que
+# quedo con el token vencido se envia.
 appId: ${APP_ID}
 ---
-- runFlow:
-    file: login.yaml
-    env:
-      USUARIO: admin
-      CLAVE: Admin123
+- assertVisible: "admin"
+- tapOn: "Contraseña"
+- inputText: Admin123
+- hideKeyboard
+- takeScreenshot: a17-esc5-solo-falta-la-contrasena
+- tapOn: "Ingresar"
+- extendedWaitUntil:
+    visible: ".*Hola,.*"
+    timeout: 60000
 - tapOn: ".*Inventario, precios y stock.*"
 - extendedWaitUntil:
     visible: "Inventario al día"
@@ -16,4 +21,4 @@ appId: ${APP_ID}
     element: "Ranitidina 150mg.*"
     direction: DOWN
     timeout: 20000
-- takeScreenshot: a17-esc5-pendiente-enviado-tras-volver-a-entrar
+- takeScreenshot: a18-esc5-pendiente-enviado-tras-volver-a-entrar
