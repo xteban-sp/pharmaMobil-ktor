@@ -14,7 +14,9 @@ CREATE TABLE producto (
 );
 
 listarTodos:
-SELECT * FROM producto ORDER BY nombre ASC;
+-- Lo pendiente primero (es lo que el usuario acaba de crear y aun no esta en el servidor);
+-- el resto, por nombre.
+SELECT * FROM producto ORDER BY pendiente DESC, nombre ASC;
 
 listarPendientes:
 -- Los ids locales bajan (-1, -2, ...): DESC los entrega en el orden en que se crearon.

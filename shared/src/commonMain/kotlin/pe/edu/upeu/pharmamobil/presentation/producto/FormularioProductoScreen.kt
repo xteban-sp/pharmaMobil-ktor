@@ -131,7 +131,7 @@ private fun CamposDelProducto(
             text = if (formulario.enEdicion) {
                 "Los cambios se guardan en el inventario de PharmaSoft."
             } else {
-                "El producto se registra en el inventario de PharmaSoft."
+                "El producto se registra en PharmaSoft. Sin conexión se guarda en el teléfono y se envía al sincronizar."
             },
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -64,6 +64,9 @@ red() {
 }
 
 adb logcat -c || true
+# Registro completo de la app durante toda la corrida (KtorHttp y Keychain/almacen).
+adb logcat -v time -s System.out:I > logcat-app.txt 2>/dev/null &
+LOGCAT_PID=$!
 
 # 1. Con red: abrir, iniciar sesion y dejar que sincronice. Luego se cierra la app.
 correr s11-con-red
@@ -102,4 +105,6 @@ correr s11-backend-apagado
 registro 4-backend-apagado
 
 adb exec-out screencap -p > 99-android-estado-final.png || true
+kill "$LOGCAT_PID" 2>/dev/null || true
+grep "KtorHttp" logcat-app.txt > ktor-completo.log || true
 exit 0

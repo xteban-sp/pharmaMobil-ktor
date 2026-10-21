@@ -12,7 +12,7 @@ appId: ${APP_ID}
     visible: "Sin conexión: mostrando datos guardados"
     timeout: 60000
 - scrollUntilVisible:
-    element: ".*Omeprazol 20mg.*"
+    element: "Omeprazol 20mg.*"
     direction: DOWN
     timeout: 20000
 - takeScreenshot: o08-${PLATAFORMA}-backend-apagado

@@ -32,9 +32,7 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: ".*guardado sin conexión.*"
     timeout: 30000
-# La lista va por nombre: se baja hasta el producto nuevo.
-- scrollUntilVisible:
-    element: ".*Pendiente.*"
-    direction: DOWN
-    timeout: 20000
+# Lo pendiente va primero en la lista. (Maestro compara sin distinguir mayusculas:
+# «Pendiente» tambien coincidiria con «1 producto pendiente de enviar».)
+- assertVisible: "Omeprazol 20mg.*"
 - takeScreenshot: o05-${PLATAFORMA}-pendiente

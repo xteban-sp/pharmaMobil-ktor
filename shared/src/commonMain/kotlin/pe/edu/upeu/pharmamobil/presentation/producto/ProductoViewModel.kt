@@ -79,7 +79,10 @@ class ProductoViewModel(
             _uiState.update {
                 it.copy(
                     sincronizando = false,
-                    avisoRed = fallo?.let(::avisoDeSincronizacion)
+                    avisoRed = fallo?.let(::avisoDeSincronizacion),
+                    // «...se enviara al sincronizar» ya no es verdad despues de sincronizar.
+                    mensajeExito = if (fallo == null && it.mensajeExito?.contains(SIN_CONEXION) == true) null
+                                   else it.mensajeExito
                 )
             }
             // Sin nada guardado y sin servidor no hay que mostrar: ahi si es un error.
@@ -394,5 +397,6 @@ class ProductoViewModel(
     private companion object {
         val CAMPOS_DEL_FORMULARIO = setOf("nombre", "precio", "stock")
         const val AVISO_SIN_CONEXION = "Sin conexión: mostrando datos guardados"
+        const val SIN_CONEXION = "sin conexión"
     }
 }

@@ -8,11 +8,11 @@ appId: ${APP_ID}
     timeout: 60000
 - assertNotVisible: ".*Pendiente.*"
 - scrollUntilVisible:
-    element: ".*Omeprazol 20mg.*"
+    element: "Omeprazol 20mg.*"
     direction: DOWN
     timeout: 20000
 - takeScreenshot: o06-${PLATAFORMA}-sincronizado
-- tapOn: ".*Omeprazol 20mg.*"
+- tapOn: "Omeprazol 20mg.*"
 - extendedWaitUntil:
     visible: "Compartir"
     timeout: 60000
