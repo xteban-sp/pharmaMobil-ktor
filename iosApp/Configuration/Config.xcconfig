@@ -10,3 +10,7 @@ MARKETING_VERSION=1.0
 // lo que sirve en el simulador. Para un iPhone fisico se pasa al compilar, con la IP de
 // la PC en la red local (ver .github/workflows/ios-evidencias.yml, job ios-dispositivo).
 PHARMASOFT_URL=
+
+// Sesion 11: SQLDelight usa el SQLite del sistema. El framework Shared es estatico, asi que
+// la libreria no viaja con el: la app la enlaza aqui.
+OTHER_LDFLAGS = $(inherited) -lsqlite3

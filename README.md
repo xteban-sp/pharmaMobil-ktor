@@ -424,3 +424,72 @@ Si hay un token guardado, la app consulta `GET auth/me`: si sigue vigente entra 
 ### Evidencias sin Mac
 
 El workflow `.github/workflows/ios-evidencias.yml` corre con cada push de la rama: levanta PharmaSoft con el perfil `h2`, repite el paso 1 de la guía en Swagger UI con un navegador real y recorre la app en un emulador de Android y en un simulador de iPhone con Maestro (`.github/ci/maestro/s10-*.yaml`). Para la expiración, reinicia el backend con tokens de 1 minuto y espera a que venzan. Las capturas quedan en las ramas `ci-evidencias-swagger-s10`, `ci-evidencias-android-s10` y `ci-evidencias-ios-s10`.
+
+## Persistencia offline-first (Sesión 11 · rama `feature/offline-first-istana`)
+
+PharmaMobil ya no le pide la lista a la red. Una base local con **SQLDelight** es la única fuente de verdad de la interfaz: la pantalla observa esa base con un `Flow` y la red pasa a ser un proceso aparte cuya única misión es mantenerla al día. Con PharmaSoft apagado o en modo avión la app abre, muestra el inventario guardado y permite registrar productos, que quedan **pendientes** y se envían al reconectar.
+
+### Esquema
+
+`shared/src/commonMain/sqldelight/pe/edu/upeu/pharmamobil/db/` (el plugin genera `PharmaDb` en `pe.edu.upeu.pharmamobil.db`):
+
+| Archivo | Tabla | Para qué |
+|---|---|---|
+| `Producto.sq` | `producto (id, nombre, precio, stock, categoria_id, activo, pendiente)` | Copia local del inventario. `pendiente = 1`: creado en el dispositivo y aún no está en el servidor |
+| `Perfil.sq` | `perfil (usuario, nombre_completo, permisos, roles)` | Datos de la última sesión validada, para entrar sin servidor (el token sigue en el almacén cifrado) |
+
+Además de las columnas de la guía, `producto` guarda `categoria_id` (PharmaSoft la exige al editar) y `activo` (la lista «De baja» de la sesión 8). Un producto creado sin red recibe un **id local negativo** (`siguienteIdLocal`): el backend nunca usa esos números, así que no puede pisar a uno real.
+
+### Piezas
+
+| Capa | Archivo | Qué hace |
+|---|---|---|
+| Datos | `data/local/CreadorDeDriver.kt` | Interfaz que abre la base; cada plataforma registra la suya en el `platformModule` |
+| Android | `androidMain/.../data/local/CreadorDeDriverAndroid.kt` | `AndroidSqliteDriver` → `databases/pharma.db` |
+| iOS | `iosMain/.../data/local/CreadorDeDriverIos.kt` | `NativeSqliteDriver` (`OTHER_LDFLAGS = -lsqlite3` en `Config.xcconfig`, el framework es estático) |
+| Pruebas | `commonTest/.../data/local/BaseDePrueba.kt` | `expect fun crearDriverDePrueba()`: JDBC en memoria en la JVM, `inMemoryDriver` en iOS. Una base nueva por prueba |
+| Datos | `data/local/ProductoLocal.kt` | Consultas y traducción fila ↔ dominio. No importa nada de Ktor ni de los DTO |
+| Datos | `data/local/PerfilLocal.kt` | Guarda y lee el perfil de la última sesión |
+| Datos | `data/remote/ProductoRemoto.kt` | Lo que antes era `ProductoRepositorioRest`: ahora solo lo usa la sincronización |
+| Datos | `data/repository/ProductoRepositorioOffline.kt` | Implementa el contrato sobre local + remoto |
+| Dominio | `domain/repository/ProductoRepository.kt` | `observar(): Flow`, `sincronizar()`, `obtener`, `registrar`, `actualizar`, `eliminar` |
+| Dominio | `domain/usecase/ProductosOfflineUseCases.kt` | `ObservarProductosUseCase` y `SincronizarProductosUseCase` (reemplazan a `ListarProductosUseCase`) |
+
+### Sincronizar: primero subir, después bajar
+
+```kotlin
+override suspend fun sincronizar() {
+    val rechazo = subirPendientes()                  // POST de cada pendiente
+    local.reemplazarSincronizados(remoto.listar())   // GET y reemplazo de lo sincronizado
+    rechazo?.let { throw it }
+}
+```
+
+- Si se bajara primero, la lista del servidor (que todavía no tiene el producto creado sin red) lo borraría de la tabla y ya no habría nada que subir.
+- `reemplazarSincronizados` borra solo `pendiente = 0` y va dentro de una transacción: el `Flow` emite una vez y la lista no parpadea.
+- Cada pendiente se confirma al subirlo (`confirmarSubida`: fila con id negativo → fila con el id real). Si la red se corta a la mitad, lo ya subido no se vuelve a enviar.
+- Un pendiente que el servidor rechaza (por ejemplo, nombre duplicado) se queda en el dispositivo, marcado, y no bloquea a los demás ni la bajada.
+- Registrar guarda primero en local (aparece de inmediato con la etiqueta **Pendiente**) y luego intenta subir; sin red (`ErrorApi.SinConexion` o `TiempoAgotado`) no falla.
+- Editar, dar de baja y reactivar siguen necesitando al servidor (es quien valida duplicados y permisos); su resultado se escribe en la base y el `Flow` actualiza la pantalla.
+
+### La pantalla
+
+`ProductoViewModel` se suscribe una vez a `observar()` en el `init` y llama a `sincronizar()`. Ya no queda ninguna «recarga de la lista» después de registrar, editar, eliminar o reactivar. La barra de sincronización muestra «Inventario al día», «Sincronizando con PharmaSoft…» o «Sin conexión: mostrando datos guardados», cuántos productos esperan para subir y el botón **Sincronizar**.
+
+Al abrir sin servidor, `AuthRepositorioRest.sesionGuardada()` no puede consultar `GET auth/me`: entra con el perfil guardado y, si el token ya no vale, el primer 401 al volver la red cierra la sesión como en la sesión 10.
+
+### Pruebas (commonTest, base en memoria)
+
+- `ProductoRepositorioOfflineTest` (MockEngine + SQLite en memoria): sin red el producto queda pendiente y la pantalla lo ve; con red se sube con el id del servidor; `sincronizar` hace el POST del pendiente **antes** del GET de la lista y no pierde nada; un corte a la mitad no duplica; un 409 no bloquea la bajada; sin red el detalle sale de la copia local.
+- `ProductoLocalTest`: ids locales negativos, la lista del servidor no borra lo pendiente, confirmar la subida cambia el id.
+- `ProductoViewModelTest`: sin conexión muestra la lista guardada con el aviso; registrar no vuelve a pedir la lista.
+- `AuthRepositorioRestTest`: sin servidor se entra con el perfil de la última sesión; cerrar sesión lo borra.
+- `AppModuleTest`: la base abre con el driver registrado.
+
+```
+./gradlew :shared:testAndroidHostTest
+```
+
+### Evidencias
+
+El workflow `.github/workflows/s11-offline.yml` corre con cada push de la rama: levanta PharmaSoft, ejecuta las pruebas y recorre el ciclo offline en un emulador de Android (modo avión con `adb`) y en un simulador de iPhone (PharmaSoft apagado). Copia la base `pharma.db` del emulador en cada paso para mostrar la marca `pendiente` y comprueba en Swagger UI que el producto creado sin red llegó al servidor con su id real. Las evidencias quedan en las ramas `ci-evidencias-android-s11` y `ci-evidencias-ios-s11`.
