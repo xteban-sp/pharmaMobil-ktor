@@ -97,6 +97,38 @@ class ProductoViewModelTest {
         assertTrue(fase.productos.first().requiereReposicion)
     }
 
+    // ---------- Sesion 11: offline-first ----------
+
+    @Test
+    fun sinConexionMuestraLaListaGuardadaConElAvisoDeRed() = runTest {
+
+        val repositorio = FakeProductoRepository()
+            .conBaseLocal(listOf(Producto(id = 1L, nombre = "Paracetamol", precio = 3.5, stock = 120)))
+            .apply { fallaAlSincronizar = ErrorApiException(ErrorApi.SinConexion) }
+
+        val viewModel = nuevoViewModel(repositorio)
+
+        assertEquals(listOf("Paracetamol"), viewModel.nombresEnPantalla())
+        assertEquals("Sin conexión: mostrando datos guardados", viewModel.uiState.value.avisoRed)
+    }
+
+    @Test
+    fun registrarNoVuelveAPedirLaLista() = runTest {
+
+        val repositorio = repositorioConDos()
+        val viewModel = nuevoViewModel(repositorio)
+        val sincronizacionesAlAbrir = repositorio.sincronizaciones
+
+        viewModel.onNombreChange("Clorfenamina")
+        viewModel.onPrecioChange("2.80")
+        viewModel.onStockChange("25")
+        viewModel.guardar()
+
+        // La lista se actualizo sola (el Flow emitio) sin otra sincronizacion.
+        assertTrue("Clorfenamina" in viewModel.nombresEnPantalla())
+        assertEquals(sincronizacionesAlAbrir, repositorio.sincronizaciones)
+    }
+
     @Test
     fun pasaAFaseErrorCuandoElRepositorioFalla() = runTest {
 
