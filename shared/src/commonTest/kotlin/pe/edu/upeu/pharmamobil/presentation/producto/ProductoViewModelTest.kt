@@ -124,6 +124,7 @@ class ProductoViewModelTest {
         val estado = nuevoViewModel(repositorio).uiState.value
 
         assertEquals(ProductoUiState.Fase.SinDatosSinConexion, estado.fase)
+        assertEquals("Sin conexión con PharmaSoft", estado.avisoRed)
         assertNull(estado.ultimaSincronizacion)
     }
 

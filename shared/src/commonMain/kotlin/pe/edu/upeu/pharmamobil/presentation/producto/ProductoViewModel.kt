@@ -96,8 +96,12 @@ class ProductoViewModel(
             // Sin nada guardado y sin servidor no hay que mostrar. Si es por falta de red
             // (actividad autonoma 11, escenario 4) es un estado vacio que se explica, no un error.
             if (fallo != null && ultimaLista.isEmpty()) {
-                val fase = if (esFaltaDeRed(fallo)) Fase.SinDatosSinConexion else Fase.Error(mensajeDe(fallo))
-                _uiState.update { it.copy(fase = fase) }
+                if (esFaltaDeRed(fallo)) {
+                    // No hay «datos guardados» que mostrar: el aviso solo dice que no hay red.
+                    _uiState.update { it.copy(fase = Fase.SinDatosSinConexion, avisoRed = AVISO_SIN_CONEXION_SIN_DATOS) }
+                } else {
+                    _uiState.update { it.copy(fase = Fase.Error(mensajeDe(fallo))) }
+                }
             } else {
                 mostrarInventario(ultimaLista)
             }
@@ -407,6 +411,7 @@ class ProductoViewModel(
     private companion object {
         val CAMPOS_DEL_FORMULARIO = setOf("nombre", "precio", "stock")
         const val AVISO_SIN_CONEXION = "Sin conexión: mostrando datos guardados"
+        const val AVISO_SIN_CONEXION_SIN_DATOS = "Sin conexión con PharmaSoft"
         const val SIN_CONEXION = "sin conexión"
     }
 }
