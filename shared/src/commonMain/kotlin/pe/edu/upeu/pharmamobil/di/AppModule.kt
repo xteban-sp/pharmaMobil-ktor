@@ -12,6 +12,7 @@ import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
 import pe.edu.upeu.pharmamobil.data.remote.ProductoApi
 import pe.edu.upeu.pharmamobil.data.remote.crearHttpClient
+import pe.edu.upeu.pharmamobil.data.local.MarcaDeSincronizacion
 import pe.edu.upeu.pharmamobil.data.local.PerfilLocal
 import pe.edu.upeu.pharmamobil.data.local.ProductoLocal
 import pe.edu.upeu.pharmamobil.data.remote.ProductoRemoto
@@ -29,6 +30,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ListarClientesUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ObservarProductosUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.SincronizarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarUltimaSincronizacionUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarClienteUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
@@ -58,13 +60,16 @@ val dataModule = module {
     // Sesion 11: offline-first. La pantalla lee de la base local; PharmaSoft solo sincroniza.
     single { ProductoLocal(get()) }
     single { ProductoRemoto(get(), CATEGORIA_POR_DEFECTO) }
-    single<ProductoRepository> { ProductoRepositorioOffline(get(), get()) }
+    // Actividad autonoma 11: con la marca de la ultima sincronizacion correcta.
+    single { MarcaDeSincronizacion(get()) }
+    single<ProductoRepository> { ProductoRepositorioOffline(get(), get(), get()) }
     single<ClienteRepository> { ClienteRepositorioEnMemoria() }
 }
 
 val domainModule = module {
     factory { ObservarProductosUseCase(get()) }
     factory { SincronizarProductosUseCase(get()) }
+    factory { ObservarUltimaSincronizacionUseCase(get()) }
     factory { ObtenerProductoUseCase(get()) }
     factory { RegistrarProductoUseCase(get()) }
     factory { ActualizarProductoUseCase(get()) }
@@ -80,7 +85,7 @@ val domainModule = module {
 }
 
 val presentationModule = module {
-    viewModel { ProductoViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ProductoViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { ClienteViewModel(get(), get()) }
     // Sesion 9: el Compartidor lo aporta el platformModule de cada plataforma.
     viewModel { DetalleProductoViewModel(get(), get()) }

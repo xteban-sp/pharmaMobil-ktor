@@ -35,7 +35,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
+import pe.edu.upeu.pharmamobil.domain.platform.RelojDelSistema
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
@@ -99,6 +105,7 @@ fun ProductoScreen(
                     sincronizando = uiState.sincronizando,
                     avisoRed = uiState.avisoRed,
                     pendientes = uiState.pendientes,
+                    ultimaSincronizacion = uiState.ultimaSincronizacion,
                     onSincronizar = viewModel::sincronizar
                 )
             }
@@ -177,6 +184,16 @@ fun ProductoScreen(
                             )
                         }
 
+                    Fase.SinDatosSinConexion ->
+                        EstadoVacio(
+                            icono = Icons.Default.CloudOff,
+                            titulo = "Todavía no hay datos en este teléfono",
+                            descripcion = "El inventario se descarga la primera vez que hay conexión. " +
+                                "Conéctate y pulsa Sincronizar." +
+                                if (puedeEscribir) " Puedes registrar productos: se enviarán al reconectar." else "",
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+
                     is Fase.Error ->
                         EstadoError(
                             titulo = "No pudimos cargar el inventario",
@@ -215,10 +232,20 @@ private fun BarraSincronizacion(
     sincronizando: Boolean,
     avisoRed: String?,
     pendientes: Int,
+    ultimaSincronizacion: Long?,
     onSincronizar: () -> Unit
 ) {
 
     val esquema = MaterialTheme.colorScheme
+
+    // Autonoma 11: «Actualizado hace...» se recalcula cada 30 s y con cada sincronizacion.
+    var ahora by remember { mutableLongStateOf(RelojDelSistema.ahoraMs()) }
+    LaunchedEffect(ultimaSincronizacion) {
+        while (true) {
+            ahora = RelojDelSistema.ahoraMs()
+            delay(30_000)
+        }
+    }
     val sinRed = avisoRed != null && !sincronizando
 
     Surface(
@@ -252,6 +279,10 @@ private fun BarraSincronizacion(
                         else -> "Inventario al día"
                     },
                     style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = textoDeAntiguedad(ultimaSincronizacion, ahora),
+                    style = MaterialTheme.typography.labelMedium
                 )
                 if (pendientes > 0) {
                     Text(

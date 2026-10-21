@@ -18,6 +18,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ProductoInvalidoException
 import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.SincronizarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarUltimaSincronizacionUseCase
 import pe.edu.upeu.pharmamobil.presentation.error.mensajeDe
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Fase
 import pe.edu.upeu.pharmamobil.presentation.producto.ProductoUiState.Operacion
@@ -39,7 +40,8 @@ class ProductoViewModel(
     private val registrarProducto: RegistrarProductoUseCase,
     private val actualizarProducto: ActualizarProductoUseCase,
     private val eliminarProducto: EliminarProductoUseCase,
-    private val reactivarProducto: ReactivarProductoUseCase
+    private val reactivarProducto: ReactivarProductoUseCase,
+    private val observarUltimaSincronizacion: ObservarUltimaSincronizacionUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductoUiState())
@@ -60,6 +62,12 @@ class ProductoViewModel(
             observarProductos().collect { productos ->
                 ultimaLista = productos
                 mostrarInventario(productos)
+            }
+        }
+        // Actividad autonoma 11: la pantalla dice cuando se actualizo por ultima vez.
+        viewModelScope.launch {
+            observarUltimaSincronizacion().collect { instante ->
+                _uiState.update { it.copy(ultimaSincronizacion = instante) }
             }
         }
         sincronizar()
@@ -85,9 +93,11 @@ class ProductoViewModel(
                                    else it.mensajeExito
                 )
             }
-            // Sin nada guardado y sin servidor no hay que mostrar: ahi si es un error.
+            // Sin nada guardado y sin servidor no hay que mostrar. Si es por falta de red
+            // (actividad autonoma 11, escenario 4) es un estado vacio que se explica, no un error.
             if (fallo != null && ultimaLista.isEmpty()) {
-                _uiState.update { it.copy(fase = Fase.Error(mensajeDe(fallo))) }
+                val fase = if (esFaltaDeRed(fallo)) Fase.SinDatosSinConexion else Fase.Error(mensajeDe(fallo))
+                _uiState.update { it.copy(fase = fase) }
             } else {
                 mostrarInventario(ultimaLista)
             }
@@ -300,7 +310,7 @@ class ProductoViewModel(
                     activos.isNotEmpty() -> Fase.ConProductos(activos.map { p -> p.aUi() })
                     // Base vacia al abrir por primera vez: se espera a la primera sincronizacion.
                     !sincronizoAlgunaVez -> Fase.Cargando
-                    it.fase is Fase.Error -> it.fase
+                    it.fase is Fase.Error || it.fase is Fase.SinDatosSinConexion -> it.fase
                     else -> Fase.SinProductos
                 },
                 dadosDeBaja = bajas.map { p -> p.aUi() },

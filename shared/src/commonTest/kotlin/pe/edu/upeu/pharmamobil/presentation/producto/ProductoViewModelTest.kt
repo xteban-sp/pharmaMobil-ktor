@@ -21,6 +21,7 @@ import pe.edu.upeu.pharmamobil.domain.usecase.ObtenerProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.ReactivarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.RegistrarProductoUseCase
 import pe.edu.upeu.pharmamobil.domain.usecase.SincronizarProductosUseCase
+import pe.edu.upeu.pharmamobil.domain.usecase.ObservarUltimaSincronizacionUseCase
 import pe.edu.upeu.pharmamobil.platform.formatearSoles
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -56,7 +57,8 @@ class ProductoViewModelTest {
         registrarProducto = RegistrarProductoUseCase(repositorio),
         actualizarProducto = ActualizarProductoUseCase(repositorio),
         eliminarProducto = EliminarProductoUseCase(repositorio),
-        reactivarProducto = ReactivarProductoUseCase(repositorio)
+        reactivarProducto = ReactivarProductoUseCase(repositorio),
+        observarUltimaSincronizacion = ObservarUltimaSincronizacionUseCase(repositorio)
     )
 
     private fun repositorioConDos() = FakeProductoRepository(
@@ -110,6 +112,29 @@ class ProductoViewModelTest {
 
         assertEquals(listOf("Paracetamol"), viewModel.nombresEnPantalla())
         assertEquals("Sin conexión: mostrando datos guardados", viewModel.uiState.value.avisoRed)
+    }
+
+    @Test
+    fun primeraAperturaSinRedEsUnEstadoVacioInformativoYNoUnError() = runTest {
+
+        // Autonoma 11, escenario 4: base local vacia y sin red.
+        val repositorio = FakeProductoRepository()
+            .apply { fallaAlSincronizar = ErrorApiException(ErrorApi.SinConexion) }
+
+        val estado = nuevoViewModel(repositorio).uiState.value
+
+        assertEquals(ProductoUiState.Fase.SinDatosSinConexion, estado.fase)
+        assertNull(estado.ultimaSincronizacion)
+    }
+
+    @Test
+    fun laPantallaRecibeLaHoraDeLaUltimaSincronizacionCorrecta() = runTest {
+
+        val repositorio = repositorioConDos().apply { reloj = 1_792_000_000_000L }
+
+        val viewModel = nuevoViewModel(repositorio)
+
+        assertEquals(1_792_000_000_000L, viewModel.uiState.value.ultimaSincronizacion)
     }
 
     @Test

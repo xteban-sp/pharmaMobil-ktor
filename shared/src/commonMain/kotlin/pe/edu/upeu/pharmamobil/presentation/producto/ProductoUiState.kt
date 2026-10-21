@@ -23,7 +23,9 @@ data class ProductoUiState(
     /** Sesion 11: true mientras se sube lo pendiente y se baja la lista del servidor. */
     val sincronizando: Boolean = false,
     /** Sesion 11: aviso cuando la ultima sincronizacion fallo (p. ej. sin conexion). */
-    val avisoRed: String? = null
+    val avisoRed: String? = null,
+    /** Autonoma 11: instante (ms) de la ultima sincronizacion correcta; null = nunca. */
+    val ultimaSincronizacion: Long? = null
 ) {
 
     /** Sesion 11: productos creados sin red que aun no llegan al servidor. */
@@ -40,6 +42,12 @@ data class ProductoUiState(
         data object Cargando : Fase
 
         data object SinProductos : Fase
+
+        /**
+         * Autonoma 11: la base local esta vacia y no hay red para llenarla (primera apertura
+         * sin conexion). No es un error del usuario ni de la app: se explica y se espera la red.
+         */
+        data object SinDatosSinConexion : Fase
 
         data class ConProductos(val productos: List<ProductoUi>) : Fase
 
