@@ -2,11 +2,15 @@ package pe.edu.upeu.pharmamobil.data.repository
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import pe.edu.upeu.pharmamobil.data.local.MarcaDeSincronizacion
 import pe.edu.upeu.pharmamobil.data.local.ProductoLocal
 import pe.edu.upeu.pharmamobil.data.remote.ProductoRemoto
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApiException
 import pe.edu.upeu.pharmamobil.domain.model.Producto
+import pe.edu.upeu.pharmamobil.domain.platform.Reloj
+import pe.edu.upeu.pharmamobil.domain.platform.RelojDelSistema
 import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
 
 /**
@@ -20,10 +24,15 @@ import pe.edu.upeu.pharmamobil.domain.repository.ProductoRepository
  */
 class ProductoRepositorioOffline(
     private val local: ProductoLocal,
-    private val remoto: ProductoRemoto
+    private val remoto: ProductoRemoto,
+    /** Actividad autonoma 11: donde queda la hora de la ultima sincronizacion correcta. */
+    private val marca: MarcaDeSincronizacion? = null,
+    private val reloj: Reloj = RelojDelSistema
 ) : ProductoRepository {
 
     override fun observar(): Flow<List<Producto>> = local.observar()
+
+    override fun ultimaSincronizacion(): Flow<Long?> = marca?.observar() ?: flowOf(null)
 
     override suspend fun registrar(producto: Producto): Producto {
         // 1. Primero en local: desde aqui el producto ya aparece en la lista (pendiente).
@@ -54,6 +63,8 @@ class ProductoRepositorioOffline(
     override suspend fun sincronizar() {
         val rechazo = subirPendientes()
         local.reemplazarSincronizados(remoto.listar())
+        // La lista del servidor ya esta en la base: los datos son de este instante.
+        marca?.registrar(reloj.ahoraMs())
         // Un pendiente que el servidor no acepta se queda en el dispositivo (se puede editar
         // o eliminar) y se informa; no bloquea a los demas ni a la bajada.
         rechazo?.let { throw it }

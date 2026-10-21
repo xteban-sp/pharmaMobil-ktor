@@ -18,6 +18,12 @@ interface ProductoRepository {
     /** La pantalla se suscribe una vez y se actualiza sola. Incluye los dados de baja. */
     fun observar(): Flow<List<Producto>>
 
+    /**
+     * Actividad autonoma 11: instante (ms) de la ultima sincronizacion correcta, o null si
+     * nunca hubo una. Emite de nuevo con cada sincronizacion.
+     */
+    fun ultimaSincronizacion(): Flow<Long?>
+
     /** Sube lo pendiente y luego trae la lista del servidor. En ese orden. */
     suspend fun sincronizar()
 

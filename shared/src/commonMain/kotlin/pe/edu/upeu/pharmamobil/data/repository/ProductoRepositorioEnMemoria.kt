@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -29,6 +30,9 @@ class ProductoRepositorioEnMemoria : ProductoRepository {
     private var siguienteId = 1L
 
     override fun observar(): Flow<List<Producto>> = productos.asStateFlow()
+
+    /** Sin servidor no hay nada que sincronizar: nunca. */
+    override fun ultimaSincronizacion(): Flow<Long?> = flowOf(null)
 
     /** No hay servidor: la memoria ya es la fuente de verdad. */
     override suspend fun sincronizar() = Unit

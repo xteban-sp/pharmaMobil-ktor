@@ -14,6 +14,13 @@ class ObservarProductosUseCase(
     operator fun invoke(): Flow<List<Producto>> = productoRepository.observar()
 }
 
+/** Actividad autonoma 11: hora de la ultima sincronizacion correcta (null = nunca). */
+class ObservarUltimaSincronizacionUseCase(
+    private val productoRepository: ProductoRepository
+) {
+    operator fun invoke(): Flow<Long?> = productoRepository.ultimaSincronizacion()
+}
+
 /** Sube lo pendiente y trae la lista del servidor. Sin red devuelve failure (SinConexion). */
 class SincronizarProductosUseCase(
     private val productoRepository: ProductoRepository

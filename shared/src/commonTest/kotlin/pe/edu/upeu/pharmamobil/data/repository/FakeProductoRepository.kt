@@ -54,11 +54,20 @@ class FakeProductoRepository(
 
     override fun observar(): Flow<List<Producto>> = local.asStateFlow()
 
+    /** Autonoma 11: instante de la ultima sincronizacion correcta (null = nunca). */
+    val ultima = MutableStateFlow<Long?>(null)
+
+    /** Instante que sincronizar() registra cuando termina bien. */
+    var reloj: Long = 1_000L
+
+    override fun ultimaSincronizacion(): Flow<Long?> = ultima.asStateFlow()
+
     override suspend fun sincronizar() {
         sincronizaciones++
         compuertaAlSincronizar?.await()
         fallaAlSincronizar?.let { throw it }
         local.value = enServidor.toList()
+        ultima.value = reloj
     }
 
     override suspend fun registrar(producto: Producto): Producto {
