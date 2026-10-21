@@ -7,10 +7,9 @@
 # Cada job publica sus evidencias en una rama ci-evidencias-*-s11 del repositorio.
 name: S11 Offline-first
 
+# Ya entregada: solo se lanza a mano (la autonoma usa s11-autonoma.yml en cada push).
 on:
   workflow_dispatch:
-  push:
-    branches: [ feature/offline-first-istana ]
 
 permissions:
   contents: write
