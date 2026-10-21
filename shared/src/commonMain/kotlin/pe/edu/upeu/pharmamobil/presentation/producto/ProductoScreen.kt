@@ -3,6 +3,8 @@ package pe.edu.upeu.pharmamobil.presentation.producto
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -337,6 +339,7 @@ private fun ListaProductos(
 }
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ProductoItem(
     producto: ProductoUi,
@@ -374,8 +377,10 @@ private fun ProductoItem(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                FlowRow(
+                    // Sesion 11: si no caben «Reponer» y «Pendiente», bajan de linea en vez de cortarse.
+                    itemVerticalAlignment = Alignment.CenterVertically,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
 
