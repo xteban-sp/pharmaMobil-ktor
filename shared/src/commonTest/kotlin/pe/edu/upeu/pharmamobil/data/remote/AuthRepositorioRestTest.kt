@@ -14,6 +14,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import pe.edu.upeu.pharmamobil.data.local.AlmacenEnMemoria
+import pe.edu.upeu.pharmamobil.data.local.PerfilLocal
+import pe.edu.upeu.pharmamobil.data.local.baseEnMemoria
 import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.data.remote.ProductoRemoto
 import pe.edu.upeu.pharmamobil.domain.error.ErrorApi
@@ -59,7 +61,9 @@ class AuthRepositorioRestTest {
         config: ConfiguracionApi
     ) {
         val cliente = crearHttpClient(motor, config, almacen, avisos)
-        val auth = AuthRepositorioRest(cliente, almacen, avisos)
+        // Sesion 11: con perfil local (base SQLite en memoria, nueva por prueba).
+        val perfiles = PerfilLocal(baseEnMemoria())
+        val auth = AuthRepositorioRest(cliente, almacen, avisos, perfiles)
         val productos = ProductoRemoto(ProductoApi(cliente), 1L)
 
         fun authorizationDe(ruta: String): List<String?> =
@@ -207,6 +211,41 @@ class AuthRepositorioRestTest {
         assertEquals(ErrorApi.SinPermiso, fallo.error)
         assertEquals("valido.x.y", e.almacen.token)
         assertNull(aviso)
+    }
+
+    @Test
+    fun sinServidorSeEntraConElPerfilDeLaUltimaSesion() = runTest {
+
+        var servidorEncendido = true
+        val e = escenario { peticion ->
+            if (!servidorEncendido) throw kotlinx.io.IOException("Connection refused")
+            respond(loginAdmin, HttpStatusCode.OK, json)
+        }
+        e.auth.iniciarSesion(Credenciales("admin", "Admin123"))
+
+        // Se cierra la app y PharmaSoft se apaga: GET auth/me no llega al servidor.
+        servidorEncendido = false
+        val sesion = e.auth.sesionGuardada()
+
+        assertEquals("Carlos Ramirez Torres", sesion?.nombreCompleto)
+        assertEquals("aaa.bbb.ccc", sesion?.token)
+        assertTrue(sesion?.puede("CATALOGO_ESCRIBIR") == true)
+    }
+
+    @Test
+    fun cerrarSesionBorraTambienElPerfilLocal() = runTest {
+
+        var servidorEncendido = true
+        val e = escenario { peticion ->
+            if (!servidorEncendido) throw kotlinx.io.IOException("Connection refused")
+            respond(loginAdmin, HttpStatusCode.OK, json)
+        }
+        e.auth.iniciarSesion(Credenciales("admin", "Admin123"))
+        e.auth.cerrarSesion()
+        servidorEncendido = false
+
+        assertNull(e.auth.sesionGuardada())
+        assertNull(e.perfiles.leer("x"))
     }
 
     @Test

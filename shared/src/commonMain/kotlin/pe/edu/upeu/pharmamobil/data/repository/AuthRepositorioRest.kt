@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.io.IOException
 import pe.edu.upeu.pharmamobil.data.local.AlmacenSeguro
+import pe.edu.upeu.pharmamobil.data.local.PerfilLocal
 import pe.edu.upeu.pharmamobil.data.remote.AvisosDeSesion
 import pe.edu.upeu.pharmamobil.data.remote.RUTA_LOGIN
 import pe.edu.upeu.pharmamobil.data.remote.dto.ErrorResponseDto
@@ -39,7 +40,9 @@ import pe.edu.upeu.pharmamobil.domain.repository.AuthRepository
 class AuthRepositorioRest(
     private val cliente: HttpClient,
     private val almacen: AlmacenSeguro,
-    private val avisos: AvisosDeSesion
+    private val avisos: AvisosDeSesion,
+    /** Sesion 11: perfil de la ultima sesion para entrar sin servidor (null = sin cache). */
+    private val perfiles: PerfilLocal? = null
 ) : AuthRepository {
 
     override val sesionTerminada: Flow<ErrorSesion> = avisos.sesionTerminada
@@ -56,7 +59,7 @@ class AuthRepositorioRest(
         // loadTokens quedo en cache con el valor anterior (o con null): se vacia
         // para que la proxima peticion lea el token recien guardado.
         cliente.authProvider<BearerAuthProvider>()?.clearToken()
-        dto.aSesion()
+        dto.aSesion().also { perfiles?.guardar(it) }
     }
 
     /**
@@ -67,13 +70,22 @@ class AuthRepositorioRest(
      */
     override suspend fun sesionGuardada(): Sesion? {
         val token = withContext(Dispatchers.IO) { almacen.leerToken() } ?: return null
-        return traducirErrores(enLogin = false) {
-            cliente.get("auth/me").body<UsuarioActualDto>().aSesion(token)
+        return try {
+            traducirErrores(enLogin = false) {
+                cliente.get("auth/me").body<UsuarioActualDto>().aSesion(token)
+            }.also { perfiles?.guardar(it) }
+        } catch (sinRed: ErrorSesionException) {
+            // Sesion 11 (offline-first): sin servidor se entra con el perfil guardado y la app
+            // muestra el inventario local. Si el token ya no vale, el primer 401 al volver la
+            // red cierra la sesion (plugin SesionVencida). Sin perfil, se informa el error.
+            if (sinRed.error == ErrorSesion.SinConexion) perfiles?.leer(token) ?: throw sinRed
+            else throw sinRed
         }
     }
 
     override suspend fun cerrarSesion() {
         withContext(Dispatchers.IO) { almacen.borrarToken() }
+        perfiles?.borrar()
         cliente.authProvider<BearerAuthProvider>()?.clearToken()
     }
 

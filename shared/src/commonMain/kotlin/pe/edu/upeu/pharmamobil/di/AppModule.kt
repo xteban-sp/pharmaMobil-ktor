@@ -12,6 +12,7 @@ import pe.edu.upeu.pharmamobil.data.repository.AuthRepositorioRest
 import pe.edu.upeu.pharmamobil.data.repository.ClienteRepositorioEnMemoria
 import pe.edu.upeu.pharmamobil.data.remote.ProductoApi
 import pe.edu.upeu.pharmamobil.data.remote.crearHttpClient
+import pe.edu.upeu.pharmamobil.data.local.PerfilLocal
 import pe.edu.upeu.pharmamobil.data.local.ProductoLocal
 import pe.edu.upeu.pharmamobil.data.remote.ProductoRemoto
 import pe.edu.upeu.pharmamobil.data.repository.ProductoRepositorioOffline
@@ -50,7 +51,9 @@ val dataModule = module {
     // Sesion 11: una sola base local; el driver lo aporta el platformModule de cada plataforma.
     single { PharmaDb(get<CreadorDeDriver>().crear()) }
     single { crearHttpClient(engine = get(), config = get(), almacen = get(), avisos = get()) }
-    single<AuthRepository> { AuthRepositorioRest(get(), get(), get()) }
+    // Sesion 11: el perfil local permite entrar con PharmaSoft apagado.
+    single { PerfilLocal(get()) }
+    single<AuthRepository> { AuthRepositorioRest(get(), get(), get(), get()) }
     single { ProductoApi(get()) }
     // Sesion 11: offline-first. La pantalla lee de la base local; PharmaSoft solo sincroniza.
     single { ProductoLocal(get()) }
