@@ -104,7 +104,9 @@ class ProductoRepositorioOffline(
                 // no se vuelve a enviar (no hay duplicados) y el resto sigue pendiente.
                 local.confirmarSubida(pendiente.id, creado)
             } catch (e: ErrorApiException) {
-                if (e.error.esFaltaDeRed()) throw e
+                // Sin red o con la sesion vencida (401) no tiene sentido seguir: todo queda
+                // pendiente en el dispositivo y se reintenta despues (o tras volver a entrar).
+                if (e.error.esFaltaDeRed() || e.error == ErrorApi.NoAutenticado) throw e
                 if (rechazo == null) rechazo = e
             }
         }

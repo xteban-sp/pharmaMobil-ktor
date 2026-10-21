@@ -161,6 +161,30 @@ class ProductoRepositorioOfflineTest {
     }
 
     @Test
+    fun `con la sesion vencida se corta la sincronizacion y lo pendiente se conserva`() = runTest {
+        var hayRed = false
+        val e = repositorioCon { peticion ->
+            if (!hayRed) throw IOException("modo avion")
+            respond(
+                """{"timestamp":"x","status":401,"error":"Unauthorized","message":"El token ha expirado. Inicie sesión nuevamente","path":"/api/v1/productos"}""",
+                HttpStatusCode.Unauthorized, json
+            )
+        }
+        e.repo.registrar(Producto(0, "Omeprazol 20mg", 4.5, 40))
+        e.repo.registrar(Producto(0, "Loratadina 10mg", 1.2, 30))
+        val antes = e.peticiones.size
+
+        hayRed = true
+        val fallo = assertFailsWith<ErrorApiException> { e.repo.sincronizar() }
+
+        assertEquals(ErrorApi.NoAutenticado, fallo.error)
+        // Al primer 401 se detiene: un solo POST y ningun GET con un token que ya no vale.
+        assertEquals(listOf("POST productos"), e.orden.drop(antes))
+        val lista = e.repo.observar().first()
+        assertEquals(2, lista.count { it.pendiente }, "nada se pierde: se envia al volver a entrar")
+    }
+
+    @Test
     fun `sin red el detalle se muestra desde la copia local`() = runTest {
         var hayRed = true
         val e = repositorioCon { peticion ->
