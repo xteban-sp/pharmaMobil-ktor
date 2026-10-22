@@ -1,0 +1,8 @@
+Running on test
+ > Flow s11a-antiguedad
+Launch app "${APP_ID}"... COMPLETED
+Assert that ".*Hola,.*" is visible... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that "Sin conexión: mostrando datos guardados" is visible... COMPLETED
+Assert that "${ESPERADO}" is visible... COMPLETED
+Take screenshot ${CAPTURA}... COMPLETED

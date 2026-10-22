@@ -1,0 +1,13 @@
+Running on test
+ > Flow s11a-esc4-login-sin-red
+Launch app "${APP_ID}" with clear state... COMPLETED
+Assert that "Ingresar" is visible... COMPLETED
+Take screenshot a01-esc4-primera-apertura-sin-red... COMPLETED
+Tap on "Usuario"... COMPLETED
+Input text admin... COMPLETED
+Tap on "Contraseña"... COMPLETED
+Input text Admin123... COMPLETED
+Hide Keyboard... COMPLETED
+Tap on "Ingresar"... COMPLETED
+Assert that "No se pudo conectar con el servidor.*" is visible... COMPLETED
+Take screenshot a02-esc4-login-sin-red... COMPLETED

@@ -1,0 +1,11 @@
+{
+  "id": 12,
+  "nombre": "Ranitidina 150mg",
+  "precio": 2.3,
+  "stock": 15,
+  "estado": true,
+  "categoriaId": 1,
+  "categoriaNombre": "Analgesicos",
+  "fechaCreacion": "2026-10-22T23:58:10.86808",
+  "fechaModificacion": null
+}

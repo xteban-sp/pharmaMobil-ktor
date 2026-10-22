@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-22T23:44:51.075Z" hostname="runnervm8k3b6" time="0.019">
+  <properties/>
+  <testcase name="arrancaEnInicioYSinPantallaALaQueVolver" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.014"/>
+  <testcase name="abreLaPantallaPedidaAlArrancar" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.001"/>
+  <testcase name="irALaPantallaQueYaSeVeNoLaDuplica" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.001"/>
+  <testcase name="acercaDeSeGuardaYSeRestauraComoTexto" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.0"/>
+  <testcase name="volverRegresaALaPantallaAnterior" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.001"/>
+  <testcase name="volverAUnaPantallaQueNoEstaEnLaPilaNoCambiaNada" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.0"/>
+  <testcase name="abrirDirectoEnUnModuloTambienPermiteVolverAInicio" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.0"/>
+  <testcase name="trasGuardarSeRegresaAlInventarioSaltandoElDetalle" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.001"/>
+  <testcase name="cadaPantallaSeGuardaComoTextoYSeRecuperaIgual" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.0"/>
+  <testcase name="elMenuLateralDejaElModuloElegidoSobreInicio" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.001"/>
+  <testcase name="unTextoDesconocidoSeDescartaAlRestaurar" classname="pe.edu.upeu.pharmamobil.navigation.PilaDeNavegacionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,26 @@
+* Create distribution directories...
+* Downloading...
+#=#=#                                                                                                                                                     0.2%###                                                                        5.0%##########                                                                15.1%##################                                                        25.2%#######################                                                   33.3%##############################                                            42.0%###################################                                       48.8%#######################################                                   55.5%###############################################                           66.6%##################################################                        69.9%########################################################                  79.0%##############################################################            86.6%###################################################################       93.2%######################################################################## 100.0%
+* Checking archive integrity...
+* Extracting archive...
+* Remove previous installation (if any)
+* Copying archive contents...
+* Cleaning up...
+
+Attempt update of interactive bash profile on regular UNIX...
+Adding maestro to your PATH in /home/runner/.bashrc
+Adding maestro to your PATH in /home/runner/.zshrc
+
+Installation was successful!
+Please open a new terminal OR run the following in the existing one:
+
+    export PATH="$PATH":"$HOME/.maestro/bin"
+
+Then run the following command:
+
+    maestro
+
+Welcome to Maestro!
+Anonymous analytics enabled. To opt out, set MAESTRO_CLI_NO_ANALYTICS environment variable to any value before running Maestro.
+
+2.11.0

@@ -1,0 +1,80 @@
+# Evidencias (android)
+
+- Ejecucion: 2 (id 39873405740)
+- Commit: 2c31fb4a0be36798203b54de435b33aeb3e9f85d
+- Rama: feature/offline-first-istana
+- Fecha (UTC): 2026-10-22 23:58:22
+
+## Archivos
+- 99-android-estado-final.png
+- README.md
+- adb-install.log
+- android-version.txt
+- backend-1min.txt
+- backend-token-1min.log
+- backend-token-60min.log
+- base-antiguedad-1-dia.txt
+- base-antiguedad-3-horas.txt
+- base-esc1-a-sincronizado.txt
+- base-esc1-b-reabierta-sin-red.txt
+- base-esc2-pendiente.txt
+- base-esc3-sincronizado.txt
+- base-esc4-a-login-sin-red.txt
+- base-esc4-b-inventario-vacio.txt
+- base-esc5-a-sesion-nueva.txt
+- base-esc5-b-pendiente-con-token-vencido.txt
+- base-esc5-c-tras-401.txt
+- base-esc5-d-reenviado.txt
+- bitacora-tiempos.txt
+- db-antiguedad-1-dia
+- db-antiguedad-3-horas
+- db-esc1-a-sincronizado
+- db-esc1-b-reabierta-sin-red
+- db-esc2-pendiente
+- db-esc3-sincronizado
+- db-esc4-a-login-sin-red
+- db-esc4-b-inventario-vacio
+- db-esc5-a-sesion-nueva
+- db-esc5-b-pendiente-con-token-vencido
+- db-esc5-c-tras-401
+- db-esc5-d-reenviado
+- entorno.txt
+- gradle-android.log
+- ktor-completo.log
+- ktor-esc1-reabrir.log
+- ktor-esc1-sincronizar.log
+- ktor-esc2-registro.log
+- ktor-esc3-sincronizar.log
+- ktor-esc4-inventario-vacio.log
+- ktor-esc4-login-sin-red.log
+- ktor-esc5-login.log
+- ktor-esc5-reconectar-401.log
+- ktor-esc5-sin-red.log
+- ktor-esc5-volver-a-entrar.log
+- logcat-app.txt
+- maestro-debug
+- maestro-instalacion.log
+- maestro-s11a-antiguedad-1.log
+- maestro-s11a-esc1-reabrir-sin-red-1.log
+- maestro-s11a-esc1-sincronizar-1.log
+- maestro-s11a-esc2-registro-1.log
+- maestro-s11a-esc3-reconectar-1.log
+- maestro-s11a-esc4-login-con-red-1.log
+- maestro-s11a-esc4-login-sin-red-1.log
+- maestro-s11a-esc4-vacio-1.log
+- maestro-s11a-esc5-login-1.log
+- maestro-s11a-esc5-reconectar-1.log
+- maestro-s11a-esc5-sin-red-1.log
+- maestro-s11a-esc5-volver-a-entrar-1.log
+- playwright-instalacion.log
+- pruebas-s11.txt
+- pruebas-shared.log
+- pruebas-xml
+- red-esc1-modo-avion.txt
+- red-esc3-reconectado.txt
+- red-esc4-modo-avion.txt
+- reloj.txt
+- swagger-esc3
+- swagger-esc3.log
+- swagger-esc5
+- swagger-esc5.log

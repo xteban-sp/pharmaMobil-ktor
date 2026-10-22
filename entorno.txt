@@ -1,0 +1,9 @@
+== sistema
+Ubuntu 24.04.5 LTS
+== java
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+== commit
+2c31fb4a0be36798203b54de435b33aeb3e9f85d ci(s11): tras la sesion expirada solo se escribe la contrasena
+backend: fff44f9 seguridad

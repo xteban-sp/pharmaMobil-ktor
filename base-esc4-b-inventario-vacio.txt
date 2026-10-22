@@ -1,0 +1,7 @@
+# base local del emulador: esc4-b-inventario-vacio
+$ sqlite3 pharma.db "SELECT id, nombre, precio, stock, activo, pendiente FROM producto"
+  id  nombre                   precio  stock  activo  pendiente
+(0 filas, 0 pendientes)
+
+$ sqlite3 pharma.db "SELECT ultima FROM sincronizacion"
+(sin filas: nunca sincronizado)

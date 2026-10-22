@@ -1,0 +1,19 @@
+Running on test
+ > Flow s11a-esc5-sin-red
+Launch app "${APP_ID}"... COMPLETED
+Assert that ".*Hola,.*" is visible... COMPLETED
+Take screenshot a14-esc5-entra-con-perfil-guardado... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that "Sin conexión: mostrando datos guardados" is visible... COMPLETED
+Tap on "Nuevo producto"... COMPLETED
+Tap on "Nombre"... COMPLETED
+Input text Ranitidina 150mg... COMPLETED
+Tap on "Precio"... COMPLETED
+Input text 2.30... COMPLETED
+Tap on "Stock"... COMPLETED
+Input text 15... COMPLETED
+Hide Keyboard... COMPLETED
+Tap on "Registrar producto"... COMPLETED
+Assert that ".*guardado sin conexión.*" is visible... COMPLETED
+Assert that "Ranitidina 150mg.*" is visible... COMPLETED
+Take screenshot a15-esc5-pendiente-con-token-vencido... COMPLETED

@@ -1,0 +1,11 @@
+{
+  "id": 11,
+  "nombre": "Omeprazol 20mg",
+  "precio": 4.5,
+  "stock": 40,
+  "estado": true,
+  "categoriaId": 1,
+  "categoriaNombre": "Analgesicos",
+  "fechaCreacion": "2026-10-22T23:53:40.451775",
+  "fechaModificacion": null
+}

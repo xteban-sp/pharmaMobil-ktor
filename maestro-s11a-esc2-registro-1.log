@@ -1,0 +1,15 @@
+Running on test
+ > Flow s11a-esc2-registro
+Tap on "Nuevo producto"... COMPLETED
+Tap on "Nombre"... COMPLETED
+Input text Omeprazol 20mg... COMPLETED
+Tap on "Precio"... COMPLETED
+Input text 4.50... COMPLETED
+Tap on "Stock"... COMPLETED
+Input text 40... COMPLETED
+Hide Keyboard... COMPLETED
+Take screenshot a07-esc2-formulario-sin-red... COMPLETED
+Tap on "Registrar producto"... COMPLETED
+Assert that ".*guardado sin conexión.*" is visible... COMPLETED
+Assert that "Omeprazol 20mg.*" is visible... COMPLETED
+Take screenshot a08-esc2-pendiente... COMPLETED

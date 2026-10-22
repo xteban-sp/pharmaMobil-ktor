@@ -1,0 +1,9 @@
+Running on test
+ > Flow s11a-esc1-reabrir-sin-red
+Launch app "${APP_ID}"... COMPLETED
+Assert that ".*Hola,.*" is visible... COMPLETED
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that "Sin conexión: mostrando datos guardados" is visible... COMPLETED
+Assert that ".*Amoxicilina 500mg.*" is visible... COMPLETED
+Assert that "Actualizado hace .*minuto.*" is visible... COMPLETED
+Take screenshot a06-esc1-reabierta-sin-red... COMPLETED

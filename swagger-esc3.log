@@ -1,0 +1,2 @@
+Omeprazol 20mg -> id 11 en PharmaSoft
+sw11-producto-sincronizado GET /api/v1/productos/11 -> HTTP 200

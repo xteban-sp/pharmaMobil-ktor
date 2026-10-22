@@ -1,0 +1,3 @@
+Ranitidina 150mg: id 12 en PharmaSoft
+login admin: HTTP 200
+sw11-producto-sincronizado: GET /api/v1/productos/12 -> HTTP 200

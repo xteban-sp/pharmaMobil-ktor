@@ -1,0 +1,1 @@
+# base local del emulador: esc4-a-login-sin-red

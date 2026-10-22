@@ -1,0 +1,8 @@
+Running on test
+ > Flow s11a-esc4-vacio
+Tap on ".*Inventario, precios y stock.*"... COMPLETED
+Assert that "Todavía no hay datos en este teléfono" is visible... COMPLETED
+Assert that "Nunca sincronizado" is visible... COMPLETED
+Assert that "Sin conexión con PharmaSoft" is visible... COMPLETED
+Assert that "No pudimos cargar el inventario" is not visible... COMPLETED
+Take screenshot a04-esc4-estado-vacio-informativo... COMPLETED

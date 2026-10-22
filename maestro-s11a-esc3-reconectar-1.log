@@ -1,0 +1,12 @@
+Running on test
+ > Flow s11a-esc3-reconectar
+Tap on "Sincronizar"... COMPLETED
+Assert that "Inventario al día" is visible... COMPLETED
+Assert that "Actualizado hace un momento" is visible... COMPLETED
+Assert that ".*Pendiente.*" is not visible... COMPLETED
+Take screenshot a09-esc3-sincronizado... COMPLETED
+Scrolling DOWN until "Omeprazol 20mg.*" is visible with speed 40, visibility percentage 100%, timeout 20000 ms, with centering disabled... COMPLETED
+Tap on "Omeprazol 20mg.*"... COMPLETED
+Assert that "Compartir" is visible... COMPLETED
+Take screenshot a10-esc3-detalle-id-real... COMPLETED
+Tap on "Volver"... COMPLETED

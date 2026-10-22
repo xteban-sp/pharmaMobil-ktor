@@ -1,0 +1,43 @@
+2026-10-22 23:48:53 UTC | 18:48:53 Lima | emulador: 2026-10-22 23:48:52 UTC | inicio: app instalada (instalacion limpia)
+2026-10-22 23:49:01 UTC | 18:49:01 Lima | emulador: 2026-10-22 23:49:00 UTC | modo avion: on
+2026-10-22 23:49:46 UTC | 18:49:46 Lima | emulador: 2026-10-22 23:49:45 UTC | flujo s11a-esc4-login-sin-red: completado
+2026-10-22 23:49:47 UTC | 18:49:47 Lima | emulador: 2026-10-22 23:49:46 UTC | base copiada: base-esc4-a-login-sin-red.txt
+2026-10-22 23:49:49 UTC | 18:49:49 Lima | emulador: 2026-10-22 23:49:48 UTC | modo avion: off
+2026-10-22 23:50:48 UTC | 18:50:48 Lima | emulador: 2026-10-22 23:50:47 UTC | flujo s11a-esc4-login-con-red: completado
+2026-10-22 23:50:56 UTC | 18:50:56 Lima | emulador: 2026-10-22 23:50:55 UTC | modo avion: on
+2026-10-22 23:51:09 UTC | 18:51:09 Lima | emulador: 2026-10-22 23:51:09 UTC | flujo s11a-esc4-vacio: completado
+2026-10-22 23:51:10 UTC | 18:51:10 Lima | emulador: 2026-10-22 23:51:09 UTC | base copiada: base-esc4-b-inventario-vacio.txt
+2026-10-22 23:51:12 UTC | 18:51:12 Lima | emulador: 2026-10-22 23:51:11 UTC | modo avion: off
+2026-10-22 23:51:26 UTC | 18:51:26 Lima | emulador: 2026-10-22 23:51:25 UTC | flujo s11a-esc1-sincronizar: completado
+2026-10-22 23:51:26 UTC | 18:51:26 Lima | emulador: 2026-10-22 23:51:25 UTC | base copiada: base-esc1-a-sincronizado.txt
+2026-10-22 23:51:34 UTC | 18:51:34 Lima | emulador: 2026-10-22 23:51:33 UTC | modo avion: on
+2026-10-22 23:52:57 UTC | 18:52:57 Lima | emulador: 2026-10-22 23:52:56 UTC | flujo s11a-esc1-reabrir-sin-red: completado
+2026-10-22 23:52:57 UTC | 18:52:57 Lima | emulador: 2026-10-22 23:52:56 UTC | base copiada: base-esc1-b-reabierta-sin-red.txt
+2026-10-22 23:53:27 UTC | 18:53:27 Lima | emulador: 2026-10-22 23:53:26 UTC | flujo s11a-esc2-registro: completado
+2026-10-22 23:53:27 UTC | 18:53:27 Lima | emulador: 2026-10-22 23:53:26 UTC | base copiada: base-esc2-pendiente.txt
+2026-10-22 23:53:29 UTC | 18:53:29 Lima | emulador: 2026-10-22 23:53:28 UTC | modo avion: off
+2026-10-22 23:53:47 UTC | 18:53:47 Lima | emulador: 2026-10-22 23:53:46 UTC | flujo s11a-esc3-reconectar: completado
+2026-10-22 23:53:47 UTC | 18:53:47 Lima | emulador: 2026-10-22 23:53:46 UTC | base copiada: base-esc3-sincronizado.txt
+2026-10-22 23:53:54 UTC | 18:53:54 Lima | emulador: 2026-10-22 23:53:53 UTC | Swagger: GET del producto sincronizado
+2026-10-22 23:54:06 UTC | 18:54:06 Lima | emulador: 2026-10-22 23:54:05 UTC | modo avion: on
+2026-10-22 23:54:06 UTC | 18:54:06 Lima | emulador: 2026-10-23 02:54:57 UTC | reloj del emulador adelantado 3 h
+2026-10-22 23:54:25 UTC | 18:54:25 Lima | emulador: 2026-10-23 02:55:15 UTC | flujo s11a-antiguedad: completado
+2026-10-22 23:54:25 UTC | 18:54:25 Lima | emulador: 2026-10-23 02:55:15 UTC | base copiada: base-antiguedad-3-horas.txt
+2026-10-22 23:54:25 UTC | 18:54:25 Lima | emulador: 2026-10-24 01:53:57 UTC | reloj del emulador adelantado 26 h
+2026-10-22 23:54:44 UTC | 18:54:44 Lima | emulador: 2026-10-24 01:54:15 UTC | flujo s11a-antiguedad: completado
+2026-10-22 23:54:44 UTC | 18:54:44 Lima | emulador: 2026-10-24 01:54:16 UTC | base copiada: base-antiguedad-1-dia.txt
+2026-10-22 23:54:44 UTC | 18:54:44 Lima | emulador: 2026-10-22 23:54:44 UTC | reloj del emulador restaurado
+2026-10-22 23:54:47 UTC | 18:54:47 Lima | emulador: 2026-10-22 23:54:46 UTC | modo avion: off
+2026-10-22 23:54:57 UTC | 18:54:57 Lima | emulador: 2026-10-22 23:54:56 UTC | PharmaSoft reiniciado con tokens de 1 minuto
+2026-10-22 23:55:36 UTC | 18:55:36 Lima | emulador: 2026-10-22 23:55:35 UTC | flujo s11a-esc5-login: completado
+2026-10-22 23:55:36 UTC | 18:55:36 Lima | emulador: 2026-10-22 23:55:35 UTC | base copiada: base-esc5-a-sesion-nueva.txt
+2026-10-22 23:56:51 UTC | 18:56:51 Lima | emulador: 2026-10-22 23:56:51 UTC | token vencido (75 s)
+2026-10-22 23:56:59 UTC | 18:56:59 Lima | emulador: 2026-10-22 23:56:59 UTC | modo avion: on
+2026-10-22 23:57:35 UTC | 18:57:35 Lima | emulador: 2026-10-22 23:57:34 UTC | flujo s11a-esc5-sin-red: completado
+2026-10-22 23:57:35 UTC | 18:57:35 Lima | emulador: 2026-10-22 23:57:35 UTC | base copiada: base-esc5-b-pendiente-con-token-vencido.txt
+2026-10-22 23:57:37 UTC | 18:57:37 Lima | emulador: 2026-10-22 23:57:37 UTC | modo avion: off
+2026-10-22 23:57:50 UTC | 18:57:50 Lima | emulador: 2026-10-22 23:57:50 UTC | flujo s11a-esc5-reconectar: completado
+2026-10-22 23:57:51 UTC | 18:57:51 Lima | emulador: 2026-10-22 23:57:50 UTC | base copiada: base-esc5-c-tras-401.txt
+2026-10-22 23:58:15 UTC | 18:58:15 Lima | emulador: 2026-10-22 23:58:14 UTC | flujo s11a-esc5-volver-a-entrar: completado
+2026-10-22 23:58:15 UTC | 18:58:15 Lima | emulador: 2026-10-22 23:58:15 UTC | base copiada: base-esc5-d-reenviado.txt
+2026-10-22 23:58:21 UTC | 18:58:21 Lima | emulador: 2026-10-22 23:58:20 UTC | Swagger: GET del producto enviado tras volver a entrar

@@ -1,0 +1,79 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.7)
+
+2026-10-22T23:41:43.841Z  INFO 2633 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : Starting PharmaBackendApplication using Java 21.0.12.1 with PID 2633 (/home/runner/work/pharmaMobil-ktor/pharmaMobil-ktor/backend/target/classes started by runner in /home/runner/work/pharmaMobil-ktor/pharmaMobil-ktor/backend)
+2026-10-22T23:41:43.844Z DEBUG 2633 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : Running with Spring Boot v4.0.7, Spring v7.0.8
+2026-10-22T23:41:43.845Z  INFO 2633 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : The following 1 profile is active: "h2"
+2026-10-22T23:41:44.601Z  INFO 2633 --- [PharmaBackend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-22T23:41:44.657Z  INFO 2633 --- [PharmaBackend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 50 ms. Found 8 JPA repository interfaces.
+2026-10-22T23:41:45.161Z  INFO 2633 --- [PharmaBackend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-22T23:41:45.196Z  INFO 2633 --- [PharmaBackend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-22T23:41:45.197Z  INFO 2633 --- [PharmaBackend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-10-22T23:41:45.309Z  INFO 2633 --- [PharmaBackend] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1413 ms
+2026-10-22T23:41:45.544Z  INFO 2633 --- [PharmaBackend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-22T23:41:46.089Z  INFO 2633 --- [PharmaBackend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn1: url=jdbc:h2:file:/tmp/pharmasoft-bd/pharmadb user=SA
+2026-10-22T23:41:46.091Z  INFO 2633 --- [PharmaBackend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-22T23:41:46.121Z  INFO 2633 --- [PharmaBackend] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:h2:file:/tmp/pharmasoft-bd/pharmadb (H2 2.4)
+2026-10-22T23:41:46.129Z  WARN 2633 --- [PharmaBackend] [           main] o.f.c.internal.database.base.Database    : Using H2 2.4.240 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+2026-10-22T23:41:46.151Z  INFO 2633 --- [PharmaBackend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2026-10-22T23:41:46.153Z  INFO 2633 --- [PharmaBackend] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.012s)
+2026-10-22T23:41:46.158Z  INFO 2633 --- [PharmaBackend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2026-10-22T23:41:46.186Z  INFO 2633 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2026-10-22T23:41:46.196Z  INFO 2633 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - esquema inicial"
+2026-10-22T23:41:46.227Z  INFO 2633 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - seguridad empleados usuarios"
+2026-10-22T23:41:46.242Z  INFO 2633 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - datos iniciales seguridad"
+2026-10-22T23:41:46.254Z  INFO 2633 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - datos de ejemplo"
+2026-10-22T23:41:46.267Z  INFO 2633 --- [PharmaBackend] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "PUBLIC", now at version v4 (execution time 00:00.043s)
+2026-10-22T23:41:46.337Z  INFO 2633 --- [PharmaBackend] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-10-22T23:41:46.372Z  INFO 2633 --- [PharmaBackend] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.19.Final
+2026-10-22T23:41:46.699Z  INFO 2633 --- [PharmaBackend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-22T23:41:46.768Z  INFO 2633 --- [PharmaBackend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:file:/tmp/pharmasoft-bd/pharmadb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: PHARMADB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-22T23:41:47.572Z  INFO 2633 --- [PharmaBackend] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-22T23:41:47.593Z  INFO 2633 --- [PharmaBackend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T23:41:47.695Z  INFO 2633 --- [PharmaBackend] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-22T23:41:48.211Z  INFO 2633 --- [PharmaBackend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name usuarioDetailsService
+2026-10-22T23:41:48.993Z  WARN 2633 --- [PharmaBackend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-22T23:41:49.580Z  INFO 2633 --- [PharmaBackend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-22T23:41:49.586Z  INFO 2633 --- [PharmaBackend] [           main] p.e.u.P.PharmaBackendApplication         : Started PharmaBackendApplication in 6.228 seconds (process running for 6.546)
+2026-10-22T23:41:49.588Z  WARN 2633 --- [PharmaBackend] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-10-22T23:41:51.620Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-22T23:41:51.620Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-22T23:41:51.622Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-10-22T23:50:44.781Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=admin
+2026-10-22T23:50:45.269Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-2] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=admin roles=[ADMIN]
+2026-10-22T23:51:23.073Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-3] p.e.u.P.s.impl.ProductoServiceImpl       : Inicio listar productos | pagina=0 | tamanio=100 | ordenarPor=id | direccion=asc
+2026-10-22T23:51:23.116Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-3] p.e.u.P.s.impl.ProductoServiceImpl       : Fin listar productos | filas=10 | total=10 | duracionMs=43
+2026-10-22T23:53:40.945Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-7] p.e.u.P.s.impl.ProductoServiceImpl       : Inicio listar productos | pagina=0 | tamanio=100 | ordenarPor=id | direccion=asc
+2026-10-22T23:53:40.949Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-7] p.e.u.P.s.impl.ProductoServiceImpl       : Fin listar productos | filas=11 | total=11 | duracionMs=4
+2026-10-22T23:53:43.834Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-8] p.e.u.P.s.impl.ProductoServiceImpl       : Buscando producto | id=11
+2026-10-22T23:53:48.040Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-9] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=admin
+2026-10-22T23:53:48.136Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-9] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=admin roles=[ADMIN]
+2026-10-22T23:53:48.145Z  INFO 2633 --- [PharmaBackend] [io-8080-exec-10] p.e.u.P.s.impl.ProductoServiceImpl       : Inicio listar productos | pagina=0 | tamanio=100 | ordenarPor=id | direccion=asc
+2026-10-22T23:53:48.149Z  INFO 2633 --- [PharmaBackend] [io-8080-exec-10] p.e.u.P.s.impl.ProductoServiceImpl       : Fin listar productos | filas=11 | total=11 | duracionMs=4
+2026-10-22T23:53:50.017Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-9] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 293 ms
+2026-10-22T23:53:50.931Z  INFO 2633 --- [PharmaBackend] [io-8080-exec-10] p.e.u.P.service.impl.AuthServiceImpl     : Intento de inicio de sesión: usuario=admin
+2026-10-22T23:53:51.028Z  INFO 2633 --- [PharmaBackend] [io-8080-exec-10] p.e.u.P.service.impl.AuthServiceImpl     : Inicio de sesión correcto: usuario=admin roles=[ADMIN]
+2026-10-22T23:53:52.836Z  INFO 2633 --- [PharmaBackend] [nio-8080-exec-1] p.e.u.P.s.impl.ProductoServiceImpl       : Buscando producto | id=11
+2026-10-22T23:54:47.069Z  INFO 2633 --- [PharmaBackend] [ionShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-22T23:54:47.077Z  INFO 2633 --- [PharmaBackend] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-10-22T23:54:47.090Z  INFO 2633 --- [PharmaBackend] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-22T23:54:47.093Z  INFO 2633 --- [PharmaBackend] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-10-22T23:54:47.095Z  INFO 2633 --- [PharmaBackend] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

@@ -1,0 +1,33 @@
+$ ./gradlew :shared:testAndroidHostTest
+179 pruebas, 0 con fallo
+
+Pruebas de la sesion 11 (offline-first):
+  PASO  ProductoLocalTest > losPendientesRecibenIdsLocalesNegativosYDistintos  (0.256 s)
+  PASO  ProductoLocalTest > confirmarLaSubidaCambiaElIdLocalPorElReal  (0.017 s)
+  PASO  ProductoLocalTest > laListaDelServidorNoBorraLoCreadoSinRed  (0.006 s)
+  PASO  AuthRepositorioRestTest > cerrarSesionBorraTambienElPerfilLocal  (0.012 s)
+  PASO  AuthRepositorioRestTest > sinServidorSeEntraConElPerfilDeLaUltimaSesion  (0.016 s)
+  PASO  ProductoRepositorioOfflineTest > un pendiente que el servidor rechaza no bloquea la bajada de la lista  (0.028 s)
+  PASO  ProductoRepositorioOfflineTest > con red el producto se sube y queda con el id del servidor  (0.010 s)
+  PASO  ProductoRepositorioOfflineTest > sincronizar sube lo pendiente antes de bajar y no se pierde nada  (0.015 s)
+  PASO  ProductoRepositorioOfflineTest > sin red el producto queda pendiente y la pantalla lo ve  (0.006 s)
+  PASO  ProductoRepositorioOfflineTest > si la red se corta a la mitad lo ya subido no se vuelve a enviar  (0.016 s)
+  PASO  ProductoRepositorioOfflineTest > sin red el detalle se muestra desde la copia local  (0.010 s)
+  PASO  ProductoRepositorioOfflineTest > con la sesion vencida se corta la sincronizacion y lo pendiente se conserva  (0.011 s)
+  PASO  AppModuleTest > abreLaBaseLocalConElDriverRegistrado  (0.002 s)
+  PASO  ProductoViewModelTest > sinConexionMuestraLaListaGuardadaConElAvisoDeRed  (0.002 s)
+  PASO  ProductoViewModelTest > registrarNoVuelveAPedirLaLista  (0.002 s)
+
+Actividad autonoma (suite offline, antiguedad, primera apertura):
+  PASO  SuiteOfflineTest > 1 sincronizacion con red - la base queda con los productos del servidor y el Flow los emite  (0.010 s)
+  PASO  SuiteOfflineTest > 2 registro sin red - el producto queda pendiente y el Flow lo emite igual  (0.006 s)
+  PASO  SuiteOfflineTest > 3 envio al reconectar - sincronizar sube lo pendiente y la fila deja de estar marcada  (0.010 s)
+  PASO  SuiteOfflineTest > 4 la bajada no borra lo pendiente - la lista del servidor conserva lo creado sin conexion  (0.007 s)
+  PASO  SuiteOfflineTest > 5 identificadores sin colision - un producto local y uno del servidor conviven  (0.010 s)
+  PASO  SuiteOfflineTest > 6 sincronizar dos veces no duplica  (0.015 s)
+  PASO  AntiguedadTest > menosDeUnMinutoEsUnMomento  (0.001 s)
+  PASO  AntiguedadTest > minutosHorasYDiasConSingularYPlural  (0.002 s)
+  PASO  AntiguedadTest > nuncaSincronizadoSeDiceExplicitamente  (0.000 s)
+  PASO  AntiguedadTest > unRelojAtrasadoNoProduceTiemposNegativos  (0.000 s)
+  PASO  ProductoViewModelTest > laPantallaRecibeLaHoraDeLaUltimaSincronizacionCorrecta  (0.002 s)
+  PASO  ProductoViewModelTest > primeraAperturaSinRedEsUnEstadoVacioInformativoYNoUnError  (0.001 s)
